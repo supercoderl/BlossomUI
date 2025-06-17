@@ -1,0 +1,80 @@
+.loginWrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+.leftBanner {
+  padding: 20px;
+  width: 40%;
+  min-width: 400px;
+}
+
+.leftBanner .logo {
+  display: inline-block;
+  width: 180px;
+  height: 46px;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 2px 12px;
+  color: #fff;
+  line-height: 44px;
+  border-radius: 6px;
+}
+
+.leftBanner h2 {
+  padding-top: 60px;
+  text-align: center;
+}
+
+.leftBanner .banner {
+  margin-top: 60px;
+  text-align: center;
+}
+
+.leftBanner .banner img {
+  width: 72%;
+}
+
+.content {
+  padding: 20px;
+  background-color: #fff;
+  width: 70%;
+}
+
+.content .innerContent {
+  margin: 80px 20% 0 20%;
+}
+
+.content .innerContent h1 {
+  padding-bottom: 20px;
+}
+
+.content .innerContent form {
+  margin-top: 20px;
+}
+
+.content .innerContent .codeWrap {
+  position: relative;
+}
+
+.content .innerContent .codeWrap .codeBtn {
+  position: absolute;
+  right: 0;
+  top: 6px;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  .leftBanner {
+    display: none;
+  }
+
+  .content {
+    width: 100%;
+  }
+
+  .content .innerContent {
+    margin-left: 10px;
+  }
+}

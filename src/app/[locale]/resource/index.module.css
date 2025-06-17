@@ -1,0 +1,26 @@
+.fuildWrap {
+  display: block;
+  column-count: 3;
+  column-gap: 12px;
+}
+
+.fuildWrap .cardImg {
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: transform 0.3s;
+}
+
+.fuildWrap .cardImg:hover {
+  transform: translateY(-6px);
+}
+
+.fuildWrap .cardImg img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+@media screen and (max-width: 600px) {
+  .fuildWrap {
+    column-count: 1;
+  }
+}

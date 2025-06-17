@@ -1,0 +1,44 @@
+.editWrap {
+  margin: 80px 20px 20px;
+  height: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  width: 100%;
+}
+
+.editWrap .charts {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 16px;
+  border-radius: 6px;
+  background-color: #fff;
+  overflow: auto;
+}
+
+.editWrap .charts .controlArea {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+}
+
+.editWrap .charts .controlArea .formItem {
+  display: flex;
+  align-items: center;
+}
+
+.editWrap .charts .controlArea .formItem .label {
+  margin-left: 12px;
+  margin-right: 10px;
+}
+
+.editWrap .table {
+  margin-left: 20px;
+  padding: 16px;
+  border-radius: 6px;
+  background-color: #fff;
+}

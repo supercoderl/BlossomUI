@@ -1,0 +1,14 @@
+@keyframes slide-right {
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slideRight {
+  animation: slide-right 0.4s cubic-bezier(0.45, 1, 0.4, 1.2) both;
+}
