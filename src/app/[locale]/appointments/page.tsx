@@ -13,7 +13,7 @@ const { Title, Text, Paragraph } = Typography;
 const Appointments = () => {
 
   return (
-    <HomeLayout curActive='/service-menu' isDark>
+    <HomeLayout curActive='/appointments' isDark>
       <main>
         <HeroSection />
         <BookingFormSection />

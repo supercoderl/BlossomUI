@@ -38,21 +38,6 @@ const HomeHeader = ({ isDark }: { isDark: boolean }) => {
         },
         {
             key: 4,
-            label: "Shop",
-            url: 'shop'
-        },
-        {
-            key: 5,
-            label: "Wedding",
-            url: 'wedding'
-        },
-        {
-            key: 6,
-            label: "Academy",
-            url: 'academy'
-        },
-        {
-            key: 7,
             label: "Contact",
             url: 'contact'
         }
