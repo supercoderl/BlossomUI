@@ -1,39 +1,19 @@
 import {
-    CalendarOutlined,
-    CreditCardOutlined,
     LeftCircleOutlined,
-    LeftOutlined,
-    ShoppingOutlined,
-    UserOutlined
 } from '@ant-design/icons';
-import styles from './index.module.css';
-import { cn } from '@/utils/helpers';
-import ServiceSelection from '@/components/Appointment/form/ServiceSelection';
-import { SetStateAction, useState } from 'react';
+import { useState } from 'react';
 import { useGlobalMessage } from '@/providers/messageProvider';
-import CalendarSelection from '@/components/Appointment/form/CalendarSelection';
+import LeftContent from '@/components/Appointment/left';
+import LeftContentSubmit from '@/components/Appointment/left/content-2';
+import RightContentSubmit from '@/components/Appointment/right/content-2';
+import RightContent from '@/components/Appointment/right';
+import { cn } from '@/utils/helpers';
 
 const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-const timeSlots = [
-    '9:00 AM - 10:00 AM',
-    '11:00 AM - 12:00 PM',
-    '11:30 AM - 12:30 PM',
-    '12:00 PM - 1:00 PM',
-    '12:30 PM - 1:30 PM',
-    '1:00 PM - 2:00 PM',
-    '1:30 PM - 2:30 PM',
-    '2:00 PM - 3:00 PM',
-    '2:30 PM - 3:30 PM',
-    '3:00 PM - 4:00 PM',
-    '3:30 PM - 4:30 PM',
-    '4:00 PM - 5:00 PM'
-];
 
 const BookingFormSection = () => {
     const [messageApi] = useGlobalMessage();
@@ -44,6 +24,14 @@ const BookingFormSection = () => {
     const [currentMonth, setCurrentMonth] = useState(5); // June (0-indexed)
     const [currentYear, setCurrentYear] = useState(2025);
     const [state, setState] = useState(1);
+    const [information, setInformation] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: ''
+    })
+    const [isSubmit, setIsSubmit] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
     const onSubmit = () => {
         switch (state) {
@@ -55,72 +43,24 @@ const BookingFormSection = () => {
                 setState(prev => prev + 1);
                 break;
             case 2:
+                if (!selectedDate) {
+                    messageApi.warning("Please select date!");
+                    return;
+                }
+                setState(prev => prev + 1);
+                break;
+            case 3:
+                if (!information.firstName || !information.lastName) {
+                    messageApi.warning("Please input required fields!");
+                    return;
+                }
+                setState(prev => prev + 1);
+            case 4:
+                setState(prev => prev + 1);
                 break;
         }
     }
 
-    const renderHeader = () => {
-        switch (state) {
-            case 1:
-                return (
-                    <span className="flex items-center">
-                        <span className="text-[18px] font-medium text-[#33434C] m-0 whitespace-nowrap">Service Selection</span>
-                    </span>
-                );
-            case 2:
-                return (
-                    <span className="flex items-center">
-                        <button
-                            className="w-[24px] mr-[12px] bg-transparent text-[#1A2C37] border border-solid border-[rgba(26,_44,_55,_0.3)] inline-flex items-center justify-center h-[24px] text-[16px] font-medium whitespace-nowrap decoration-none rounded-[6px] p-[2px] cursor-pointer transition-all duration-300 ease-in-out"
-                            type="button"
-                            onClick={() => setState(prev => prev - 1)}
-                        >
-                            <LeftOutlined className='flex items-center justify-center overflow-hidden' />
-                        </button>
-                        <span className="text-[18px] font-medium text-[#33434C] m-0 whitespace-nowrap">Service Selection</span>
-                    </span>
-                );
-        }
-    }
-
-    const renderItem = () => {
-        switch (state) {
-            case 1:
-                return (
-                    <ServiceSelection
-                        selectedService={selectedService}
-                        setSelectedService={setSelectedService}
-                        selectedEmployee={selectedEmployee}
-                        setSelectedEmployee={setSelectedEmployee}
-                    />
-                );
-            case 2:
-                return (
-                    <CalendarSelection
-                        currentMonth={currentMonth}
-                        currentYear={currentYear}
-                        selectedDate={selectedDate}
-                        selectedTime={selectedTime}
-                        setSelectedDate={setSelectedDate}
-                        setSelectedTime={setSelectedTime}
-                        setCurrentMonth={setCurrentMonth}
-                        setCurrentYear={setCurrentYear}
-                        months={months}
-                        daysOfWeek={daysOfWeek}
-                        timeSlots={timeSlots}
-                    />
-                );
-            default:
-                return (
-                    <ServiceSelection
-                        selectedService={selectedService}
-                        setSelectedService={setSelectedService}
-                        selectedEmployee={selectedEmployee}
-                        setSelectedEmployee={setSelectedEmployee}
-                    />
-                );
-        }
-    }
 
     return (
         <section className="mt-[100px] mb-[70px] relative">
@@ -131,165 +71,79 @@ const BookingFormSection = () => {
                             <div className="">
                                 <div className="">
                                     <div className="bg-transparent">
-                                        <div className='flex justify-center w-full max-w-[760px] rounded-[8px] shadow-[0_30px_40px_#0000001f] transition-max-width duration-300 ease-in-out'>
-                                            <div className="w-[240px] pb-[16px] flex-[0_0_auto] relative flex flex-col justify-between text-[16px] bg-[rgba(246,_235,_231,_1)] text-black py-4 pr-2 pl-4 transition-width duration-300 ease-in-out">
+                                        <div className={
+                                            cn(
+                                                'flex justify-center w-full rounded-[8px] shadow-[0_30px_40px_#0000001f] transition-max-width duration-300 ease-in-out',
+                                                isCollapsed ? "max-w-[592px]" : "max-w-[760px]"
+                                            )
+                                        }>
+                                            <div className={
+                                                cn(
+                                                    "pb-[16px] flex-[0_0_auto] relative flex flex-col justify-between text-[16px] bg-[rgba(246,_235,_231,_1)] text-black py-4 pr-2 pl-4 transition-width duration-300 ease-in-out",
+                                                    isCollapsed ? "w-[72px]" : "w-[240px]"
+                                                )
+                                            }>
                                                 <div className="pr-2 overflow-x-hidden max-w-md">
-                                                    <div className={
-                                                        cn(
-                                                            "bg-black/5 rounded p-2 mb-2",
-                                                            styles.slideRight
-                                                        )
+                                                    {
+                                                        isSubmit ?
+                                                            <LeftContentSubmit />
+                                                            :
+                                                            <LeftContent
+                                                                state={state}
+                                                                selectedService={selectedService}
+                                                                selectedEmployee={selectedEmployee}
+                                                                selectedDate={selectedDate}
+                                                                information={information
+                                                                }
+                                                                months={months}
+                                                                currentMonth={currentMonth}
+                                                                currentYear={currentYear}
+                                                                selectedTime={selectedTime}
+                                                                isCollapsed={isCollapsed}
+                                                            />
                                                     }
-                                                        style={{ animationDelay: '0ms' }}>
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="relative w-6 h-5 text-2xl">
-                                                                <ShoppingOutlined className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" size={20} />
-                                                            </div>
-                                                            <p className="font-medium mb-0 ml-1.5 text-sm">Service Selection</p>
-                                                            <div className="flex items-center justify-center w-6 h-6 bg-orange-100 rounded-full border-4 border-black transition-all duration-300 ease-in-out ml-auto">
-                                                            </div>
-                                                        </div>
-                                                        {selectedService && (
-                                                            <span className={
-                                                                cn(
-                                                                    'block overflow-hidden',
-                                                                    styles.slideRight
-                                                                )
-                                                            } style={{ animationDelay: '210ms', animationDuration: '0.7s' }}>
-                                                                <p className={
-                                                                    cn(
-                                                                        'text-[12px] py-[4px] m-0 whitespace-pre',
-                                                                        selectedEmployee ? 'border-b border-dashed border-[rgba(0,_0,_0,_0.1)]' : ''
-                                                                    )
-                                                                }>
-                                                                    <span>{selectedService}</span>
-                                                                </p>
-                                                            </span>
-                                                        )}
-                                                        {
-                                                            selectedEmployee && (
-                                                                <span className={
-                                                                    cn(
-                                                                        'block overflow-hidden',
-                                                                        styles.slideRight
-                                                                    )
-                                                                } style={{ animationDelay: '210ms', animationDuration: '0.7s' }}>
-                                                                    <p className={
-                                                                        cn(
-                                                                            'text-[12px] pb-[4px] m-0 whitespace-pre',
-                                                                        )
-                                                                    }>
-                                                                        <span>{selectedEmployee}</span>
-                                                                    </p>
-                                                                </span>
-                                                            )
-                                                        }
-                                                    </div>
-
-                                                    <div className={
-                                                        cn(
-                                                            "bg-black/5 rounded p-2 mb-2",
-                                                            styles.slideRight
-                                                        )
-                                                    }
-                                                        style={{ animationDelay: '70ms' }}>
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="relative w-6 h-5 text-2xl">
-                                                                <CalendarOutlined className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" size={20} />
-                                                            </div>
-                                                            <p className="font-medium mb-0 ml-1.5 text-sm">Date & Time</p>
-                                                            <div className="flex items-center justify-center w-6 h-6 bg-orange-100 rounded-full border border-black/10 transition-all duration-300 ease-in-out ml-auto">
-                                                            </div>
-                                                        </div>
-                                                        {selectedDate && (
-                                                            <span className={
-                                                                cn(
-                                                                    'block overflow-hidden',
-                                                                    styles.slideRight
-                                                                )
-                                                            } style={{ animationDelay: '210ms', animationDuration: '0.7s' }}>
-                                                                <p className={
-                                                                    cn(
-                                                                        'text-[12px] py-[4px] m-0 whitespace-pre',
-                                                                        selectedDate ? 'border-b border-dashed border-[rgba(0,_0,_0,_0.1)]' : ''
-                                                                    )
-                                                                }>
-                                                                    <span>{months[currentMonth]} {selectedDate}, {currentYear} - {selectedTime.split(" - ")[0]}</span>
-                                                                </p>
-                                                            </span>
-                                                        )}
-                                                    </div>
-
-                                                    <div className={
-                                                        cn(
-                                                            "bg-black/5 rounded p-2 mb-2",
-                                                            styles.slideRight
-                                                        )
-                                                    }
-                                                        style={{ animationDelay: '140ms' }}>
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="relative w-6 h-5 text-2xl">
-                                                                <UserOutlined className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" size={20} />
-                                                            </div>
-                                                            <p className="font-medium mb-0 ml-1.5 text-sm">Your Information</p>
-                                                            <div className="flex items-center justify-center w-6 h-6 bg-orange-100 rounded-full border border-black/10 transition-all duration-300 ease-in-out ml-auto">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className={
-                                                        cn(
-                                                            "bg-black/5 rounded p-2 mb-2",
-                                                            styles.slideRight
-                                                        )
-                                                    }
-                                                        style={{ animationDelay: '210ms' }}>
-                                                        <div className="flex items-center justify-between">
-                                                            <div className="relative w-6 h-5 text-2xl">
-                                                                <CreditCardOutlined className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" size={20} />
-                                                            </div>
-                                                            <p className="font-medium mb-0 ml-1.5 text-sm">Payments</p>
-                                                            <div className="flex items-center justify-center w-6 h-6 bg-orange-100 rounded-full border border-black/10 transition-all duration-300 ease-in-out ml-auto">
-                                                            </div>
-                                                        </div>
-                                                    </div>
 
                                                     <div className="absolute bottom-4 left-4 w-[calc(100%-32px)]">
-                                                        <div className="flex items-center justify-between border-t border-black/10 pt-3 cursor-pointer">
-                                                            <span className="text-base font-medium">Collapse menu</span>
-                                                            <LeftCircleOutlined className="text-2xl bg-black rounded-full !text-white" size={24} />
+                                                        <div
+                                                            className="flex items-center justify-between border-t border-black/10 pt-3 cursor-pointer"
+                                                            onClick={() => setIsCollapsed(!isCollapsed)}
+                                                        >
+                                                            {!isCollapsed && <span className="text-base font-medium">Collapse menu</span>}
+                                                            <LeftCircleOutlined className={
+                                                                cn(
+                                                                    "text-[24px] bg-black rounded-full !text-white",
+                                                                    isCollapsed && "mx-auto"
+                                                                )
+                                                            } />
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div className="max-w-[520px] w-full bg-white overflow-hidden">
                                                 <div className="overflow-hidden relative h-full">
-                                                    <div className="py-4 px-8 shadow-[0_2px_3px_rgba(26,_44,_55,_0.15)] relative">
-                                                        {renderHeader()}
-                                                    </div>
-                                                    <div className="pt-[40px] block overflow-x-hidden h-[444px] py-4 px-8">
-                                                        <form className="">
-                                                            {renderItem()}
-                                                        </form>
-                                                        <div className="hidden">
-                                                            <div className="am-slide-popup__up-inner">
-                                                                <p className="am-fs__popup-x">
-                                                                    <span className="am-icon-close"></span>
-                                                                </p>
-                                                                <div className="am-fs__ps-popup">
-                                                                    <div className="am-fs__ps-popup__heading">Hey, there are special packages with this service, check them out!</div>
-                                                                    <div className="am-fs__ps am-fs__ps-popup">
-                                                                    </div>
-                                                                    <div className="am-fs__ps-popup__or">Or</div>
-                                                                </div>
-                                                                <div className="am-slide-popup__up-footer">
-                                                                    <button id="" className="am-button am-button--filled am-button--medium am-button--primary am-package-popup-continue am-fs__ps-popup__btn-mobile" type="button">
-                                                                        <span className="am-button__inner">Skip packages and continue with the selected service</span><div className="am-fs__ps-pill">$0.00</div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    {
+                                                        isSubmit ?
+                                                            <RightContentSubmit />
+                                                            :
+                                                            <RightContent
+                                                                state={state}
+                                                                setState={setState}
+                                                                selectedService={selectedService}
+                                                                selectedEmployee={selectedEmployee}
+                                                                selectedDate={selectedDate}
+                                                                selectedTime={selectedTime}
+                                                                information={information}
+                                                                months={months}
+                                                                currentMonth={currentMonth}
+                                                                currentYear={currentYear}
+                                                                setSelectedService={setSelectedService}
+                                                                setSelectedEmployee={setSelectedEmployee}
+                                                                setSelectedDate={setSelectedDate}
+                                                                setSelectedTime={setSelectedTime}
+                                                                setCurrentMonth={setCurrentMonth}
+                                                                setCurrentYear={setCurrentYear}
+                                                                setInformation={setInformation} />
+                                                    }
                                                     <div className="flex items-center justify-end w-full py-2 px-8 bg-transparent shadow-[0_-2px_3px_rgba(26,_44,_55,_0.15)]">
                                                         <button
                                                             className="bg-black text-white border border-solid border-black inline-flex items-center justify-center h-[40px] text-[15px] font-medium whitespace-nowrap decoration-none transition-all duration-300 ease-in-out py-2 px-5 rounded-[6px] cursor-pointer hover:bg-[rgba(0,_0,_0,_0.8)]"

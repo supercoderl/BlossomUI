@@ -31,3 +31,39 @@
 .fadeIn {
   animation: fadeIn 0.3s ease-out forwards;
 }
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(26, 44, 55, 0.2) 25%,
+    rgba(26, 44, 55, 0.6) 37%,
+    rgba(26, 44, 55, 0.2) 63%
+  );
+  background-size: 400% 100%;
+  animation: el-skeleton-loading 1.4s ease infinite;
+  border-radius: 4px;
+}
+
+@keyframes el-skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(-50%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slideRight {
+  animation: slide-right 0.4s cubic-bezier(0.45, 1, 0.4, 1.2) both;
+}
