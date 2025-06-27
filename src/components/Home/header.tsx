@@ -1,14 +1,17 @@
+import { menus } from '@/data/menu';
 import { cn } from '@/utils/helpers';
 import {
     InstagramOutlined,
-    FacebookOutlined
+    FacebookOutlined,
+    MenuOutlined,
+    CloseOutlined
 } from '@ant-design/icons';
 import { List } from 'antd';
 import { url } from 'inspector';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-const HomeHeader = ({ isDark }: { isDark: boolean }) => {
+const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpen?: (value: boolean) => void, isOpen?: boolean }) => {
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
@@ -20,38 +23,15 @@ const HomeHeader = ({ isDark }: { isDark: boolean }) => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const menus = [
-        {
-            key: 1,
-            label: "Service Menu",
-            url: 'service-menu'
-        },
-        {
-            key: 2,
-            label: "Book Appointment",
-            url: 'appointments'
-        },
-        {
-            key: 3,
-            label: "Our Story",
-            url: 'our-story'
-        },
-        {
-            key: 4,
-            label: "Contact",
-            url: 'contact'
-        }
-    ]
-
     return (
         <header className="relative z-50 block">
             <div className={cn(
-                "group px-[50px] w-full top-0 left-0 border-b border-solid transition-all duration-300 ease-in-out max-w-full",
+                "group px-[22px] md:px-[50px] w-full top-0 left-0 border-b border-solid transition-all duration-300 ease-in-out max-w-full",
                 scrolled ? "fixed bg-white border-[rgba(0,_0,_0,_0.1)]" : "absolute bg-transparent border-transparent hover:bg-white"
             )}>
                 <div className="flex items-center justify-between max-w-[1920px] mx-auto transition-all duration-300">
-                    <div className="left-content">
-                        <div className="max-h-[82px] flex items-center transition-all duration-300 ease-in-out">
+                    <div className="left-content grow-2 md:grow-[unset]">
+                        <div className="max-h-[82px] flex items-center justify-center md:justify-start transition-all duration-300 ease-in-out">
                             <Link className={
                                 cn(
                                     "py-[13px]",
@@ -71,7 +51,7 @@ const HomeHeader = ({ isDark }: { isDark: boolean }) => {
                         </div>
                     </div>
 
-                    <div className="center-content">
+                    <div className="center-content hidden md:block">
                         <nav className="block" role="navigation">
                             <List
                                 className="px-[60px]"
@@ -155,12 +135,12 @@ const HomeHeader = ({ isDark }: { isDark: boolean }) => {
                     </div>
 
                     <div className="right-content">
-                        <div className="-mx-[7px]">
+                        <div className="-mx-[7px] hidden md:block">
                             <Link
                                 className={
                                     scrolled || isDark ? "text-black" : "text-white group-hover:text-black"
                                 }
-                                href="https://instagram.com/firstsight.design?igshid=1a3ry8qt8e72w"
+                                href="https://instagram.com"
                             >
                                 <InstagramOutlined className='px-[7px] text-[19px]' />
                             </Link>
@@ -168,14 +148,39 @@ const HomeHeader = ({ isDark }: { isDark: boolean }) => {
                                 className={
                                     scrolled || isDark ? "text-black" : "text-white group-hover:text-black"
                                 }
-                                href="https://www.facebook.com/Firstsightdesign-108914574269860">
+                                href="https://www.facebook.com">
                                 <FacebookOutlined className='px-[7px] text-[19px]' />
                             </Link>
                         </div>
-                        <div className="hidden">
-                            <button className="hamburger hamburger--collapse-r" type="button">
-                                <span className="hamburger-box">
-                                    <span className="hamburger-inner"></span>
+                        <div className="block md:hidden">
+                            <button
+                                className="pt-[7px] pb-[4px] inline-block transition-opacity duration-500 m-0" type="button"
+                                onClick={() => {
+                                    if (handleOpen !== undefined && isOpen !== undefined) {
+                                        handleOpen(!isOpen);
+                                    }
+                                }}
+                            >
+                                <span className={
+                                    cn(
+                                        "absolute w-[20px] h-[15px] inline-block relative transition-all duration-300",
+                                        isOpen ? "-translate-x-[280px]" : "translate-x-0"
+                                    )
+                                }>
+                                    <MenuOutlined
+                                        className={cn(
+                                            'text-xl absolute inset-0 transition-opacity duration-300',
+                                            isOpen ? 'opacity-0' : 'opacity-100',
+                                            scrolled || isDark ? 'text-black' : '!text-white'
+                                        )}
+                                    />
+                                    <CloseOutlined
+                                        className={cn(
+                                            'text-xl absolute inset-0 transition-opacity duration-300',
+                                            isOpen ? 'opacity-100' : 'opacity-0',
+                                            scrolled ||isDark ? 'text-black' : '!text-white'
+                                        )}
+                                    />
                                 </span>
                             </button>
                         </div>

@@ -78,7 +78,7 @@ const AboutSection = () => {
     const handleTouchEnd = () => handleEnd();
 
     return (
-        <div className="w-full">
+        <div className="w-full" data-aos="fade-zoom-in">
             {/* Beauty Box Section */}
             <section className="bg-rose-50 py-16 lg:py-24 scroll-smooth">
                 <div className="container mx-auto px-4 max-w-7xl">
@@ -135,7 +135,7 @@ const AboutSection = () => {
                         </div>
 
                         {/* Content Section */}
-                        <div className="w-full lg:w-1/2 text-center lg:text-left">
+                        <div className="w-full lg:w-1/2">
                             <h2 className="text-4xl lg:text-6xl font-light text-gray-900 mb-8 tracking-wide leading-tight">
                                 Beauty Box
                             </h2>
@@ -150,7 +150,7 @@ const AboutSection = () => {
                                 </p>
                             </div>
 
-                            <div className="inline-block">
+                            <div className="inline-block text-center md:text-left w-full">
                                 <a
                                     href="https://firstsight.design/cherie/beauty/product/beauty-box-2/"
                                     className="inline-block bg-transparent border-2 border-gray-900 text-gray-900 px-10 py-4 font-semibold tracking-widest text-sm uppercase hover:bg-gray-900 hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-4 focus:ring-gray-300"
@@ -170,7 +170,7 @@ const AboutSection = () => {
                     <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
                         
                         {/* Content Section */}
-                        <div className="w-full lg:w-1/2 text-center lg:text-left order-2 lg:order-1">
+                        <div className="w-full lg:w-1/2 order-2 lg:order-1">
                             <h2 className="text-4xl lg:text-6xl font-light text-gray-900 mb-8 tracking-wide leading-tight">
                                 Gift Cards
                             </h2>

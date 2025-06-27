@@ -1,20 +1,20 @@
 const BlogSection = () => {
     return (
-        <section className="py-[100px] relative">
+        <section className="py-[50px] md:py-[100px] relative" data-aos="fade-zoom-in">
             <div className="bg-[#F6EBE7] h-full w-full absolute top-0 left-0"></div>
-            <div className="w-[1170px] relative mx-auto flex">
+            <div className="max-w-[767px] md:max-w-[1170px] relative mx-auto flex">
                 <div className="w-full relative min-h flex">
                     <div className="p-0 flex relative w-full flex-wrap content-start">
                         <div className="mb-0 text-center w-full relative">
-                            <div className="mb-[50px]">
-                                <h2 className="text-black mb-[16px] text-[42px] font-medium m-0 p-0">Blog</h2>
+                            <div className="mb-[40px] md:mb-[50px]">
+                                <h2 className="text-black mb-[16px] text-[28px] md:text-[42px] font-medium m-0 p-0">Blog</h2>
                             </div>
                         </div>
                         <div className="mb-0 w-full relative">
                             <div className="">
                                 <div className="">
                                     <div className="flex flex-wrap">
-                                        <div className="mb-[31px] flex-[0_0_25%] max-w-[25%] px-[15px]">
+                                        <div className="mb-[31px] flex-[0_0_100%] md:flex-[0_0_25%] max-w-full md:max-w-[25%] px-[15px]">
                                             <div className="mb-[24px]">
                                                 <a href="https://firstsight.design/cherie/beauty/how-to-maintain-healthy-hair-10-easy-tips-copy2/">
                                                     <img loading="lazy" decoding="async" width="769" height="1024" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2020/06/Blog-5@4x-1-769x1024.jpg" className="attachment-large size-large wp-post-image" alt="" />
@@ -31,7 +31,7 @@ const BlogSection = () => {
                                                 </h3>
                                             </div>
                                         </div>
-                                        <div className="mb-[31px] flex-[0_0_25%] max-w-[25%] px-[15px]">
+                                        <div className="mb-[31px] flex-[0_0_100%] md:flex-[0_0_25%] max-w-full md:max-w-[25%] px-[15px]">
 
                                             <div className="mb-[24px]">
                                                 <a href="https://firstsight.design/cherie/beauty/how-to-maintain-healthy-hair-10-easy-tips/">
@@ -46,7 +46,7 @@ const BlogSection = () => {
                                                 <h3 className="text-center mb-0 text-[16px] font-medium text-black"><a href="https://firstsight.design/cherie/beauty/how-to-maintain-healthy-hair-10-easy-tips/">How to Maintain Healthy Hair: 10 Easy Tips</a></h3>
                                             </div>
                                         </div>
-                                        <div className="mb-[31px] flex-[0_0_25%] max-w-[25%] px-[15px]">
+                                        <div className="mb-[31px] flex-[0_0_100%] md:flex-[0_0_25%] max-w-full md:max-w-[25%] px-[15px]">
 
                                             <div className="mb-[24px]">
                                                 <a href="https://firstsight.design/cherie/beauty/having-these-7-things-on-your-bedside-table-copy3/">
@@ -61,7 +61,7 @@ const BlogSection = () => {
                                                 <h3 className="text-center mb-0 text-[16px] font-medium text-black"><a href="https://firstsight.design/cherie/beauty/having-these-7-things-on-your-bedside-table-copy3/">Aroma Therapy and Aroma Massages</a></h3>
                                             </div>
                                         </div>
-                                        <div className="mb-[31px] flex-[0_0_25%] max-w-[25%] px-[15px]">
+                                        <div className="mb-[31px] flex-[0_0_100%] md:flex-[0_0_25%] max-w-full md:max-w-[25%] px-[15px]">
                                             <div className="mb-[24px]">
                                                 <a href="https://firstsight.design/cherie/beauty/this-nail-polish-brand-is-diversifying-the-nail-care-copy3/">
                                                     <img loading="lazy" decoding="async" width="769" height="1024" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2020/06/Blog-7@4x-1-769x1024.jpg" className="attachment-large size-large wp-post-image" alt="" />

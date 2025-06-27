@@ -1,13 +1,13 @@
 const TeamSection = () => {
     return (
         <>
-            <section className="mt-[100px] mb-[34px] relative">
-                <div className="max-w-[1170px] flex mx-auto relative">
+            <section className="mt-[50px] md:mt-[100px] mb-6 md:mb-[34px] relative">
+                <div className="max-w-[767px] max-w-[1170px] flex mx-auto relative">
                     <div className="w-full relative min-h flex">
                         <div className="px-[15px] flex relative w-full flex-wrap content-start">
                             <div className="text-center w-full relative">
                                 <div className="">
-                                    <h2 className="mb-4 text-[42px] font-medium">Our Team</h2>		
+                                    <h2 className="mb-4 text-[28px] md:text-[42px] font-medium">Our Team</h2>		
                                     </div>
                             </div>
                         </div>
@@ -15,14 +15,14 @@ const TeamSection = () => {
                 </div>
             </section>
             <section className="relative">
-                <div className="max-w-[1170px] flex mx-auto relative">
+                <div className="max-w-[767px] max-w-[1170px] flex mx-auto relative">
                     <div className="w-full relative min-h flex">
                         <div className="flex relative w-full flex-wrap content-start">
                             <div className="w-full relative">
                                 <div className="">
                                     <div className="">
-                                        <div className="grid grid-cols-4 gap-x-8">
-                                            <div className="mb-[45px]">
+                                        <div className="grid md:grid-cols-4 gap-x-8">
+                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
                                                 <div className="text-center">
                                                     <a href="#art-team-member-685602409dced-popup-1" className="">
                                                         <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-12.webp" alt="Team Member" />
@@ -48,7 +48,7 @@ const TeamSection = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="mb-[45px]">
+                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
                                                 <div className="text-center">
                                                     <a href="#art-team-member-685602409dcf4-popup-2" className="">
                                                         <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-42.webp" alt="Team Member" />
@@ -74,7 +74,7 @@ const TeamSection = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="mb-[45px]">
+                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
                                                 <div className="text-center">
                                                     <a href="#art-team-member-685602409dcf6-popup-3" className="">
                                                         <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-32.png" alt="Team Member" />
@@ -102,7 +102,7 @@ const TeamSection = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="mb-[45px]">
+                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
                                                 <div className="text-center">
                                                     <a href="#art-team-member-685602409dcf9-popup-4" className="">
                                                         <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-22.webp" alt="Team Member" />
@@ -128,7 +128,7 @@ const TeamSection = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="mb-[45px]">
+                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
                                                 <div className="text-center">
                                                     <a href="#art-team-member-685602409dcfa-popup-5" className="">
                                                         <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-32.png" alt="Team Member" />
@@ -155,7 +155,7 @@ const TeamSection = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="mb-[45px]">
+                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
                                                 <div className="text-center">
                                                     <a href="#art-team-member-685602409dcfc-popup-6" className="">
                                                         <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-52.webp" alt="Team Member" />
@@ -181,7 +181,7 @@ const TeamSection = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="mb-[45px]">
+                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
                                                 <div className="text-center">
                                                     <a href="#art-team-member-685602409dcfd-popup-7" className="">
                                                         <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-62-1.png" alt="Team Member" />
@@ -207,7 +207,7 @@ const TeamSection = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="mb-[45px]">
+                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
                                                 <div className="text-center">
                                                     <a href="#art-team-member-685602409dcff-popup-8" className="">
                                                         <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-82-1.webp" alt="Team Member" />

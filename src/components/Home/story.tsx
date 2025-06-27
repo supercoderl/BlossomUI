@@ -1,9 +1,9 @@
 const StorySection = () => {
     return (
-        <section className="my-[100px] py-[100px] relative">
+        <section className="my-[50px] md:my-[100px] py-[50px] md:py-[100px] relative" data-aos="fade-zoom-in">
             <div className="bg-[#F6EBE7] h-full w-full absolute top-0 left-0"></div>
-            <div className="max-w-[1170px] flex mx-auto relative">
-                <div className="w-1/2 relative min-h flex">
+            <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative flex-wrap">
+                <div className="w-full md:w-1/2 relative min-h flex">
                     <div className="px-[15px] flex relative w-full flex-wrap content-start">
                         <div className="w-full text-center">
                             <div className="">
@@ -21,11 +21,11 @@ const StorySection = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-[49.959%] relative min-h flex">
-                    <div className="px-[15px] flex relative w-full flex-wrap content-center items-center ml-[67px]">
+                <div className="w-full md:w-[49.959%] relative min-h flex">
+                    <div className="px-[15px] flex relative w-full flex-wrap content-center items-center md:ml-[67px]">
                         <div className="mb-0 w-full">
-                            <div className="mb-[30px]">
-                                <h2 className="text-black mb-[16px] text-[42px] font-medium">Our Story</h2>
+                            <div className="mt-[30px] mb-4 md:mt-0 md:mb-[30px]">
+                                <h2 className="text-black mb-[16px] text-[28px] md:text-[42px] font-medium">Our Story</h2>
                             </div>
                         </div>
                         <div className="mb-0 w-full">
@@ -35,7 +35,7 @@ const StorySection = () => {
                         </div>
                         <div className="w-full relative">
                             <div className="mt-[50px]">
-                                <div className="text-left">
+                                <div className="text-center md:text-left">
                                     <a href="https://firstsight.design/cherie/beauty/our-story/" className="decoration-none font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] hover:bg-black hover:text-white transition-all duration-300">Learn More</a>
                                 </div>
                             </div>

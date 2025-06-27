@@ -9,9 +9,11 @@ import TeamSection from './Team';
 import ProductSection from './Product';
 
 const Appointments = () => {
-
   return (
-    <HomeLayout curActive='/our-story' isDark>
+    <HomeLayout
+      curActive='/our-story'
+      isDark
+    >
       <main>
         <HeroSection />
         <PhilosophySection />

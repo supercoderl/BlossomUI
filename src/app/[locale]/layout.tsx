@@ -8,6 +8,7 @@ import {
 import "./globals.css";
 import { MessageProvider } from "@/providers/messageProvider";
 import { NextIntlClientProvider } from "next-intl";
+import 'aos/dist/aos.css'
 
 const inter = Inter({ subsets: ["latin"] });
 

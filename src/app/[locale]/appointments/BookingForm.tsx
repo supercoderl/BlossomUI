@@ -8,6 +8,9 @@ import LeftContentSubmit from '@/components/Appointment/left/content-2';
 import RightContentSubmit from '@/components/Appointment/right/content-2';
 import RightContent from '@/components/Appointment/right';
 import { cn } from '@/utils/helpers';
+import { PhoneIcon } from '@/components/Icon/phone';
+import { ClockIcon } from '@/components/Icon/clock';
+import { LocationIcon } from '@/components/Icon/location';
 
 const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -55,6 +58,7 @@ const BookingFormSection = () => {
                     return;
                 }
                 setState(prev => prev + 1);
+                break;
             case 4:
                 setState(prev => prev + 1);
                 break;
@@ -64,8 +68,8 @@ const BookingFormSection = () => {
 
     return (
         <section className="mt-[100px] mb-[70px] relative">
-            <div className="max-w-[1170px] flex relative mx-auto">
-                <div className="w-2/3 relative min-h flex">
+            <div className="max-w-[767px] md:max-w-[1170px] flex flex-wrap flex-col md:flex-row relative mx-auto">
+                <div className="w-full md:w-2/3 relative min-h flex">
                     <div className="px-[15px] flex relative flex-wrap w-full content-start">
                         <div className="w-full relative">
                             <div className="">
@@ -79,7 +83,7 @@ const BookingFormSection = () => {
                                         }>
                                             <div className={
                                                 cn(
-                                                    "pb-[16px] flex-[0_0_auto] relative flex flex-col justify-between text-[16px] bg-[rgba(246,_235,_231,_1)] text-black py-4 pr-2 pl-4 transition-width duration-300 ease-in-out",
+                                                    "pb-[16px] flex-[0_0_auto] relative hidden md:flex flex-col justify-between text-[16px] bg-[rgba(246,_235,_231,_1)] text-black py-4 pr-2 pl-4 transition-width duration-300 ease-in-out",
                                                     isCollapsed ? "w-[72px]" : "w-[240px]"
                                                 )
                                             }>
@@ -162,36 +166,36 @@ const BookingFormSection = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-1/3 relative min-h flex">
-                    <div className="pt-[10px] flex relative flex-wrap content-start">
+                <div className="w-full md:w-1/3 mt-24 md:m-0 relative min-h flex">
+                    <div className="w-full pt-[10px] flex relative flex-wrap content-start">
                         <div className="w-full relative">
                             <div className="">
                                 <div className="flex-col flex flex-wrap text-center">
                                     <div className="mb-[50px] flex-[0_0_100%] max-w-full relative w-full min-h px-[15px]">
                                         <div className="mb-[19px]">
-                                            <svg className='mx-auto' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="11.5" y="2.5" width="24" height="43" rx="1.5" fill="#F6EBE7" stroke="black"></rect><rect x="20" y="7" width="7" height="1" fill="black"></rect><circle cx="23.5" cy="39.5" r="1.5" fill="black"></circle></svg>
+                                            <PhoneIcon className='w-12 h-12' />
                                         </div>
                                         <h6 className="mb-[10px] text-[20px] font-medium">Contact</h6>
                                         <div className="text-center px-[49px] text-[16px]">
-                                            <p className='mb-0'>T: 070 9485 7568<br />info@beautysalon.com</p>
+                                            <p className='mb-0'>T: +44 23 8061 3526<br />blossom_nails2018@outlook.com</p>
                                         </div>
                                     </div>
                                     <div className="mb-[50px] flex-[0_0_100%] max-w-full relative w-full min-h px-[15px]">
                                         <div className="mb-[19px]">
-                                            <svg className='mx-auto' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24.5" cy="24.5" r="19" fill="#F6EBE7" stroke="black"></circle><path d="M24 12.5V25.5L30 31.5" stroke="black"></path></svg>
+                                            <ClockIcon className='w-12 h-12' />
                                         </div>
                                         <h6 className="mb-[10px] text-[20px] font-medium">Hours</h6>
                                         <div className="text-center px-[49px] text-[16px]">
-                                            <p className='mb-0'>Mon – Fri: 8 am — 8 pm<br />Sat: 9 am — 6 pm<br />Sun: 9 am — 4 pm</p>
+                                            <p className='mb-0'>Mon – Sat: 09:00 am — 06:00 pm<br />Sun: close</p>
                                         </div>
                                     </div>
                                     <div className="mb-[50px] flex-[0_0_100%] max-w-full relative w-full min-h px-[15px]">
                                         <div className="mb-[19px]">
-                                            <svg className='mx-auto' xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none"><path d="M39.5 18.5C39.5 22.9086 37.6893 26.8697 34.714 31.1637C32.7635 33.9788 30.3434 36.8965 27.6388 40.1573C26.3183 41.7493 24.93 43.4232 23.4953 45.2068C22.2962 43.7506 21.1349 42.3668 20.022 41.0407C16.9832 37.4197 14.3051 34.2285 12.2027 31.1656C9.2574 26.8745 7.5 22.9121 7.5 18.5C7.5 9.66344 14.6634 2.5 23.5 2.5C32.3366 2.5 39.5 9.66344 39.5 18.5Z" fill="#F6EBE7" stroke="black"></path><circle cx="23.5" cy="17.5" r="6" fill="white" stroke="black"></circle></svg>
+                                            <LocationIcon className='w-12 h-12' />
                                         </div>
                                         <h6 className="mb-[10px] text-[20px] font-medium">Location</h6>
                                         <div className="text-center px-[49px] text-[16px]">
-                                            <p className='mb-0'>85 Royal Mint Street,<br />London, E1 8LG, UK</p>
+                                            <p className='mb-0'>8c wells place SO50 5PP,<br />Eastleigh, UK</p>
                                         </div>
                                     </div>
                                 </div>

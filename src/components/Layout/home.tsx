@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { getThemeBg } from '@/utils';
 import { usePathname } from '../../navigation';
 import Header from '../Home/header';
+import MobileWrapper from './mobile-wrapper';
 
 const { Content, Footer } = Layout;
 
@@ -48,13 +49,18 @@ const items: MenuProps['items'] = [
     },
 ];
 
-const HomeLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/'], isDark = false }) => {
+const HomeLayout: React.FC<IProps> = ({
+    children,
+    curActive,
+    defaultOpen = ['/'],
+    isDark = false
+}) => {
     const {
         token: { },
     } = theme.useToken();
 
     const t = useTranslations('global');
-
+    const [openWrapper, setOpenWrapper] = useState(false);
     const locale = useLocale();
     const otherLocale: any = locale === 'en' ? ['zh', '中'] : ['en', 'En'];
 
@@ -89,9 +95,9 @@ const HomeLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/']
                 }
             }}
         >
-            <Layout style={{ minHeight: "100vh" }}>
+            <Layout style={{ minHeight: "100vh" }} data-aos="fade-zoom-in" data-aos-delay="300" data-aos-duration="2500">
                 <Layout>
-                    <Header isDark={isDark} />
+                    <Header handleOpen={setOpenWrapper} isDark={isDark} isOpen={openWrapper} />
                     <Content>
                         <div
                             style={{
@@ -109,6 +115,8 @@ const HomeLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/']
                     </Content>
                 </Layout>
             </Layout>
+
+            <MobileWrapper isOpen={openWrapper} handleOpen={setOpenWrapper} />
         </ConfigProvider>
     );
 };

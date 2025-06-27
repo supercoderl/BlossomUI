@@ -1,13 +1,13 @@
 const ProductSection = () => {
     return (
-        <section className="bg-[#FBF4F1] mt-[55px] py-[100px] relative">
+        <section className="bg-[#FBF4F1] md:mt-[55px] py-[50px] md:py-[100px] relative">
             <div className="h-full w-full absolute top-0 left-0"></div>
-            <div className="max-w-[1170px] flex mx-auto relative">
-                <div className="w-[49.959%] relative min-h flex">
-                    <div className="content-center items-center mr-[66px] flex relative w-full flex-wrap">
+            <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative flex-wrap flex-col-reverse md:flex-row">
+                <div className="w-full md:w-[49.959%] relative min-h flex">
+                    <div className="content-center items-center md:mr-[66px] px-[15px] flex relative w-full flex-wrap">
                         <div className="w-full relative">
-                            <div className="mb-[30px]">
-                                <h2 className="mb-4 text-[42px] font-medium">Our Products</h2>
+                            <div className="mt-[30px] mb-4 md:mb-[30px]">
+                                <h2 className="mb-4 text-[28px] md:text-[42px] font-medium">Our Products</h2>
                             </div>
                         </div>
                         <div className="w-full relative">
@@ -16,14 +16,14 @@ const ProductSection = () => {
                         </div>
                         <div className="w-full relative">
                             <div className="mt-[50px]">
-                                <div className="text-left">
+                                <div className="text-center md:text-left">
                                     <a href="https://firstsight.design/cherie/beauty/shop/" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black bg-transparent tranition-all duration-300 hover:bg-black hover:text-white inline-block py-[14px] px-[31px]">Shop now</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="w-1/2 relative">
+                <div className="w-full md:w-1/2 relative">
                     <div className="px-[15px] flex relative w-full flex-wrap content-start">
                         <div className="flex text-center relative">
                             <div className="">

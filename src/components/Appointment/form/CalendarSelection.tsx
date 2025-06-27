@@ -238,7 +238,7 @@ const CalendarSelection = ({
                                 onClick={() => setSelectedTime(timeSlot)}
                                 className={
                                     cn(
-                                        "w-full p-3 text-sm rounded-md border transition-colors",
+                                        "w-full p-[4px] md:p-3 text-[12px] md:text-sm rounded-md border transition-colors",
                                         selectedTime === timeSlot ? 'bg-black text-white border-black' : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200',
                                         styles.slideUp
                                     )}

@@ -1,21 +1,21 @@
 const ArticleSection = () => {
     return (
-        <section className="pt-[100px] pb-[80px] relative">
-            <div className="max-w-[1170px] flex mx-auto relative">
+        <section className="pt-[50px] md:pt-[100px] pb-[30px] md:pb-[80px] relative" data-aos="fade-zoom-in">
+            <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative">
                 <div className="w-full relative min-h flex">
                     <div className="flex relative w-full flex-wrap content-start">
-                        <div className="mb-[34px] text-center w-full relative">
+                        <div className="mb-6 md:mb-[34px] text-center w-full relative">
                             <div className="">
-                                <h5 className="text-black mb-[16px] text-[22px]">As Seen On</h5>		
+                                <h5 className="text-black mb-[16px] text-[20px] md:text-[22px]">As Seen On</h5>		
                                 </div>
                         </div>
                         <div className="w-full relative">
                             <div className="">
                                 <div className="">
-                                    <div className="px-[100px]">
+                                    <div className="px-[30px] md:px-[100px]">
                                         <div className="">
                                             <div data-id="1" className="text-center">
-                                                <div className="mb-[50px] text-[42px] font-medium">
+                                                <div className="mb-[50px] text-[28px] md:text-[42px] font-medium">
                                                     <p className="m-0">“The place with its style, soul and uncompromising quality.“</p>
                                                 </div>
                                                 <div className="text-[13px] pb-[4px]">

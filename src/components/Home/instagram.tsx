@@ -1,6 +1,6 @@
 const InstagramSection = () => {
     return (
-        <section className="py-[100px] relative">
+        <section className="py-[50px] md:py-[100px] relative" data-aos="fade-zoom-in">
             {/* Background overlay */}
             <div className="bg-black h-full w-full absolute top-0 left-0"></div>
 

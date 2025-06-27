@@ -17,16 +17,16 @@ const LocationSection = () => {
                 <div className="w-full relative flex">
                     <div className="flex relative w-full flex-wrap content-start">
                         <div className="w-full relative">
-                            <div className="flex h-[662px]"> {/* Set explicit height here */}
-                                <div className="w-1/2 h-full">
+                            <div className="h-[662px] grid md:grid-cols-2"> {/* Set explicit height here */}
+                                <div className="w-full md:h-full">
                                     <img 
-                                        className="w-full h-full object-cover" 
+                                        className="w-full md:h-full object-cover" 
                                         decoding="async" 
                                         src="https://firstsight.design/cherie/beauty/wp-content/uploads/2020/12/Contact-2.jpg" 
                                         alt="" 
                                     />
                                 </div>
-                                <div className="w-1/2 h-full flex">
+                                <div className="w-full md:h-full flex">
                                     <div id="map" className="w-full h-full overflow-hidden relative">
                                         <div className="cursor-grab w-full h-full">
                                             <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}>

@@ -31,11 +31,11 @@ const FAQsSection = () => {
     ];
 
     return (
-        <section className="py-24 relative">
+        <section className="py-[50px] md:py-24 relative">
             {/* Background */}
             <div className="bg-[#FBF4F1] h-full w-full absolute top-0 left-0"></div>
 
-            <div className="max-w-6xl mx-auto relative px-4">
+            <div className="max-w-[767px] max-w-6xl mx-auto relative px-4">
                 <div className="w-full">
                     {/* Header */}
                     <div className="text-center mb-8">

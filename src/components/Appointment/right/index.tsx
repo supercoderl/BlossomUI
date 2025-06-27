@@ -90,7 +90,7 @@ const RightContent = ({
                         >
                             <LeftOutlined className='flex items-center justify-center overflow-hidden' />
                         </button>
-                        <span className="text-[18px] font-medium text-[#33434C] m-0 whitespace-nowrap">Service Selection</span>
+                        <span className="text-[18px] font-medium text-[#33434C] m-0 whitespace-nowrap">Date & Time</span>
                     </span>
                 );
             case 3:

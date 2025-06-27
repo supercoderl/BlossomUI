@@ -1,7 +1,6 @@
-'use client'
+"use client"
 
 import { message } from "antd";
-import { useTranslations } from 'next-intl';
 import HomeLayout from "@/components/Layout/home";
 import HeroSection from "@/components/Home/hero";
 import ServiceSection from "@/components/Home/service";
@@ -15,11 +14,13 @@ import InstagramSection from "@/components/Home/instagram";
 import ContactSection from "@/components/Home/contact";
 
 export default function Home() {
-    const t = useTranslations('index');
     const [messageApi, contextHolder] = message.useMessage();
 
     return (
-        <HomeLayout curActive="/" isDark={false}>
+        <HomeLayout
+            curActive="/"
+            isDark={false}
+        >
             {contextHolder}
             <div>
                 <HeroSection />

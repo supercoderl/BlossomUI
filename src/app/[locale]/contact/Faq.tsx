@@ -39,8 +39,8 @@ HydraFacials are a miracle treatment for common skin concerns such as: acne, hyp
     ]
 
     return (
-        <section className="w-full bg-white shadow-lg rounded-lg overflow-hidden py-[100px]">
-            <div className="max-w-[1170px] flex mx-auto relative">
+        <section className="w-full bg-white shadow-lg rounded-lg overflow-hidden py-[50px] md:py-[100px]">
+            <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative">
                 <div className="w-full relative min-h flex">
                     <div className="px-[15px] flex relative w-full flex-wrap content-start">
                         <div className="w-full relative max-w-[750px] mx-auto">
