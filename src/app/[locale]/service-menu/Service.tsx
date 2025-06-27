@@ -1,14 +1,42 @@
 import Jarallax from "@/components/Animation/Jarallax";
 import JarallaxImage from "@/components/Animation/Jarallax/image";
 import { services } from "@/data/service";
+import { useGlobalMessage } from "@/providers/messageProvider";
 import { cn } from "@/utils/helpers";
 import React from "react";
 import { useEffect, useState } from "react";
+import { getCategories } from "../service/category/api";
+import { useApiLoadingStore } from "@/stores/loadingStore";
 
 const ServiceSection = () => {
     const [scrolled, setScrolled] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [messageApi] = useGlobalMessage();
+
+    const onLoad = async () => {
+        try {
+            await getCategories().then((res) => {
+                if (res && res.data) {
+                    setCategories(res.data.items ?? []);
+                }
+            })
+        } catch (error: any) {
+            if (error && error.response && error.response.data) {
+                const errors = error.response.data.errors;
+                if (errors && errors.length > 0) {
+                    errors.forEach((error: any) => {
+                        messageApi.error(error || 'Login failed');
+                    })
+                }
+            }
+            else {
+                messageApi.error("Request failed, please try again later");
+            }
+        }
+    }
 
     useEffect(() => {
+        onLoad();
         const handleScroll = () => {
             setScrolled(window.scrollY > 100);
         };

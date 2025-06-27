@@ -1,13 +1,12 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps, Typography } from 'antd';
-import getNavList from './menu';
+import { Layout, theme, ConfigProvider } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { getThemeBg } from '@/utils';
-import { usePathname } from '../../navigation';
 import Header from '../Home/header';
 import MobileWrapper from './mobile-wrapper';
+import { PreLoader } from '../Loading/preloader';
 
 const { Content, Footer } = Layout;
 
@@ -15,45 +14,16 @@ interface IProps {
     children: React.ReactNode,
     curActive: string,
     defaultOpen?: string[],
-    isDark?: boolean
+    isDark?: boolean,
+    loading?: boolean
 }
-
-const onLogout = () => {
-    localStorage.removeItem("isDarkTheme")
-}
-
-const items: MenuProps['items'] = [
-    {
-        key: '1',
-        label: (
-            <a target="_blank" rel="noopener noreferrer" href="#">
-                Personal Center
-            </a>
-        ),
-    },
-    {
-        key: '2',
-        label: (
-            <a target="_blank" rel="noopener noreferrer" href="#">
-                Switch account
-            </a>
-        ),
-    },
-    {
-        key: '3',
-        label: (
-            <a target="_blank" onClick={onLogout} rel="noopener noreferrer" href="/user/login">
-                Log out
-            </a>
-        ),
-    },
-];
 
 const HomeLayout: React.FC<IProps> = ({
     children,
     curActive,
     defaultOpen = ['/'],
-    isDark = false
+    isDark = false,
+    loading = false
 }) => {
     const {
         token: { },
@@ -95,6 +65,7 @@ const HomeLayout: React.FC<IProps> = ({
                 }
             }}
         >
+            {loading && <PreLoader />}
             <Layout style={{ minHeight: "100vh" }} data-aos="fade-zoom-in" data-aos-delay="300" data-aos-duration="2500">
                 <Layout>
                     <Header handleOpen={setOpenWrapper} isDark={isDark} isOpen={openWrapper} />

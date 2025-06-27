@@ -23,10 +23,15 @@ const config: Config = {
           '0%': { transform: 'translateY(100%)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        fadeIn: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
       },
       animation: {
         'slide-right': 'slide-right 0.4s cubic-bezier(0.45, 1, 0.4, 1.2) both',
         'slide-up': 'slide-up 0.6s cubic-bezier(0.45, 1, 0.4, 1.2) both',
+        fade: 'fadeIn 0.3s ease-in-out',
       },
     },
   },

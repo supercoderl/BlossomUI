@@ -1,29 +1,17 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
-import {
-  Table,
-  Card,
-  Rate,
-  Button,
-  Modal,
-  Divider,
-  Typography,
-  message,
-  Row,
-  Col
-} from 'antd';
+import React from 'react';
 import HomeLayout from '@/components/Layout/home';
 import HeroSection from './Hero';
 import ServiceSection from './Service';
 import FAQsSection from './FAQs';
-
-const { Title, Text, Paragraph } = Typography;
+import { useApiLoadingStore } from '@/stores/loadingStore';
 
 const ServiceMenu = () => {
+  const { loading } = useApiLoadingStore();
 
   return (
-    <HomeLayout curActive='/service-menu' isDark>
+    <HomeLayout curActive='/service-menu' isDark loading={loading["get-categories"]}>
       <main>
         <HeroSection />
         <ServiceSection />
