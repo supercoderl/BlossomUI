@@ -2,12 +2,13 @@ import { NextIntlClientProvider, useMessages } from 'next-intl';
 
 type Props = {
     children: React.ReactNode;
-    params: { locale: string };
+    params: Promise<{ locale: string }>;
 };
 
-export default function LocaleLayout({ children, params: { locale } }: Props) {
+export default async function LocaleLayout({ children, params }: Props) {
     // Receive messages provided in `i18n.ts`
     const messages = useMessages();
+    const { locale } = await params;
 
     return <NextIntlClientProvider locale={locale} messages={messages}>
         {children}

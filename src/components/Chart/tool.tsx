@@ -219,24 +219,6 @@ const createChart = (el: HTMLElement, type: string, data: any[]) => {
             pie,
             rose,
         ];
-        chart.options({
-            type: 'timingKeyframe',
-            width: 800,
-            children: keyframes.map((plot) => {
-                // @ts-ignore
-                const { children, ...options } = plot(data);
-                return {
-                    theme: 'dark',
-                    paddingLeft: 40,
-                    paddingBottom: 50,
-                    paddingRight: 50,
-                    ...options,
-                    ...(children && {
-                        children: children.map((d: any) => ({ ...d, theme: 'dark' })),
-                    }),
-                };
-            }),
-        });
     }
 
 

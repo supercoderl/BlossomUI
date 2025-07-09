@@ -12,16 +12,16 @@ const { Content, Footer } = Layout;
 
 interface IProps {
     children: React.ReactNode,
-    // curActive: string,
-    // defaultOpen?: string[],
+    curActive: string,
+    defaultOpen?: string[],
     isDark?: boolean,
     loading?: boolean
 }
 
 const HomeLayout: React.FC<IProps> = ({
     children,
-    // curActive,
-    // defaultOpen = ['/'],
+    curActive,
+    defaultOpen = ['/'],
     isDark = false,
     loading = false
 }) => {

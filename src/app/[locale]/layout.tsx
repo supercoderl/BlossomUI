@@ -11,12 +11,11 @@ import 'aos/dist/aos.css'
 
 type Props = {
     children: React.ReactNode;
-    params: { locale: string };
+    params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata({
-    params: { locale }
-}: Omit<Props, 'children'>): Promise<Metadata> {
+export async function generateMetadata({ params }: Omit<Props, 'children'>): Promise<Metadata> {
+    const { locale } = await params;
     const t = await getTranslations({ locale, namespace: 'index' });
 
     return {
@@ -26,7 +25,8 @@ export async function generateMetadata({
     };
 }
 
-export default async function BasicLayout({ children, params: { locale } }: Readonly<Props>) {
+export default async function BasicLayout({ children, params }: Readonly<Props>) {
+    const { locale } = await params;
     const messages = await getMessages({ locale });
 
     return (
