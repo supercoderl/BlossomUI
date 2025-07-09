@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import {
     CloseOutlined,
+    DownOutlined,
     PlusOutlined
 } from '@ant-design/icons'
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font'
@@ -13,9 +14,9 @@ const FAQSection = ({
 } : {
     font: NextFontWithVariable
 }) => {
-    const [openPanel, setOpenPanel] = useState<string | null>(null)
+    const [openPanel, setOpenPanel] = useState(null)
 
-    const togglePanel = (panelId: string) => {
+    const togglePanel = (panelId: any) => {
         setOpenPanel(openPanel === panelId ? null : panelId)
     }
 

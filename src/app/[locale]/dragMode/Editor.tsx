@@ -1,17 +1,23 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, ReactNode } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import schema from './mock';
 import Canvas from '@/components/Canvas';
 import styles from './index.module.css';
 
-const EditorWrap = () => {
+interface IEditorType {
+    isPreview?: boolean
+}
+
+const EditorWrap = (props: IEditorType) => {
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const [canvasPanelX, setCanvasPanelX] = useState(0);
-    const [canvasSize] = useState([1000, 500]);
-    const [pageSchema] = useState<any>(schema);
+    const [canvasSize, setCanvasSize] = useState([1000, 500]);
+    const [pageSchema, setPageSchema] = useState<any>(schema);
 
     useEffect(() => {
-        console.log(canvasPanelX);
         // 调度 + 计算画布位置
         const width = document.body.offsetWidth;
         const configPanelW = 200;

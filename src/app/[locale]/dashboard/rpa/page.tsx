@@ -1,6 +1,7 @@
 'use client'
 // import { useTranslations} from 'next-intl';
-import { useState, useEffect } from 'react';
+import { Button, Spin } from 'antd';
+import { useState, useRef, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import dynamic from 'next/dynamic';
 
@@ -16,10 +17,12 @@ const Graph = dynamic(
 
 export default function Dashboard() {
   // const t = useTranslations();
+  const boardContainerRef = useRef<any>();
+  const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(loading);
+    
     setLoading(false);
   }, []);
 

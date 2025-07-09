@@ -6,7 +6,7 @@ type Props = {
   children: ReactNode;
 };
 
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: any) {
   useEffect(() => {
     import('aos').then((AOS) =>
       AOS.init({

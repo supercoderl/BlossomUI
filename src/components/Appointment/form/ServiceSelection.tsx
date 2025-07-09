@@ -54,7 +54,7 @@ const ServiceSelection = ({
                 setTechnicians(technicians);
             }
         }
-        catch {
+        catch (err) {
             messageApi.error("Request failed, please reload the page.");
         }
     }

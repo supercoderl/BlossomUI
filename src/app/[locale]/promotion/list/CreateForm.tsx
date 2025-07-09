@@ -53,7 +53,7 @@ export default function DiscountCreator({
                     onReload();
                 }
             });
-        } catch {
+        } catch (error) {
             message.error('Failed to create promotion');
         }
     };

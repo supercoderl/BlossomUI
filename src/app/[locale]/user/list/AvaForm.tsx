@@ -18,8 +18,6 @@ const AdvancedSearchForm = ({
     clearFilters: () => void,
     onReload: () => void
 }) => {
-    console.log(filters);
-    console.log(setFilters);
     return (
         <Card style={{ marginBottom: '24px' }}>
             <div className="flex items-center justify-between">
@@ -31,7 +29,7 @@ const AdvancedSearchForm = ({
                         placeholder="Service name"
                         style={{ width: 180 }}
                         value={""}
-                        onChange={() => { }}
+                        onChange={(e) => { }}
                     />
 
                     <Button type="primary" onClick={applyFilters}>

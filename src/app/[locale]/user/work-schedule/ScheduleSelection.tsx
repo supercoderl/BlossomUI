@@ -32,7 +32,7 @@ const ScheduleSelection = ({ selectedDate, selectedDateSchedules, employees, ope
                 <List
                     size="small"
                     dataSource={selectedDateSchedules}
-                    renderItem={(schedule) => (
+                    renderItem={(schedule, index) => (
                         <List.Item
                             style={{
                                 padding: '12px',
@@ -47,14 +47,12 @@ const ScheduleSelection = ({ selectedDate, selectedDateSchedules, employees, ope
                                     icon={<EditOutlined />}
                                     onClick={() => openScheduleModal(schedule)}
                                     style={{ color: '#1890ff' }}
-                                    key="edit"
                                 />,
                                 <Popconfirm
                                     title="Delete this schedule?"
                                     onConfirm={() => deleteSchedule(schedule.id)}
                                     okText="Yes"
                                     cancelText="No"
-                                    key="delete"
                                 >
                                     <Button type="text" icon={<DeleteOutlined />} danger />
                                 </Popconfirm>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import Lottie from 'lottie-react';
 
@@ -14,6 +15,8 @@ const LoadingBackground: React.FC<LoadingBackgroundProps> = ({
     children,
     text = "Wait a minute...",
 }) => {
+    const antIcon = <LoadingOutlined style={{ fontSize: 48, color: '#1890ff' }} spin />;
+
     return (
         <>
             {loading && (

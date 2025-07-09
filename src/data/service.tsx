@@ -1,4 +1,5 @@
 import { CosmetologyIcon } from "@/components/Icon/cosmetology";
+import { EyelashesIcon } from "@/components/Icon/eyelashes";
 import { HairIcon } from "@/components/Icon/hair";
 import { MakeUpIcon } from "@/components/Icon/makeup";
 import { PolishIcon } from "@/components/Icon/polish";

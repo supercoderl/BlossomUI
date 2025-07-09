@@ -64,7 +64,7 @@ function* insertionSort(arr: number[]) {
     return arr;
 }
 
-const sleep = (time = 2000) => new Promise((resolve) => {
+const sleep = (time = 2000) => new Promise((resolve, reject) => {
     setTimeout(() => {
         resolve(1);
     }, time)

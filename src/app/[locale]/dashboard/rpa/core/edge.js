@@ -7,7 +7,7 @@ class BaseEdge extends Edge {
     $(path).addClass('test-base-link');
     return path;
   }
-  drawLabel() {
+  drawLabel(texts) {
   }
 }
 

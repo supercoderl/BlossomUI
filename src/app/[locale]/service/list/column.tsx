@@ -1,5 +1,6 @@
 import { formatter } from '@/utils/currency';
 import { Popconfirm, Space, type TableProps } from 'antd';
+import { deleteService } from '../api';
 
 interface DataType {
     id: string;

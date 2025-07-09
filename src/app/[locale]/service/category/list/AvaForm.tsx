@@ -4,6 +4,7 @@ import {
 } from '@ant-design/icons';
 
 const { Text } = Typography;
+const { Option } = Select;
 
 const AdvancedSearchForm = ({
     filters,
@@ -21,8 +22,6 @@ const AdvancedSearchForm = ({
     onOpen: () => void
 }) => {
     const { token } = theme.useToken();
-    console.log(filters);
-    console.log(setFilters);
 
     return (
         <Card style={{ marginBottom: '24px' }}>
@@ -35,7 +34,7 @@ const AdvancedSearchForm = ({
                         placeholder="Service name"
                         style={{ width: 180 }}
                         value={""}
-                        onChange={() => { }}
+                        onChange={(e) => { }}
                     />
 
                     <Button type="primary" onClick={applyFilters}>

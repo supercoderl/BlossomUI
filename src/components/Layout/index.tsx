@@ -103,9 +103,9 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
                     theme={curTheme ? "dark" : "light"}
                     breakpoint="lg"
                     collapsedWidth="0"
-                    onBreakpoint={() => {
+                    onBreakpoint={(broken) => {
                     }}
-                    onCollapse={() => {
+                    onCollapse={(collapsed, type) => {
                     }}
                 >
                     <span className={styles.logo}>

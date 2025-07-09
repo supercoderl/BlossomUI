@@ -132,7 +132,7 @@ export default function ServiceEditor() {
                     messageApi.success('Service saved successfully');
                 }
             });
-        } catch {
+        } catch (error) {
             message.error('Failed to save service');
         }
     };

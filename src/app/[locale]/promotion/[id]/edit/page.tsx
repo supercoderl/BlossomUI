@@ -92,7 +92,7 @@ export default function PromotionEditor() {
                     messageApi.success('Promotion saved successfully');
                 }
             });
-        } catch {
+        } catch (error) {
             message.error('Failed to save promotion');
         }
     };

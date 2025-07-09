@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Layout from '@/components/Layout';
 import gfm from '@bytemd/plugin-gfm';
-import { Editor } from '@bytemd/react';
+import { Editor, Viewer } from '@bytemd/react';
 import 'bytemd/dist/index.css';
 
 import styles from './index.module.css';

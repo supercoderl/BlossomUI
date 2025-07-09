@@ -3,6 +3,8 @@ import { useRef, useEffect } from 'react';
 import { HolderOutlined } from '@ant-design/icons';
 import Layout from '@/components/Layout';
 import Chart from '@/components/Chart';
+import Sortable from 'sortablejs';
+
 
 import boardList from './board';
 
@@ -15,9 +17,9 @@ export default function Dashboard() {
 
     useEffect(() => {
         setTimeout(() => {
-            // const sortable = new Sortable(document.querySelector('#dashboard') as HTMLElement, {
-            //     handle: ".moveBtn"
-            // })
+            const sortable = new Sortable(document.querySelector('#dashboard') as HTMLElement, {
+                handle: ".moveBtn"
+            })
         }, 1000)
 
     }, [boardContainerRef])

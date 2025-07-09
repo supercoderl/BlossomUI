@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Table, Typography } from 'antd';
+import { Card, Table, theme, Typography } from 'antd';
 import AvaForm from './AvaForm';
 import { getColumns } from './column';
 import Layout from '@/components/Layout';
@@ -15,8 +15,12 @@ import UploadImageForm from './UploadImageForm';
 const { Title, Text } = Typography;
 
 export default function Service() {
+  const { token } = theme.useToken();
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [includeDeleted, setIncludeDeleted] = useState(false);
   const { loading } = useApiLoadingStore();
   const [isServiceOpen, setIsServiceOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -42,9 +46,9 @@ export default function Service() {
   const onLoad = async () => {
     const [serviceRes, categoryRes] = await Promise.all([
       getServices({
-        query: { page: 1, pageSize: 5 },
-        searchTerm: '',
-        includeDeleted: false
+        query: { ...pageQuery },
+        searchTerm,
+        includeDeleted
       }),
       getCategories()
     ]);
@@ -102,7 +106,7 @@ export default function Service() {
           <Table
             columns={getColumns(onDelete, loading['delete-service'], setIsUploadImageOpen)}
             dataSource={services}
-            pagination={{ pageSize: 5 }}
+            pagination={{ pageSize: pageQuery.pageSize }}
             scroll={{ x: 1000 }}
             rowKey="id"
             loading={loading['get-services'] || loading['get-categories']}

@@ -8,38 +8,29 @@ import "./globals.css";
 import { MessageProvider } from "@/providers/messageProvider";
 import { NextIntlClientProvider } from "next-intl";
 import 'aos/dist/aos.css'
+import { ReactNode } from "react";
 
-type Props = {
-    children: React.ReactNode;
-    params: Promise<{ locale: string }>;
-};
+export async function generateMetadata({ params }: any ): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: 'index' });
 
-export async function generateMetadata({ params }: Omit<Props, 'children'>): Promise<Metadata> {
-    const { locale } = await params;
-    const t = await getTranslations({ locale, namespace: 'index' });
-
-    return {
-        // metadataBase: new URL('http://localhost:3000'),
-        title: t('title'),
-        description: t('desc'),
-    };
+  return {
+    title: t('title'),
+    description: t('desc'),
+  };
 }
 
-export default async function BasicLayout({ children, params }: Readonly<Props>) {
-    const { locale } = await params;
-    const messages = await getMessages({ locale });
+export default async function BasicLayout({ children, params }: any) {
+  const messages = await getMessages({ locale: params?.locale });
 
-    return (
-        <html lang={locale}>
-            <head>
-            </head>
-            <body>
-                <NextIntlClientProvider locale={locale} messages={messages}>
-                    <MessageProvider>
-                        <AntdRegistry>{children}</AntdRegistry>
-                    </MessageProvider>
-                </NextIntlClientProvider>
-            </body>
-        </html>
-    );
+  return (
+    <html lang={params?.locale}>
+      <body>
+        <NextIntlClientProvider locale={params?.locale} messages={messages}>
+          <MessageProvider>
+            <AntdRegistry>{children}</AntdRegistry>
+          </MessageProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  );
 }

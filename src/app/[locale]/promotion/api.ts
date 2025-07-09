@@ -12,7 +12,7 @@ export const getPromotions = (filter: Filter) =>
             }
         }));
 
-export const createPromotion = (data: unknown) =>
+export const createPromotion = (data: any) =>
     withApiLoading('create-promotion', () =>
         req.post(`/Promotion`, data));
 
@@ -24,6 +24,6 @@ export const getPromotionById = (id: string) =>
     withApiLoading('get-promotion-by-id', () =>
         req.get(`/Promotion/${id}`));
 
-export const updatePromotion = (data: unknown) =>
+export const updatePromotion = (data: any) =>
     withApiLoading('update-promotion', () =>
         req.put(`/Promotion`, data));

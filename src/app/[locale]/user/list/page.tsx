@@ -1,6 +1,6 @@
 'use client';
-
-import { Card, Table, Typography } from 'antd';
+import { useTranslations } from 'next-intl';
+import { Card, Table, theme, Typography } from 'antd';
 import AvaForm from './AvaForm';
 import { columns, technicianColumns } from './column';
 import Layout from '@/components/Layout';
@@ -12,15 +12,20 @@ import { UserRoles } from '@/enums/userRoles';
 const { Title, Text } = Typography;
 
 export default function User() {
+  const t = useTranslations('user');
+  const { token } = theme.useToken();
   const [users, setUsers] = useState([]);
+  const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [includeDeleted, setIncludeDeleted] = useState(false);
   const { loading } = useApiLoadingStore();
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
 
   const onLoad = async () => {
     await getUsers({
-      query: { page: 1, pageSize: 5 },
-      searchTerm: '',
-      includeDeleted: false
+      query: pageQuery,
+      searchTerm,
+      includeDeleted
     }).then((res) => {
       if (res && res.data) {
         setUsers(res.data.items || []);
@@ -58,7 +63,7 @@ export default function User() {
           <Table
             columns={columns}
             dataSource={users}
-            pagination={{ pageSize: 5 }}
+            pagination={{ pageSize: pageQuery.pageSize }}
             expandable={{
               expandedRowRender: (record) => {
                 const technicianData = record.technicianInfo

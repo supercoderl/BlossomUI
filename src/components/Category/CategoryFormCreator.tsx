@@ -1,10 +1,14 @@
 'use client';
-import { Form, Input, Button, message, Row, Col, Modal } from 'antd';
-import { SaveOutlined } from '@ant-design/icons';
+import { Form, Input, InputNumber, Select, Upload, Button, message, Row, Col, Modal } from 'antd';
+import { UploadOutlined, SaveOutlined, PlusOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
+import type { UploadProps } from 'antd';
 import { useGlobalMessage } from '@/providers/messageProvider';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import { createCategory } from '@/app/[locale]/service/category/api';
+
+const { TextArea } = Input;
+const { Option } = Select;
 
 interface CategoryFormData {
     name: string;
