@@ -27,9 +27,6 @@ const CustomerReviewManager = () => {
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedReview, setSelectedReview] = useState<any>(null);
-  const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
-  const [searchTerm, setSearchTerm] = useState('');
-  const [includeDeleted, setIncludeDeleted] = useState(false);
   const { loading } = useApiLoadingStore();
   const [filters, setFilters] = useState<{
     rating: number | null,
@@ -41,9 +38,9 @@ const CustomerReviewManager = () => {
 
   const onLoad = async () => {
     await getReviews({
-      query: { ...pageQuery },
-      searchTerm,
-      includeDeleted
+      query: { page: 1, pageSize: 5 },
+      searchTerm: '',
+      includeDeleted: false
     }).then((res) => {
       if (res && res.data && res.data.items.length > 0) {
         setReviews(res.data.items);
@@ -76,16 +73,16 @@ const CustomerReviewManager = () => {
   };
 
   const applyFilters = () => {
-    let filtered = reviews;
+
   };
 
   const clearFilters = () => {
     setFilters({ rating: null, product: null });
   };
 
-  const avgRating = reviews.length > 0
-    ? (reviews.reduce((sum, r) => sum, 0) / reviews.length).toFixed(1)
-    : 0;
+  // const avgRating = reviews.length > 0
+  //   ? (reviews.reduce((sum, r) => sum, 0) / reviews.length).toFixed(1)
+  //   : 0;
 
   return (
     <Layout curActive='/review/list'>
@@ -116,7 +113,7 @@ const CustomerReviewManager = () => {
             loading={loading['get-reviews']}
             rowKey="id"
             pagination={{
-              pageSize: pageQuery.pageSize,
+              pageSize: 5,
               showSizeChanger: true,
               showQuickJumper: true,
               showTotal: (total, range) =>

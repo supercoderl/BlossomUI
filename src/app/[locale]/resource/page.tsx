@@ -1,6 +1,6 @@
 'use client'
 // import { useTranslations} from 'next-intl';
-import { Tabs, Empty, type TabsProps } from 'antd';
+import { Tabs, type TabsProps } from 'antd';
 import Layout from '@/components/Layout';
 import styles from './index.module.css';
 

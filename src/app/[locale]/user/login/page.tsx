@@ -6,9 +6,7 @@ import { loginApi, registerApi } from '../api';
 import {
     GoogleOutlined,
     FacebookOutlined,
-    GithubOutlined,
-    TwitterOutlined,
-    LinkedinOutlined
+    GithubOutlined
 } from '@ant-design/icons';
 import styles from './index.module.css';
 import moment from 'moment';
@@ -55,7 +53,7 @@ export default function Home() {
 
             if (curMode === mode[1]) {
                 const { email, pwd, firstName, lastName, phoneNumber, gender, dateOfBirth } = values;
-                await registerApi(email, pwd, firstName, lastName, phoneNumber, gender, dateOfBirth).then(res => {
+                await registerApi(email, pwd, firstName, lastName, phoneNumber, gender, dateOfBirth).then(() => {
                     // register logic
                     messageApi.success("Registration successful, please log in");
                     setCurMode(mode[0]);

@@ -20,7 +20,7 @@ const dataArray = [
 
 export default function Home() {
     const [showComponent, setShowComponent] = useState(false);
-    const [userInfo, setUserInfo] = useState<any>({});
+    // const [userInfo, setUserInfo] = useState<any>({});
 
     useEffect(() => {
         setShowComponent(true)
@@ -81,10 +81,10 @@ export default function Home() {
                         showTitle
                         assistantMeta={{ avatar: '🛸', title: 'Nocode/WEP 智能助手' }}
                         userMeta={{
-                            avatar: userInfo.avatar || '用户',
+                            avatar: '用户',
                             title: '用户' + Date.now(),
                         }}
-                        request={async (messages: any) => {
+                        request={async (messages: unknown) => {
                             console.log('messages', messages);
 
                             const mockResponse = new MockSSEResponse(dataArray);

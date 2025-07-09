@@ -1,4 +1,4 @@
-import { Button, Card, Input, theme, Typography } from "antd";
+import { Button, Card, Input, Typography } from "antd";
 import {
     FilterOutlined
 } from '@ant-design/icons';
@@ -12,13 +12,14 @@ const AdvancedSearchForm = ({
     clearFilters,
     onReload
 }: {
-    filters: any,
-    setFilters: (filters: any) => void,
+    filters: unknown,
+    setFilters: (filters: unknown) => void,
     applyFilters: () => void,
     clearFilters: () => void,
     onReload: () => void
 }) => {
-    const { token } = theme.useToken();
+    console.log(filters);
+    console.log(setFilters);
 
     return (
         <Card style={{ marginBottom: '24px' }}>
@@ -31,7 +32,7 @@ const AdvancedSearchForm = ({
                         placeholder="Service name"
                         style={{ width: 180 }}
                         value={""}
-                        onChange={(e) => { }}
+                        onChange={() => { }}
                     />
 
                     <Button type="primary" onClick={applyFilters}>

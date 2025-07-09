@@ -22,7 +22,7 @@ export const getBookings = (filter: Filter) =>
             }
         }));
 
-export const createBooking = (data: any) =>
+export const createBooking = (data: unknown) =>
     withApiLoading('create-booking', () =>
         req.post(`/Booking`, data));
 

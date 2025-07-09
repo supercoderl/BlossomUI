@@ -19,9 +19,13 @@ instance.interceptors.request.use(async function (config) {
 });
 
 let isRefreshing = false;
-let failedQueue: any[] = [];
+type FailedQueueItem = {
+  resolve: (value?: unknown) => void;
+  reject: (reason?: unknown) => void;
+};
+let failedQueue: FailedQueueItem[] = [];
 
-const processQueue = (error: any, token = null) => {
+const processQueue = (error: unknown, token = null) => {
   failedQueue.forEach(prom => {
     if (error) {
       prom.reject(error);

@@ -1,5 +1,4 @@
 import { DiscountType } from '@/enums/discountType';
-import { formatter } from '@/utils/currency';
 import { Popconfirm, Space, type TableProps } from 'antd';
 
 interface DataType {

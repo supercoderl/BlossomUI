@@ -8,24 +8,15 @@ import { useSearchParams } from 'next/navigation';
 import mockData from './data';
 import styles from './index.module.css';
 
-
-interface IEditorType {
-
-}
-
-const EditorWrap = (props: IEditorType) => {
-    const [isLoading, setIsLoading] = useState(false);
+const EditorWrap = () => {
+    const [isLoading] = useState(false);
     const [data2, setData2] = useState(mockData);
     const [curType, setCurType] = useState('Bubble');
     const [Component, setComponent] = useState<any>(null);
     const [draw, setDraw] = useState(false);
 
     const searchParams = useSearchParams();
-    const uid = searchParams.get('uid');
     const isInline = !!searchParams.get('i');
-
-    const [id, setId] = useState(searchParams.get('id'));
-
 
     const onFinish = (values: any) => {
         // console.log('Received values of form:', values);

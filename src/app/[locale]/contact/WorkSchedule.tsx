@@ -3,6 +3,7 @@ import { LocationIcon } from "@/components/Icon/location";
 import { PhoneIcon } from "@/components/Icon/phone";
 import { cn } from "@/utils/helpers";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+import Link from "next/link";
 
 const WorkSchedule = ({
     font
@@ -56,7 +57,7 @@ const WorkSchedule = ({
                         <div className="w-full relative">
                             <div className="">
                                 <div className="text-center">
-                                    <a href="/appointments" className="text-[14px] font-medium text-center uppercase inline-block border border-solid border-black text-black py-[14px] px-[31px] bg-transparent transition duration-300 hover:bg-black hover:text-white">Book Appointment</a>
+                                    <Link href="/appointments" className="text-[14px] font-medium text-center uppercase inline-block border border-solid border-black text-black py-[14px] px-[31px] bg-transparent transition duration-300 hover:bg-black hover:text-white">Book Appointment</Link>
                                 </div>
                             </div>
                         </div>

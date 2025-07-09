@@ -118,7 +118,7 @@ export default function UserEditor() {
                     messageApi.success('User saved successfully');
                 }
             });
-        } catch (error) {
+        } catch {
             message.error('Failed to save user');
         }
     };

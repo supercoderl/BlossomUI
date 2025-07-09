@@ -1,6 +1,6 @@
 'use client'
 // import { useTranslations} from 'next-intl';
-import { Button, Spin } from 'antd';
+import { Spin } from 'antd';
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { checkData } from './api';
 import Layout from '@/components/Layout';
@@ -20,6 +20,7 @@ export default function Dashboard() {
         setList(res.data);
         setLoading(false);
     })
+    console.log(list);
   }, []);
 
   return (

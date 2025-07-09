@@ -1,17 +1,15 @@
 'use client';
-import { Form, Input, InputNumber, Select, Upload, Button, message, Row, Col } from 'antd';
-import { UploadOutlined, SaveOutlined, PlusOutlined } from '@ant-design/icons';
+import { Form, Input, InputNumber, Select, Button, message, Row, Col } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 import { theme } from 'antd';
 import { useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import type { UploadFile, UploadProps } from 'antd';
+import { useEffect } from 'react';
 import Layout from '@/components/Layout';
 import { useGlobalMessage } from '@/providers/messageProvider';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import LoadingBackground from '@/components/Loading';
 import { getCategoryById, updateCategory } from '../../api';
 
-const { TextArea } = Input;
 const { Option } = Select;
 
 interface CategoryFormData {
@@ -78,7 +76,7 @@ export default function CategoryEditor() {
                     messageApi.success('Category saved successfully');
                 }
             });
-        } catch (error) {
+        } catch {
             message.error('Failed to save category');
         }
     };

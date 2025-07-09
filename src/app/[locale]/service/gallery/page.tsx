@@ -46,13 +46,8 @@ export default function GalleryManagement() {
     const [viewMode, setViewMode] = useState('grid');
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [currentEditImage, setCurrentEditImage] = useState(null);
-    const [pageQuery, setPageQuery] = useState({
-        page: 1,
-        pageSize: 5
-    });
     const [filterCategory, setFilterCategory] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
-    const [includeDeleted, setIncludeDeleted] = useState(false);
     const { loading } = useApiLoadingStore();
     const [messageApi] = useGlobalMessage();
 
@@ -60,9 +55,9 @@ export default function GalleryManagement() {
 
     const onLoad = async () => {
         await getServiceImages({
-            query: { ...pageQuery },
+            query: { page: 1, pageSize: 5 },
             searchTerm,
-            includeDeleted
+            includeDeleted: false
         }).then((res) => {
             if (res && res.data && res.data.items.length > 0) {
                 setImages(res.data.items);
@@ -413,8 +408,8 @@ export default function GalleryManagement() {
                                 {/* Pagination */}
                                 <div style={{ textAlign: 'center', marginTop: '24px' }}>
                                     <Pagination
-                                        current={pageQuery.page}
-                                        pageSize={pageQuery.pageSize}
+                                        current={1}
+                                        pageSize={5}
                                         showSizeChanger={false}
                                         showQuickJumper
                                         showTotal={(total, range) =>

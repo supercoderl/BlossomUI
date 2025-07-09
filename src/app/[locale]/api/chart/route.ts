@@ -1,4 +1,3 @@
-import { NextRequest } from 'next/server'
 import { sleep } from '@/utils';
 
 const boardList = [
@@ -56,7 +55,7 @@ const boardList = [
 ]
 
 // 模拟用户获取数据
-export async function GET(req: NextRequest) {
+export async function GET() {
     const plainData: any[] = [];
     const asyncData: any[] = [];
     const resultData: any[] = [];

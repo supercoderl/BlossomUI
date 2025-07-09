@@ -1,6 +1,6 @@
 import { TechnicianInfo } from "@/types/user";
 import { stringToColor } from "@/utils/color";
-import { Button, Form, FormInstance, Input, Modal, Select, Space, TimePicker } from "antd"
+import { Button, Form, FormInstance, Modal, Select, Space, TimePicker } from "antd"
 
 const { Option } = Select;
 

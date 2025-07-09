@@ -31,7 +31,6 @@ const { Title, Text } = Typography;
 const DailyScheduleSystem = () => {
     const [employees, setEmployees] = useState<TechnicianInfo[]>([]);
     const [bookings, setBookings] = useState<Booking[]>([]);
-    const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
     const [editingSchedule, setEditingSchedule] = useState<Booking | null>(null);
@@ -42,12 +41,12 @@ const DailyScheduleSystem = () => {
     const onLoad = async () => {
         const [technicianRes, bookingRes] = await Promise.all([
             getTechnicians({
-                query: { ...pageQuery },
+                query: { page: 1, pageSize: 5 },
                 searchTerm: '',
                 includeDeleted: false
             }),
             getBookings({
-                query: { ...pageQuery },
+                query: { page: 1, pageSize: 5 },
                 searchTerm: '',
                 includeDeleted: false
             })
@@ -61,7 +60,7 @@ const DailyScheduleSystem = () => {
             setEmployees(technicians);
         }
 
-        if(bookings.length > 0) {
+        if (bookings.length > 0) {
             setBookings(bookings);
         }
     }
@@ -95,7 +94,7 @@ const DailyScheduleSystem = () => {
 
     const openScheduleModal = (timeSlot: string = '', schedule: Booking | null = null) => {
         setEditingSchedule(schedule);
-        
+
         if (schedule) {
             form.setFieldsValue({
                 employeeId: schedule.technicianId,

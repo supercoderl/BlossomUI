@@ -1,4 +1,3 @@
-import { formatter } from '@/utils/currency';
 import { Popconfirm, Space, Tag, type TableProps } from 'antd';
 
 interface DataType {

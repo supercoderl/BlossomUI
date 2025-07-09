@@ -39,7 +39,7 @@ const EditServiceImageForm = ({ isOpen, onClose, messageApi, currentEditImage, o
 
     useEffect(() => {
         if (currentEditImage) {
-            setFormData(prev => ({
+            setFormData(() => ({
                 serviceImageId: currentEditImage.id,
                 imageName: currentEditImage.imageName,
                 description: currentEditImage.description

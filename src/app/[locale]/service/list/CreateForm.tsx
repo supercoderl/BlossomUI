@@ -78,7 +78,7 @@ export default function ServiceCreator({
                     onReload();
                 }
             });
-        } catch (error) {
+        } catch {
             message.error('Failed to create service');
         }
     };

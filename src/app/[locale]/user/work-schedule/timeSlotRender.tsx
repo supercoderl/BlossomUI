@@ -68,7 +68,7 @@ export const renderTimeSlot = (
 
                     {schedulesInSlot.length > 0 ? (
                         <div style={{ marginTop: '8px' }}>
-                            {schedulesInSlot.map((schedule, index) => {
+                            {schedulesInSlot.map((schedule) => {
                                 const employee = getEmployeeById(schedule.technicianId ?? "", employees);
                                 return (
                                     <div key={schedule.id} style={{ marginBottom: 12 }}>
