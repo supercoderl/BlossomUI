@@ -1,4 +1,13 @@
-const InstagramSection = () => {
+import { cn } from "@/utils/helpers";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+
+const InstagramSection = ({
+    font,
+    font2
+} : {
+    font: NextFontWithVariable,
+    font2: NextFontWithVariable
+}) => {
     return (
         <section className="py-[50px] md:py-[100px] relative" data-aos="fade-zoom-in">
             {/* Background overlay */}
@@ -10,12 +19,22 @@ const InstagramSection = () => {
                         {/* Section title */}
                         <div className="text-center mb-[20px] w-full relative">
                             <div className="mb-[19px]">
-                                <h2 className="text-white mb-[16px] text-[42px] font-medium">Instagram</h2>
+                                <h2 className={
+                                    cn(
+                                        "text-white mb-[16px] text-[42px] font-medium",
+                                        font.className
+                                    )
+                                }>Instagram</h2>
                             </div>
                         </div>
 
                         {/* Instagram feed container */}
-                        <div className="mb-[20px] w-full relative">
+                        <div className={
+                            cn(
+                                "mb-[20px] w-full relative",
+                                font2.className
+                            )
+                        }>
                             <div className="">
                                 <div className="">
                                     <div id="sb_instagram" className="w-full mx-auto" style={{ paddingBottom: 10 }}>

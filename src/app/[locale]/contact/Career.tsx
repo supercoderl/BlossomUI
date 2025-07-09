@@ -1,6 +1,18 @@
-const CareerSection = () => {
+import { cn } from "@/utils/helpers";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+
+const CareerSection = ({
+    font
+} : {
+    font: NextFontWithVariable,
+}) => {
     return (
-        <section className="bg-[#F6EBE7] py-2.5 md:py-[100px]">
+        <section className={
+            cn(
+                "bg-[#F6EBE7] py-2.5 md:py-[100px]",
+                font.className
+            )
+        }>
             <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative">
                 <div className="w-full relative min-h flex">
                     <div className="flex relative w-full flex-wrap content-start">
@@ -13,7 +25,7 @@ const CareerSection = () => {
                                         </div>
                                         <h5 className="mt-4 mb-2.5 text-[20px] md:text-[22px] text-black">Join Our Team</h5>
                                         <div className="mb-[30px]">
-                                            <p className="m-0">Please send us an email at position@cherie.com telling us a bit about yourself. Oh…and attach your resume.</p>
+                                            <p className="m-0 text-[18px] font-[300] leading-[1.7em]">Please send us an email at blossom_nails2018@outlook.com telling us a bit about yourself. Oh…and attach your resume.</p>
                                         </div>
                                         <div className="">
                                             <a href="https://firstsight.design/cherie/beauty/career-archive/" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] bg-transparent transition-all duration-300 hover:bg-black hover:text-white">View Positions</a>
@@ -25,7 +37,7 @@ const CareerSection = () => {
                                         </div>
                                         <h5 className="mt-4 mb-2.5 text-[20px] md:text-[22px] text-black">Become Our Partner</h5>
                                         <div className="mb-[30px]">
-                                            <p className="m-0">Interested in a Cherie Franchise? Drop us a line on frinchise@cherie.com and find out more.</p>
+                                            <p className="m-0 text-[18px] font-[300] leading-[1.7em]">Interested in a Blossom Tech? Drop us a line on blossom_nails2018@outlook.com and find out more.</p>
                                         </div>
                                         <div className="">
                                             <a href="https://firstsight.design/cherie/beauty/franchise/" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] bg-transparent transition-all duration-300 hover:bg-black hover:text-white">Tell Me More</a>

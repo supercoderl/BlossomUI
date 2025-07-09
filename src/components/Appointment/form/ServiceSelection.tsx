@@ -4,71 +4,70 @@ import {
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import styles from '../index.module.css';
 import { cn } from '@/utils/helpers';
+import { Service, ServiceOption } from '@/types/service';
+import { TechnicianInfo } from '@/types/user';
+import { getServices } from '@/app/[locale]/service/api';
+import { getTechnicians } from '@/app/[locale]/user/api';
+import { formatter } from '@/utils/currency';
+import { MessageInstance } from 'antd/es/message/interface';
 
 const ServiceSelection = ({
     selectedService,
     setSelectedService,
     selectedEmployee,
-    setSelectedEmployee
+    setSelectedEmployee,
+    messageApi
 }: {
-    selectedService: string;
-    setSelectedService: Dispatch<SetStateAction<string>>;
-    selectedEmployee: string;
-    setSelectedEmployee: Dispatch<SetStateAction<string>>
+    selectedService: (Service & { type: 'service' }) | (ServiceOption & { type: 'option' }) | null;
+    setSelectedService: Dispatch<SetStateAction<(Service & { type: 'service' }) | (ServiceOption & { type: 'option' }) | null>>;
+    selectedEmployee: TechnicianInfo | null;
+    setSelectedEmployee: Dispatch<SetStateAction<TechnicianInfo | null>>,
+    messageApi: MessageInstance
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isEmployeeOpen, setIsEmployeeOpen] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState<keyof typeof serviceData | null>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const dropdownEmployeeRef = useRef<HTMLDivElement>(null);
+    const [services, setServices] = useState<Service[]>([]);
+    const [technicians, setTechnicians] = useState<TechnicianInfo[]>([]);
 
-    const serviceData = {
-        Hair: [
-            { name: 'Classic Haircut', price: '$39.00' },
-            { name: 'Clipper Cut', price: '$39.00' },
-            { name: 'Signature Haircut', price: '$49.00' }
-        ],
-        Makeup: [
-            { name: 'Natural Makeup', price: '$45.00' },
-            { name: 'Glam Makeup', price: '$65.00' }
-        ],
-        Brows: [
-            { name: 'Eyebrow Shaping', price: '$25.00' }
-        ],
-        Nails: [
-            { name: 'Classic Manicure', price: '$30.00' },
-            { name: 'Gel Manicure', price: '$45.00' }
-        ],
-        Cosmetology: [
-            { name: 'Facial Treatment', price: '$60.00' },
-            { name: 'Chemical Peel', price: '$80.00' }
-        ]
-    };
+    const onLoad = async () => {
+        try {
+            const [serviceRes, technicianRes] = await Promise.all([
+                getServices({
+                    query: {
+                        page: 1,
+                        pageSize: 50
+                    }
+                }),
+                getTechnicians({})
+            ]);
 
-    const employeeData = [
-        {
-            id: 1,
-            name: "asdasd",
-            avatar: ""
-        },
-        {
-            id: 2,
-            name: "asadadasd",
-            avatar: ""
-        },
-        {
-            id: 3,
-            name: "asbvababdasd",
-            avatar: ""
+            const services = serviceRes?.data?.items || [];
+            const technicians = technicianRes?.data?.items || [];
+
+            if (services.length > 0) {
+                setServices(services);
+            }
+
+            if (technicians.length > 0) {
+                setTechnicians(technicians);
+            }
         }
-    ];
+        catch (err) {
+            messageApi.error("Request failed, please reload the page.");
+        }
+    }
+
+    useEffect(() => {
+        onLoad();
+    }, []);
 
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: any) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsOpen(false);
-                setSelectedCategory(null);
             }
 
             if (dropdownEmployeeRef.current && !dropdownEmployeeRef.current.contains(event.target)) {
@@ -84,25 +83,19 @@ const ServiceSelection = ({
 
     const handleSelectBoxClick = () => {
         setIsOpen(!isOpen);
-        setSelectedCategory(null);
     };
 
     const handleSelectEmployeeBoxClick = () => {
         setIsEmployeeOpen(!isOpen);
     };
 
-    const handleCategoryClick = (category: any) => {
-        setSelectedCategory(category);
-    };
-
-    const handleEmployeeClick = (employee: any) => {
+    const handleEmployeeClick = (employee: TechnicianInfo) => {
         setSelectedEmployee(employee);
     };
 
-    const handleServiceSelect = (service: any) => {
-        setSelectedService(service.name);
+    const handleServiceSelect = (serviceOption: ServiceOption) => {
+        setSelectedService({ ...serviceOption, type: 'option' });
         setIsOpen(false);
-        setSelectedCategory(null);
     };
 
     return (
@@ -123,7 +116,7 @@ const ServiceSelection = ({
                     onClick={handleSelectBoxClick}
                 >
                     <span className={selectedService ? 'text-gray-900' : 'text-gray-400'}>
-                        {selectedService || 'Select Service'}
+                        {selectedService?.type === 'service' ? selectedService?.name : selectedService?.type === 'option' ? selectedService?.variantName : 'Select Service'}
                     </span>
                     <DownOutlined className={`text-gray-400 text-xs transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                 </div>
@@ -140,19 +133,24 @@ const ServiceSelection = ({
                             {/* Categories Column */}
                             <div className="bg-gray-50 border-r border-gray-200">
                                 <div className="px-4 py-3 bg-gray-100 border-b border-gray-200">
-                                    <span className="text-sm font-medium text-gray-700">Category</span>
+                                    <span className="text-sm font-medium text-gray-700">Service</span>
                                 </div>
                                 <div className="max-h-64 overflow-y-auto">
-                                    {Object.entries(serviceData).map(([category, services]) => (
+                                    {services.map(service => (
                                         <div
-                                            key={category}
-                                            className={`px-4 py-3 cursor-pointer border-b border-gray-200 hover:bg-gray-100 transition-colors ${selectedCategory === category ? 'bg-gray-200' : ''
+                                            key={service.id}
+                                            className={`px-4 py-3 cursor-pointer border-b border-gray-200 hover:bg-gray-100 transition-colors ${selectedService?.type === "service" ? selectedService.id : selectedService?.type === "option" ? selectedService.serviceOptionId : "" === service.id ? 'bg-gray-200' : ''
                                                 }`}
-                                            onClick={() => handleCategoryClick(category)}
+                                            onClick={() => setSelectedService({ ...service, type: 'service' })}
                                         >
                                             <div className="flex justify-between items-center">
-                                                <span className="text-sm text-gray-700">{category}</span>
-                                                <span className="text-xs text-gray-400">({services.length})</span>
+                                                <span className="text-sm text-gray-700">{service.name}</span>
+                                                <span className={
+                                                    cn(
+                                                        "text-xs",
+                                                        service.options.length <= 0 && Number(service.price ?? 0) > 0 ? "text-black" : "text-gray-400"
+                                                    )
+                                                }>({service.options.length > 0 ? service.options.length : formatter().format(service?.price ?? 0)})</span>
                                             </div>
                                         </div>
                                     ))}
@@ -162,19 +160,19 @@ const ServiceSelection = ({
                             {/* Services Column */}
                             <div className="bg-white">
                                 <div className="px-4 py-3 bg-gray-100 border-b border-gray-200">
-                                    <span className="text-sm font-medium text-gray-700">Service</span>
+                                    <span className="text-sm font-medium text-gray-700">Options</span>
                                 </div>
                                 <div className="max-h-64 overflow-y-auto">
-                                    {selectedCategory && serviceData[selectedCategory] ? (
-                                        serviceData[selectedCategory].map((service, index) => (
+                                    {selectedService && selectedService?.type === 'service' && selectedService.options.length > 0 ? (
+                                        selectedService.options.map((service, index) => (
                                             <div
                                                 key={index}
                                                 className="px-4 py-3 cursor-pointer border-b border-gray-200 hover:bg-gray-50 transition-colors"
                                                 onClick={() => handleServiceSelect(service)}
                                             >
                                                 <div className="flex justify-between items-center">
-                                                    <span className="text-sm text-gray-700">{service.name}</span>
-                                                    <span className="text-sm font-medium text-gray-900">{service.price}</span>
+                                                    <span className="text-sm text-gray-700">{service.variantName}</span>
+                                                    <span className="text-sm font-medium text-gray-900">{service.priceFrom}{Number(service.priceTo) > 0 && `/${service.priceTo}`}</span>
                                                 </div>
                                             </div>
                                         ))
@@ -206,7 +204,7 @@ const ServiceSelection = ({
                     onClick={handleSelectEmployeeBoxClick}
                 >
                     <span className={selectedEmployee ? 'text-gray-900' : 'text-gray-400'}>
-                        {selectedEmployee || 'Select Employee'}
+                        {selectedEmployee?.fullName || 'Select Employee'}
                     </span>
                     <DownOutlined className={`text-gray-400 text-xs transition-transform ${isEmployeeOpen ? 'rotate-180' : ''}`} />
                 </div>
@@ -223,11 +221,11 @@ const ServiceSelection = ({
                             {/* Employees Column */}
                             <div className="bg-white">
                                 <div className="max-h-64 overflow-y-auto">
-                                    {employeeData.map(item => (
+                                    {technicians.map(technician => (
                                         <div
-                                            key={item.id}
+                                            key={technician.id}
                                             className="px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                                            onClick={() => handleEmployeeClick(item.name)}
+                                            onClick={() => handleEmployeeClick(technician)}
                                         >
                                             <div className="flex gap-x-2 items-center">
                                                 <img
@@ -235,7 +233,7 @@ const ServiceSelection = ({
                                                     alt=''
                                                     className='w-[32px] h-[32px] rounded-full'
                                                 />
-                                                <span className="text-sm text-gray-700">{item.name}</span>
+                                                <span className="text-sm text-gray-700">{technician.fullName}</span>
                                             </div>
                                         </div>
                                     ))}

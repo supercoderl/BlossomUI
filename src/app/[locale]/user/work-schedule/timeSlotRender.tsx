@@ -1,39 +1,42 @@
 import { getEmployeeById } from "@/utils/employee";
-import { Button, Card, GlobalToken, message, Tag, Typography } from "antd";
+import { Button, Card, message, Tag, Typography } from "antd";
 import {
     PlusOutlined,
     EditOutlined,
     DeleteOutlined,
     UserOutlined,
     LoadingOutlined,
+    ThunderboltOutlined,
+    ClockCircleOutlined,
 } from '@ant-design/icons';
 import { TechnicianInfo } from "@/types/user";
 import { stringToColor } from "@/utils/color";
-import { Schedule } from "@/types/workSchedule";
+import { Booking } from "@/types/booking";
+import dayjs from "dayjs";
 
 const { Text } = Typography;
 
 export const renderTimeSlot = (
     timeSlot: any,
-    schedules: Schedule[],
+    bookings: Booking[],
     selectedDate: any,
-    openScheduleModal: (timeSlot: string, schedule: Schedule | null) => void,
+    openScheduleModal: (timeSlot: string, schedule: Booking | null) => void,
     employees: TechnicianInfo[],
-    setSchedules: (values: Schedule[]) => void,
+    setBookings: (values: Booking[]) => void,
     loading: Record<string, boolean>
 ) => {
     const getSchedulesForDateTime = (date: any, timeSlot: string) => {
         const dateStr = date.format('YYYY-MM-DD');
-        return schedules.filter(schedule =>
-            schedule.workDate === dateStr &&
-            schedule.startTime <= timeSlot &&
-            schedule.endTime > timeSlot
+        return bookings.filter(booking =>
+            dayjs(booking.scheduleTime).format('YYYY-MM-DD') === dateStr &&
+            dayjs(booking.scheduleTime).format('HH:mm') <= timeSlot &&
+            dayjs(booking.scheduleTime).add(booking.bookingDetails?.[0].service?.durationMinutes ?? 0, 'minutes').format('HH:mm') >= timeSlot
         );
     };
 
-    const deleteSchedule = (scheduleId: any) => {
-        setSchedules(schedules.filter(s => s.id !== scheduleId));
-        message.success('Schedule deleted successfully');
+    const deleteSchedule = (bookingId: string) => {
+        setBookings(bookings.filter(b => b.id !== bookingId));
+        message.success('Booking deleted successfully');
     };
 
     const schedulesInSlot = getSchedulesForDateTime(selectedDate, timeSlot.value);
@@ -66,7 +69,7 @@ export const renderTimeSlot = (
                     {schedulesInSlot.length > 0 ? (
                         <div style={{ marginTop: '8px' }}>
                             {schedulesInSlot.map((schedule, index) => {
-                                const employee = getEmployeeById(schedule.technicianId, employees);
+                                const employee = getEmployeeById(schedule.technicianId ?? "", employees);
                                 return (
                                     <div key={schedule.id} style={{ marginBottom: 12 }}>
                                         <Tag
@@ -81,11 +84,36 @@ export const renderTimeSlot = (
                                             }}
                                         >
                                             <UserOutlined style={{ fontSize: '10px' }} />
-                                            {employee?.fullName}
+                                            {employee?.fullName ?? "N/A"}
                                         </Tag>
-                                        <Text style={{ fontSize: '11px', color: '#666', marginLeft: '8px' }}>
-                                            {schedule.startTime} - {schedule.endTime}
-                                        </Text>
+                                        <Tag
+                                            color={stringToColor(schedule.guestName ?? "")}
+                                            style={{
+                                                borderRadius: '12px',
+                                                padding: '2px 8px',
+                                                fontSize: '12px',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '4px'
+                                            }}
+                                        >
+                                            <ThunderboltOutlined style={{ fontSize: '10px' }} />
+                                            {schedule.guestName ?? "N/A"}
+                                        </Tag>
+                                        <Tag
+                                            color={stringToColor(dayjs(schedule.scheduleTime).format('DDTHH:mm:ss'))}
+                                            style={{
+                                                borderRadius: '12px',
+                                                padding: '2px 8px',
+                                                fontSize: '12px',
+                                                display: 'inline-flex',
+                                                alignItems: 'center',
+                                                gap: '4px'
+                                            }}
+                                        >
+                                            <ClockCircleOutlined style={{ fontSize: '10px' }} />
+                                            {dayjs(schedule.scheduleTime).format('HH:mm')} - {dayjs(schedule.scheduleTime).add(schedule.bookingDetails?.[0].service?.durationMinutes ?? 0, 'minutes').format('HH:mm')}
+                                        </Tag>
                                         <div style={{ marginTop: '2px', display: 'flex', gap: '4px' }}>
                                             <Button
                                                 size="small"

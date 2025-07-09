@@ -42,10 +42,10 @@ const data = [
         "value": 12
       },
       {
-        "id": "Next-Admin",
-        "name": "Next-Admin",
+        "id": "Blossom Nails",
+        "name": "Blossom Nails",
         "level": 0,
-        "tag": "Next-Admin",
+        "tag": "Blossom Nails",
         "value": 34
       },
       {

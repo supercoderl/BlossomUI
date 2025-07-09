@@ -1,7 +1,15 @@
 import { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
+import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
+import { cn } from '@/utils/helpers';
 
-const FAQsSection = () => {
+const FAQsSection = ({
+    font, 
+    font2
+} : {
+    font: NextFontWithVariable,
+    font2: NextFontWithVariable
+}) => {
     const [openItems, setOpenItems] = useState<Record<number, boolean>>({});
 
     const toggleItem = (index: number) => {
@@ -39,18 +47,33 @@ const FAQsSection = () => {
                 <div className="w-full">
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <h2 className="text-4xl md:text-5xl font-medium text-gray-800 mb-8">
+                        <h2 className={
+                            cn(
+                                "text-4xl md:text-5xl font-medium text-gray-800 mb-8",
+                                font.className
+                            )
+                        }>
                             Frequently Asked Questions
                         </h2>
-                        <div className="max-w-2xl mx-auto">
-                            <p className="text-gray-600 text-lg leading-relaxed">
+                        <div className={
+                            cn(
+                                "max-w-2xl mx-auto",
+                                font2.className
+                            )
+                        }>
+                            <p className="text-gray-600 font-[300] text-lg leading-relaxed leading-[1.7em]">
                                 Here you can find answers on frequently asked questions. If you cannot find the answer, feel free to contact us via email or phone.
                             </p>
                         </div>
                     </div>
 
                     {/* FAQ Items */}
-                    <div className="max-w-3xl mx-auto">
+                    <div className={
+                        cn(
+                            "max-w-3xl mx-auto",
+                            font2.className
+                        )
+                    }>
                         <div className="border-b border-gray-200">
                             {faqData.map((item, index) => (
                                 <div key={index} className="border-t border-gray-200">
@@ -74,7 +97,7 @@ const FAQsSection = () => {
                                     <div className={`overflow-hidden transition-all duration-300 ease-in-out ${openItems[index] ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
                                         }`}>
                                         <div className="pb-6 px-2">
-                                            <div className="text-gray-600 leading-relaxed whitespace-pre-line">
+                                            <div className="text-gray-600 leading-relaxed whitespace-pre-line text-[16px] leading-[23px] tracking-[0.02em]">
                                                 {item.answer}
                                             </div>
                                         </div>

@@ -26,7 +26,7 @@ const data = {
     left: 250,
     height: 90,
     width: 140,
-    text: 'Next-Admin',
+    text: 'Blossom Nails',
     Class: Node,
     endpoints: [{
       id: 'left_2',

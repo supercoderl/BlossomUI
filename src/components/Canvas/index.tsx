@@ -475,7 +475,7 @@ export default function Canvas(props: IProps) {
                     height: i.base.height,
                     transform: i.base.transform
                 }}>
-                    {i.name === 'Button' && <Button type="primary">Next-Admin</Button>}
+                    {i.name === 'Button' && <Button type="primary">Blossom Nails</Button>}
                     {/* { i.name === 'Image' && <img src="/qtcode.png" alt="next-admin drag and drop" /> } */}
                     {i.name === 'Image' && <img src="/logo_bg.svg" alt="next-admin drag and drop" />}
                 </div>)}

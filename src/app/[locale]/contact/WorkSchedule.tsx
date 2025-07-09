@@ -1,10 +1,21 @@
 import { ClockIcon } from "@/components/Icon/clock";
 import { LocationIcon } from "@/components/Icon/location";
 import { PhoneIcon } from "@/components/Icon/phone";
+import { cn } from "@/utils/helpers";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
 
-const WorkSchedule = () => {
+const WorkSchedule = ({
+    font
+} : {
+    font: NextFontWithVariable
+}) => {
     return (
-        <section className="py-[50px] md:py-[100px] relative">
+        <section className={
+            cn(
+                "py-[50px] md:py-[100px] relative",
+                font.className
+            )
+        }>
             <div className="h-full w-full absolute top-0 left-0"></div>
             <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative">
                 <div className="w-full relative min-h flex">
@@ -45,7 +56,7 @@ const WorkSchedule = () => {
                         <div className="w-full relative">
                             <div className="">
                                 <div className="text-center">
-                                    <a href="" className="text-[14px] font-medium text-center uppercase inline-block border border-solid border-black text-black py-[14px] px-[31px] bg-transparent transition duration-300 hover:bg-black hover:text-white">Book Appointment</a>
+                                    <a href="/appointments" className="text-[14px] font-medium text-center uppercase inline-block border border-solid border-black text-black py-[14px] px-[31px] bg-transparent transition duration-300 hover:bg-black hover:text-white">Book Appointment</a>
                                 </div>
                             </div>
                         </div>

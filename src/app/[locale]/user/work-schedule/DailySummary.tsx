@@ -1,14 +1,15 @@
 import BasicLoading from "@/components/Loading/basic";
+import { Booking } from "@/types/booking";
 import { TechnicianInfo } from "@/types/user";
-import { Schedule } from "@/types/workSchedule";
 import { stringToColor } from "@/utils/color";
 import { getEmployeeById } from "@/utils/employee";
 import { Card, Empty, Tag, Typography } from "antd";
+import dayjs from "dayjs";
 
 const { Text } = Typography;
 
 const DailySummary = ({ allDaySchedules, employees, loading }: {
-    allDaySchedules: Schedule[],
+    allDaySchedules: Booking[],
     employees: TechnicianInfo[],
     loading: Record<string, boolean>
 }) => {
@@ -32,7 +33,7 @@ const DailySummary = ({ allDaySchedules, employees, loading }: {
                             <Text strong>Total Schedules: {allDaySchedules.length}</Text>
                             <div style={{ marginTop: '12px' }}>
                                 {allDaySchedules.map(schedule => {
-                                    const employee = getEmployeeById(schedule.technicianId, employees);
+                                    const employee = getEmployeeById(schedule.technicianId ?? "", employees);
                                     return (
                                         <div key={schedule.id} style={{
                                             marginBottom: '8px',
@@ -44,7 +45,7 @@ const DailySummary = ({ allDaySchedules, employees, loading }: {
                                                 {employee?.fullName}
                                             </Tag>
                                             <Text style={{ fontSize: '12px', display: 'block' }}>
-                                                {schedule.startTime} - {schedule.endTime}
+                                                {dayjs(schedule.scheduleTime).format('HH:mm')} - {dayjs(schedule.scheduleTime).add(schedule.bookingDetails?.[0].service?.durationMinutes ?? 0, 'minutes').format('HH:mm')}
                                             </Text>
                                             {schedule && (
                                                 <Text style={{ fontSize: '11px', color: '#666', fontStyle: 'italic' }}>

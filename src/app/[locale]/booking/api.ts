@@ -21,3 +21,17 @@ export const getBookings = (filter: Filter) =>
                 includeDeleted: filter.includeDeleted
             }
         }));
+
+export const createBooking = (data: any) =>
+    withApiLoading('create-booking', () =>
+        req.post(`/Booking`, data));
+
+export const getAllTimeSlotsForTechnician = (technicianId: string, date: string) => {
+    return withApiLoading('get-time-slots', () =>
+        req.get(`/Booking/time-slots`, {
+            params: {
+                technicianId,
+                selectedDate: date
+            }
+        }));
+}

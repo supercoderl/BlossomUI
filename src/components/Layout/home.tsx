@@ -65,7 +65,7 @@ const HomeLayout: React.FC<IProps> = ({
                 }
             }}
         >
-            {loading && <PreLoader />}
+            <PreLoader loading={loading} />
             <Layout style={{ minHeight: "100vh" }} data-aos="fade-zoom-in" data-aos-delay="300" data-aos-duration="2500">
                 <Layout>
                     <Header handleOpen={setOpenWrapper} isDark={isDark} isOpen={openWrapper} />

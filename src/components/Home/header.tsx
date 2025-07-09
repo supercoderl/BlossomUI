@@ -7,9 +7,17 @@ import {
     CloseOutlined
 } from '@ant-design/icons';
 import { List } from 'antd';
-import { url } from 'inspector';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { Logo } from '../Logo';
+import { Jost } from 'next/font/google';
+
+const jost = Jost({
+    subsets: ["latin"],
+    weight: ["300", "400", "500", "600", "700", "800"],
+    display: "swap",
+    variable: "--font-inter",
+});
 
 const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpen?: (value: boolean) => void, isOpen?: boolean }) => {
     const [scrolled, setScrolled] = useState(false);
@@ -27,7 +35,8 @@ const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpe
         <header className="relative z-50 block">
             <div className={cn(
                 "group px-[22px] md:px-[50px] w-full top-0 left-0 border-b border-solid transition-all duration-300 ease-in-out max-w-full",
-                scrolled ? "fixed bg-white border-[rgba(0,_0,_0,_0.1)]" : "absolute bg-transparent border-transparent hover:bg-white"
+                scrolled ? "fixed bg-white border-[rgba(0,_0,_0,_0.1)]" : "absolute bg-transparent border-transparent hover:bg-white",
+                jost.className
             )}>
                 <div className="flex items-center justify-between max-w-[1920px] mx-auto transition-all duration-300">
                     <div className="left-content grow-2 md:grow-[unset]">
@@ -35,18 +44,9 @@ const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpe
                             <Link className={
                                 cn(
                                     "py-[13px]",
-                                    scrolled || isDark ? "hidden" : "block group-hover:hidden"
                                 )
                             } href="/">
-                                <img src="https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/Logo-White.svg" alt="Site Logotype" className="img-logotype" />
-                            </Link>
-                            <Link className={
-                                cn(
-                                    "py-[13px]",
-                                    scrolled || isDark ? "block" : "hidden group-hover:block"
-                                )
-                            } href="/">
-                                <img src="https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/Logo-Black.svg" alt="Site Logotype Dark" className="img-logotype" />
+                                <Logo isDark={isDark || scrolled} />
                             </Link>
                         </div>
                     </div>
@@ -140,7 +140,7 @@ const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpe
                                 className={
                                     scrolled || isDark ? "text-black" : "text-white group-hover:text-black"
                                 }
-                                href="https://instagram.com"
+                                href="https://www.instagram.com/blossom_nails.eastleigh"
                             >
                                 <InstagramOutlined className='px-[7px] text-[19px]' />
                             </Link>
@@ -148,7 +148,7 @@ const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpe
                                 className={
                                     scrolled || isDark ? "text-black" : "text-white group-hover:text-black"
                                 }
-                                href="https://www.facebook.com">
+                                href="https://www.facebook.com/blossomnailseastleigh">
                                 <FacebookOutlined className='px-[7px] text-[19px]' />
                             </Link>
                         </div>
@@ -178,7 +178,7 @@ const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpe
                                         className={cn(
                                             'text-xl absolute inset-0 transition-opacity duration-300',
                                             isOpen ? 'opacity-100' : 'opacity-0',
-                                            scrolled ||isDark ? 'text-black' : '!text-white'
+                                            scrolled || isDark ? 'text-black' : '!text-white'
                                         )}
                                     />
                                 </span>

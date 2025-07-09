@@ -1,4 +1,13 @@
-const PhilosophySection = () => {
+import { cn } from "@/utils/helpers";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+
+const PhilosophySection = ({
+    font,
+    font2
+}: {
+    font: NextFontWithVariable,
+    font2: NextFontWithVariable
+}) => {
     return (
         <>
             <section className="mt-[50px] md:mt-[100px] mb-6 md:mb-[34px] relative">
@@ -7,7 +16,10 @@ const PhilosophySection = () => {
                         <div className="px-[15px] flex relative w-full flex-wrap content-start">
                             <div className="text-center w-full relative">
                                 <div className="">
-                                    <h2 className="mb-4 text-[28px] md:text-[42px] font-medium">Philosophy</h2>
+                                    <h2 className={cn(
+                                        "mb-4 text-[28px] md:text-[42px] font-medium",
+                                        font.className
+                                    )}>Philosophy</h2>
                                 </div>
                             </div>
                         </div>
@@ -18,7 +30,12 @@ const PhilosophySection = () => {
                 <div className="max-w-[767px] max-w-[1170px] flex mx-auto relative">
                     <div className="w-full relative min-h flex">
                         <div className="flex relative w-full flex-wrap content-start">
-                            <div className="mb-2.5 w-full relative">
+                            <div className={
+                                cn(
+                                    "mb-2.5 w-full relative",
+                                    font2.className
+                                )
+                            }>
                                 <div className="">
                                     <div className="grid md:grid-cols-3 flex-wrap text-center">
                                         <div className="relative w-full min-h px-[15px] mb-[50px]">
@@ -131,7 +148,7 @@ const PhilosophySection = () => {
                             <div className="w-full relative">
                                 <div className="">
                                     <div className="text-center">
-                                        <a href="" className="text-[14px] font-medium uppercase text-center text-black border border-solid border-black inline-block py-[14px] px-[31px] bg-transparent transition-all duration-300 hover:bg-black hover:text-white">Book Appointment</a>
+                                        <a href="/appointments" className="text-[14px] font-medium uppercase text-center text-black border border-solid border-black inline-block py-[14px] px-[31px] bg-transparent transition-all duration-300 hover:bg-black hover:text-white">Book Appointment</a>
                                     </div>
                                 </div>
                             </div>

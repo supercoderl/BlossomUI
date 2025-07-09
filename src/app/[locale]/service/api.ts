@@ -6,7 +6,7 @@ export const getServices = (filter: Filter) =>
     withApiLoading('get-services', () =>
         req.get('/Service', {
             params: {
-                query: filter.query,
+                ...filter.query,
                 searchTerm: filter.searchTerm,
                 includeDeleted: filter.includeDeleted
             }

@@ -1,25 +1,36 @@
-import Jarallax from "@/components/Animation/Jarallax";
-import JarallaxImage from "@/components/Animation/Jarallax/image";
-import { services } from "@/data/service";
+"use client"
+
 import { useGlobalMessage } from "@/providers/messageProvider";
 import { cn } from "@/utils/helpers";
 import React from "react";
 import { useEffect, useState } from "react";
 import { getCategories } from "../service/category/api";
-import { useApiLoadingStore } from "@/stores/loadingStore";
+import { Category } from "@/types/category";
+import { iconMap } from "@/components/Icon";
+import { Service } from "@/types/service";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+import { formatter } from "@/utils/currency";
+import { getServices } from "../service/api";
 
-const ServiceSection = () => {
+const ServiceSection = ({ font, font2 }: { font: NextFontWithVariable, font2: NextFontWithVariable }) => {
     const [scrolled, setScrolled] = useState(false);
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+    const [services, setServices] = useState<Service[]>([]);
     const [messageApi] = useGlobalMessage();
 
     const onLoad = async () => {
         try {
-            await getCategories().then((res) => {
-                if (res && res.data) {
-                    setCategories(res.data.items ?? []);
-                }
-            })
+            const [serviceRes, categoryRes] = await Promise.all([getServices({ query: { page: 1, pageSize: 50 } }), getCategories()])
+
+            const services = serviceRes?.data?.items || [];
+            const categories = categoryRes?.data?.items || [];
+
+            setServices(services);
+            setCategories(categories);
+            if (categories.length > 0) {
+                setSelectedCategory(categories[0]);
+            }
         } catch (error: any) {
             if (error && error.response && error.response.data) {
                 const errors = error.response.data.errors;
@@ -33,6 +44,10 @@ const ServiceSection = () => {
                 messageApi.error("Request failed, please try again later");
             }
         }
+    }
+
+    const filterServices = (category: Category) => {
+        return services.filter(s => s.categoryId === category.id);
     }
 
     useEffect(() => {
@@ -68,31 +83,38 @@ const ServiceSection = () => {
                                             )
                                         }>
                                             {
-                                                services.map(item => (
-                                                    <ul key={item.id} className="flex flex-col">
-                                                        <li className={
-                                                            cn(
-                                                                "w-[210px]",
-                                                                scrolled ? "my-[25px]" : "mb-[50px]"
-                                                            )
-                                                        }>
-                                                            <a href={item.href} className="flex flex-col items-center decoration-none relative z-200 text-black">
-                                                                {React.cloneElement(item.icon, {
-                                                                    className: cn(
-                                                                        "transition-all duration-300",
-                                                                        scrolled ? "w-6 h-6" : "w-12 h-12"
-                                                                    )
-                                                                })}
-                                                                <span className={
-                                                                    cn(
-                                                                        "border-b border-solid border-black font-medium text-[13px] pb-[5px] uppercase",
-                                                                        scrolled ? "text-xs mt-3" : "text-md mt-[22px]"
-                                                                    )
-                                                                }>{item.label}</span>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                ))
+                                                categories.map(item => {
+                                                    const Icon = iconMap[item.icon] || iconMap.HairIcon;
+
+                                                    return (
+                                                        <ul key={item.id} className="flex flex-col">
+                                                            <li className={
+                                                                cn(
+                                                                    "w-[210px]",
+                                                                    scrolled ? "my-[25px]" : "mb-[50px]",
+                                                                    font2.className
+                                                                )
+                                                            }>
+                                                                <a href={item.url} className="flex flex-col items-center decoration-none relative z-200 text-black">
+                                                                    <Icon className={
+                                                                        cn(
+                                                                            "transition-all duration-300",
+                                                                            scrolled ? "w-6 h-6" : "w-12 h-12"
+                                                                        )
+                                                                    }
+                                                                    />
+                                                                    <span className={
+                                                                        cn(
+                                                                            "border-solid border-black font-medium text-[13px] pb-[5px] uppercase",
+                                                                            scrolled ? "text-xs mt-3" : "text-md mt-[22px]",
+                                                                            selectedCategory?.id === item.id ? "border-b" : ""
+                                                                        )
+                                                                    }>{item.name}</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    )
+                                                })
                                             }
                                             <div className="absolute overflow-hidden -z-1 visibility-hidden">
                                                 <div className="absolute inset-0 overflow-hidden -z-1 visibility-hidden">
@@ -107,312 +129,109 @@ const ServiceSection = () => {
                                     <div className="flex">
                                         <div className="relative overflow-visible min-h w-full mx-auto">
                                             <div className="pb-[1px] static">
-                                                <div id="service1" className="bg-white">
-                                                    <div className="max-w-[854px] mx-auto py-[50px] md:py-[100px]">
-                                                        <div className="text-center">
-                                                            <h2 className="mb-[30px] text-[28px] md:text-[42px] font-medium">Hair</h2>
-                                                            <div className="mb-[40px] md:mb-[50px] px-[15px] md:px-[120px]">
-                                                                <p>Stylish hair cuts, gorgeous styling, incredible color services and best hair treatments. Choose your dream service!</p><p>&nbsp;</p><p>&nbsp;</p>
-                                                            </div>
-                                                        </div>
-                                                        <h5 className="px-[30px] md:px-[54px] mb-6 text-[20px]">Haircut</h5>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Clipper Cut</span>
-                                                                    <span className="">$39</span>
+                                                {
+                                                    categories.map((category, index) => (
+                                                        <div id={category.url} key={category.id} className={cn(
+                                                            index % 2 !== 0 ? "bg-[#F6EBE7]" : "bg-white"
+                                                        )}>
+                                                            <div className="mx-auto py-[50px] md:py-[100px] md:px-28">
+                                                                <div className="text-center">
+                                                                    <h2 className={
+                                                                        cn(
+                                                                            "mb-[30px] text-[28px] md:text-[42px] font-medium",
+                                                                            font.className
+                                                                        )
+                                                                    }>{category.name}</h2>
+                                                                    <div className="mb-[40px] md:mb-[50px] px-[15px] md:px-[120px]">
+                                                                        <p className="italic text-gray-400">Summary of this category</p><p>&nbsp;</p><p>&nbsp;</p>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>A haircut using clippers to achieve an ultra-short design. (30 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Kids Haircut</span>
-                                                                    <span className="">$29</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>A haircut on a child age 10 &amp; under.<br />(30 min)</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Haircut</span>
-                                                                    <span className="">$39</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>A haircut, trim or shape on anyone over the age of 10. (60 min)</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Bang Trim</span>
-                                                                    <span className="">$19</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>A trim on the bang area. Shampoo, conditioner and scalp massage not included. (15 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Signature Haircut</span>
-                                                                    <span className="">$49</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>A haircut, trim, shape on anyone over the age of 10 with a customized conditioning treatment. (1 hr 15 min)</p>                                                        </div>
-                                                            </div>
-                                                        </div>
-                                                        <h5 className="px-[30px] md:px-[54px] mb-6 text-[20px]">Color</h5>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">All-Over Color</span>
-                                                                    <span className="">$30</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>An all-over application of a single hair color from roots to ends. (1 hr 45 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Full Root Touch-up</span>
-                                                                    <span className="">$59</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>An application of hair color to the root area only. (1 hr 45 min)</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="text-center">
-                                                            <a href="" className="text-center uppercase font-medium text-black border border-solid border-black hover:bg-white hover:text-white transition-all duration-300 inline-block py-[14px] px-[31px]">Book Appointment</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="service2" className=" bg-[#F6EBE7]">
-                                                    <div className="max-w-[854px] mx-auto py-[50px] md:py-[100px]">
-                                                        <div className="text-center">
-                                                            <h2 className="mb-[30px] text-[28px] md:text-[42px] font-medium">Makeup</h2>
-                                                            <div className="mb-[40px] md:mb-[50px] px-[15px] md:px-[120px]">
-                                                                <p>Complete your service with beautiful makeup and simply be amazing with complete look.</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Complimentary Touch-up</span>
-                                                                    <span className="">$30</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Complete your service with this quick touch up, or pop in and meet with an available service professional or retail beauty advisor. (15 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Everyday Makeup Application</span>
-                                                                    <span className="">$39</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Put your fresh face forward. This make up application will have you looking your best. (45 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Formal Makeup Application</span>
-                                                                    <span className="">$49</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>A make up application that includes enhanced make up techniques for a more dramatic look. (60 min)</p>                                                        </div>
-                                                            </div>
+                                                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                                                    {filterServices(category).map(service => (
+                                                                        <div key={service.id} className="group">
+                                                                            {/* Service Header */}
+                                                                            <div className="mb-6">
+                                                                                <h3 className={
+                                                                                    cn(
+                                                                                        "text-xl font-medium text-gray-900 tracking-tight",
+                                                                                        font2.className
+                                                                                    )
+                                                                                }>
+                                                                                    {service.name}
+                                                                                </h3>
+                                                                            </div>
 
-
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Cocktail Makeup</span>
-                                                                    <span className="">$55</span>
+                                                                            {/* Service Content */}
+                                                                            <div className="space-y-3">
+                                                                                {service.options.length <= 0 ? (
+                                                                                    // Single service without options
+                                                                                    <div className={
+                                                                                        cn(
+                                                                                            "border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors",
+                                                                                            font2.className
+                                                                                        )
+                                                                                    }>
+                                                                                        <div className="flex items-center justify-between">
+                                                                                            <div className="flex-1">
+                                                                                                <p className="text-gray-700 font-medium mb-1 line-clamp-3">
+                                                                                                    {service.description}
+                                                                                                </p>
+                                                                                                <p className="text-sm text-gray-500">
+                                                                                                    {service.durationMinutes} min
+                                                                                                </p>
+                                                                                            </div>
+                                                                                            <div className="text-right ml-4">
+                                                                                                <p className="text-xl font-semibold text-gray-900">
+                                                                                                    {formatter().format(service.price ?? 0)}
+                                                                                                </p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    // Multiple service options
+                                                                                    service.options.map((option) => (
+                                                                                        <div
+                                                                                            key={option.serviceOptionId}
+                                                                                            className={
+                                                                                                cn(
+                                                                                                    "border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors",
+                                                                                                    font2.className
+                                                                                                )
+                                                                                            }
+                                                                                        >
+                                                                                            <div className="flex items-center justify-between">
+                                                                                                <div className="flex-1">
+                                                                                                    <p className="text-gray-700 font-medium mb-1">
+                                                                                                        {option.variantName}
+                                                                                                    </p>
+                                                                                                    <p className="text-sm text-gray-500">
+                                                                                                        {option.durationMinutes} min
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                                <div className="text-right ml-4">
+                                                                                                    <p className="text-xl font-semibold text-gray-900">
+                                                                                                        {formatter().format(option.priceFrom ?? 0)}{Number(option.priceTo) > 0 && `/${formatter().format(option.priceTo ?? 0)}`}
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    ))
+                                                                                )}
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
                                                                 </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>A make up application that includes enhanced make up techniques for a more dramatic look. (60 min)</p>                                                        </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="text-center">
-                                                            <a href="" className="text-center uppercase font-medium text-black border border-solid border-black hover:bg-white hover:text-white transition-all duration-300 inline-block py-[14px] px-[31px]">Book Appointment</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="service3" className=" bg-white">
-                                                    <div className="max-w-[854px] mx-auto py-[50px] py-[100px]">
-                                                        <div className="text-center">
-                                                            <h2 className="mb-[30px] text-[28px] text-[42px] font-medium">Brows</h2>
-                                                            <div className="mb-[40px] md:mb-[50px] px-[15px] md:px-[120px]">
-                                                                <p>Brows can change it all. Try out styling and tinting your brows and see the difference.</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Brow Wax &amp; Style</span>
-                                                                    <span className="">$29</span>
+                                                                <div className="flex flex-wrap mb-[23px]">
                                                                 </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Includes a brow consultation, wax &amp; style. (20 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Brow Trim</span>
-                                                                    <span className="">$20</span>
+                                                                <div className="flex flex-wrap mb-[23px]">
                                                                 </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Includes a brow consultation, trim &amp; style. (20 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Brow Tweeze</span>
-                                                                    <span className="">$20</span>
+                                                                <div className="text-center">
+                                                                    <a href="/appointments" className="text-center uppercase font-medium text-black border border-solid border-black hover:bg-black hover:text-white transition-all duration-300 inline-block py-[14px] px-[31px]">Book Appointment</a>
                                                                 </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Includes a brow consultation, tweeze &amp; style. (20 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Bang Trim</span>
-                                                                    <span className="">$19</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>A trim on the bang area. Shampoo, conditioner and scalp massage not included. (15 min)</p>                                                        </div>
                                                             </div>
                                                         </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="text-center">
-                                                            <a href="" className="text-center uppercase font-medium text-black border border-solid border-black hover:bg-white hover:text-white transition-all duration-300 inline-block py-[14px] px-[31px]">Book Appointment</a>
-                                                        </div>
-                                                    </div>
-                                                    <Jarallax speed={0.2} className="relative h-[770px]">
-                                                        <div id="absolute top-0 left-0 w-full h-full overflow-hidden -z-100">
-                                                            <JarallaxImage
-                                                                decoding="async"
-                                                                className="jarallax-img"
-                                                                src="https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/image-21@1.5x-1.jpg"
-                                                                alt="service image"
-                                                            />
-                                                        </div>
-                                                    </Jarallax>
-                                                </div>
-                                                <div id="service4" className=" bg-[#F6EBE7]">
-                                                    <div className="max-w-[854px] mx-auto py-[50px] py-[100px]">
-                                                        <div className="text-center">
-                                                            <h2 className="mb-[30px] text-[28px] text-[42px] font-medium">Nails</h2>
-                                                            <div className="mb-[40px] md:mb-[50px] px-[15px] md:px-[120px]">
-                                                                <p>Get your nails done for great mood. Simple pleasures can make your week, not just day.</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Cherie Manicure</span>
-                                                                    <span className="">$50</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Delicate cuticle work, buffing, and shaping. To finish, a relaxing hand massage, topped off with a perfect polish. (60 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Buff Manicure</span>
-                                                                    <span className="">$39</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Our natural look manicure – no polish, but all of the pampering. (20 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Gel Manicure</span>
-                                                                    <span className="">$59</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>All the features of our Cherie manicure, but finish with nontoxic Gel Polish instead. (40 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Cherie Pedicure</span>
-                                                                    <span className="">$39</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Our natural look pedi – no polish, but all of the pampering. Revitalize tired feet. (30 min)</p>                                                        </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="text-center">
-                                                            <a href="" className="text-center uppercase font-medium text-black border border-solid border-black hover:bg-white hover:text-white transition-all duration-300 inline-block py-[14px] px-[31px]">Book Appointment</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div id="service5" className="">
-                                                    <div className="max-w-[854px] mx-auto py-[50px] md:py-[100px]">
-                                                        <div className="text-center">
-                                                            <h2 className="mb-[30px] text-[28px] text-[42px] font-medium">Cosmetology</h2>
-                                                            <div className="mb-[40px] md:mb-[50px] px-[15px] md:px-[120px]">
-                                                                <p>Indulge a little longer with a customized facial to help achieve your skin goals in 60-90 minutes.</p>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">60 Minute Customized Facial</span>
-                                                                    <span className="">$40</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Customized Facial enhanced with your choice of Microdermabrasion for Smoother Skin. (60 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Moisturizing Facial</span>
-                                                                    <span className="">$20</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>Revives stressed, dehydrated and overworked skin in minutes. (60 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Hydrafacial</span>
-                                                                    <span className="">$39</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>The HydraFacial is a much-loved rejuvenation treatment, using patented Vortex technology to deliver botanical nutrients directly to the skin. (90 min)</p>                                                        </div>
-                                                            </div>
-                                                            <div className="w-full md:w-1/2 px-[30px] md:px-[54px] mb-[27px]">
-                                                                <div className="mb-[8px] flex justify-between">
-                                                                    <span className="text-[16px] font-medium">Anti-Aging Therapy</span>
-                                                                    <span className="">$49</span>
-                                                                </div>
-                                                                <div className="pr-[57px]">
-                                                                    <p>This anti-aging treatment stimulates collagen production for a firmer complextion. (60 min)</p>                                                        </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="flex flex-wrap mb-[23px]">
-                                                        </div>
-                                                        <div className="text-center">
-                                                            <a href="" className="text-center uppercase font-medium text-black border border-solid border-black hover:bg-white hover:text-white transition-all duration-300 inline-block py-[14px] px-[31px]">Book Appointment</a>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    ))
+                                                }
                                                 <div className="resize-sensor">
                                                     <div className="resize-sensor-expand">
                                                         <div></div>

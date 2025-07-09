@@ -6,8 +6,14 @@ import {
     DownOutlined,
     PlusOutlined
 } from '@ant-design/icons'
+import { NextFontWithVariable } from 'next/dist/compiled/@next/font'
+import { cn } from '@/utils/helpers'
 
-const FAQSection = () => {
+const FAQSection = ({
+    font
+} : {
+    font: NextFontWithVariable
+}) => {
     const [openPanel, setOpenPanel] = useState(null)
 
     const togglePanel = (panelId: any) => {
@@ -39,7 +45,12 @@ HydraFacials are a miracle treatment for common skin concerns such as: acne, hyp
     ]
 
     return (
-        <section className="w-full bg-white shadow-lg rounded-lg overflow-hidden py-[50px] md:py-[100px]">
+        <section className={
+            cn(
+                "w-full bg-white shadow-lg rounded-lg overflow-hidden py-[50px] md:py-[100px]",
+                font.className
+            )
+        }>
             <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative">
                 <div className="w-full relative min-h flex">
                     <div className="px-[15px] flex relative w-full flex-wrap content-start">
@@ -74,7 +85,7 @@ HydraFacials are a miracle treatment for common skin concerns such as: acne, hyp
                                             }`}
                                     >
                                         <div className="py-3 bg-white">
-                                            <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+                                            <p className="text-gray-700 leading-relaxed whitespace-pre-line text-[16px] leading-[23px] tracking-[0.02em]">
                                                 {faq.content}
                                             </p>
                                         </div>

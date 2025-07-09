@@ -1,7 +1,33 @@
 import { cn } from "@/utils/helpers";
 import styles from '../index.module.css';
+import { Service, ServiceOption } from "@/types/service";
+import { TechnicianInfo } from "@/types/user";
+import { formatter } from "@/utils/currency";
+import { months } from "@/data/date";
 
-const RightContentSubmit = () => {
+const RightContentSubmit = ({
+    selectedDate,
+    selectedTime,
+    selectedService,
+    selectedEmployee,
+    currentMonth,
+    currentYear,
+    information
+}: {
+    selectedDate: number | null;
+    selectedTime: string;
+    selectedService: (Service & { type: 'service' }) | (ServiceOption & { type: 'option' }) | null,
+    selectedEmployee: TechnicianInfo | null,
+    currentMonth: number,
+    currentYear: number,
+    information: {
+        firstName: string;
+        lastName: string;
+        email: string;
+        phone: string;
+    }
+}) => {
+
     return (
         <div className="p-4 h-[calc(100%_-_56px)] block overflow-x-hidden">
             <div className="mt-[22px] flex flex-col items-center mb-4">
@@ -43,7 +69,7 @@ const RightContentSubmit = () => {
                         style={{ animationDelay: '0ms' }}
                     >
                         <span className='text-[rgba(26,_44,_55,_0.4)]'>Date:</span>
-                        <span className='text-[#1A2C37]'>June 20, 2025</span>
+                        <span className='text-[#1A2C37]'>{months[currentMonth]} {selectedDate}, {currentYear}</span>
                     </div>
                     <div className={
                         cn(
@@ -54,7 +80,7 @@ const RightContentSubmit = () => {
                         style={{ animationDelay: '100ms' }}
                     >
                         <span className='text-[rgba(26,_44,_55,_0.4)]'>Local Time:</span>
-                        <span className='text-[#1A2C37]'>9:00 AM</span>
+                        <span className='text-[#1A2C37]'>{selectedTime}</span>
                     </div>
                     <div className={
                         cn(
@@ -64,7 +90,7 @@ const RightContentSubmit = () => {
                     }
                         style={{ animationDelay: '200ms' }}>
                         <span className='text-[rgba(26,_44,_55,_0.4)]'>Service:</span>
-                        <span className='text-[#1A2C37]'>Classic Haircut</span>
+                        <span className='text-[#1A2C37]'>{selectedService?.type === "service" ? selectedService?.name : selectedService?.type === "option" ? selectedService?.variantName : null}</span>
                     </div>
                     <div className={
                         cn(
@@ -74,7 +100,7 @@ const RightContentSubmit = () => {
                     }
                         style={{ animationDelay: '300ms' }}>
                         <span className='text-[rgba(26,_44,_55,_0.4)]'>Employee:</span>
-                        <span className='text-[#1A2C37]'>Helen Simpson</span>
+                        <span className='text-[#1A2C37]'>{selectedEmployee?.fullName}</span>
                     </div>
                     <div className={
                         cn(
@@ -84,7 +110,7 @@ const RightContentSubmit = () => {
                     }
                         style={{ animationDelay: '400ms' }}>
                         <span className='text-[rgba(26,_44,_55,_0.4)]'>Payment:</span>
-                        <span className='text-[#1A2C37]'>$39.00 - On-site</span>
+                        <span className='text-[#1A2C37]'>{formatter().format(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService.priceFrom : 0)}</span>
                     </div>
                     <div className={
                         cn(
@@ -94,7 +120,7 @@ const RightContentSubmit = () => {
                     }
                         style={{ animationDelay: '500ms' }}>
                         <span className='text-[rgba(26,_44,_55,_0.4)]'>Your Name:</span>
-                        <span className='text-[#1A2C37]'>aa aaaa</span>
+                        <span className='text-[#1A2C37]'>{information.firstName + " " + information.lastName}</span>
                     </div>
                 </div>
             </div>

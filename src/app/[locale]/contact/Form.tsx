@@ -1,12 +1,26 @@
-const FormSection = () => {
+import { cn } from "@/utils/helpers";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+
+const FormSection = ({
+    font,
+    font2
+} : {
+    font: NextFontWithVariable,
+    font2: NextFontWithVariable
+}) => {
     return (
         <>
-            <section className="mt-[50px] md:mt-[100px] relative">
+            <section className="mt-[50px] md:mt-[150px] relative">
                 <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative">
                     <div className="w-full relative min-h flex">
                         <div className="flex relative w-full flex-wrap content-start">
                             <div className="text-center w-full relative">
-                                <div className="mb-[30px]">
+                                <div className={
+                                    cn(
+                                        "mb-[30px]",
+                                        font.className
+                                    )
+                                }>
                                     <h2 className="mb-4 text-[28px] md:text-[42px] font-medium">Drop Us a Line</h2>
                                 </div>
                             </div>
@@ -19,15 +33,24 @@ const FormSection = () => {
                     <div className="w-full relative min-h flex">
                         <div className="px-[15px] md:px-[340px] flex relative w-full flex-wrap content-start">
                             <div className="text-center w-full relative">
-                                <div className="">
-                                    <p className="m-0">Leave us a message and we will get back to you as soon as possible. We’d love hearing from you.</p>
+                                <div className={
+                                    cn(
+                                        font2.className
+                                    )
+                                }>
+                                    <p className="m-0 text-[18px] font-[300] leading-[1.7em]">Leave us a message and we will get back to you as soon as possible. We’d love hearing from you.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-            <section className="mb-[50px] md:mb-[100px] relative">
+            <section className={
+                cn(
+                    "mb-[50px] md:mb-[100px] relative",
+                    font2.className
+                )
+            }>
                 <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative">
                     <div className="w-full relative min-h flex">
                         <div className="px-[15px] flex relative w-full flex-wrap content-start">

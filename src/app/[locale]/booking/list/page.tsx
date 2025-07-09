@@ -37,6 +37,8 @@ export default function Service() {
     onLoad();
   }, []);
 
+  console.log(bookings);
+
   return (
     <Layout curActive='/booking/list'>
       <main>

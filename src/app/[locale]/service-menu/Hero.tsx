@@ -1,6 +1,14 @@
-const HeroSection = () => {
+import { cn } from "@/utils/helpers";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+
+const HeroSection = ({ font }: { font: NextFontWithVariable }) => {
     return (
-        <section className="relative">
+        <section className={
+            cn(
+                "relative",
+                font.className
+            )
+        }>
             <div className="flex mx-auto relative">
                 <div className="w-full relative min-h flex">
                     <div className="flex relative w-full flex-wrap content-start">

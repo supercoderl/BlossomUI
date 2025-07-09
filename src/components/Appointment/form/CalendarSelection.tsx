@@ -6,6 +6,9 @@ import {
 } from '@ant-design/icons';
 import styles from '../index.module.css';
 import { cn } from "@/utils/helpers";
+import { getDaysInMonth, getFirstDayOfMonth, getPreviousMonthDays, isDateInPast, isSlotOverlapping, parseSlotRange } from "@/utils/date";
+import { daysOfWeek, months, timeSlots } from "@/data/date";
+import { getAllTimeSlotsForTechnician } from "@/app/[locale]/booking/api";
 
 const CalendarSelection = ({
     currentMonth,
@@ -16,42 +19,26 @@ const CalendarSelection = ({
     setSelectedTime,
     setCurrentMonth,
     setCurrentYear,
-    months,
-    daysOfWeek,
-    timeSlots
-} : {
+    employeeId,
+    loading
+}: {
     currentMonth: number;
     currentYear: number;
-    selectedDate: any;
+    selectedDate: number | null;
     selectedTime: string;
-    setSelectedDate: Dispatch<SetStateAction<any>>;
+    setSelectedDate: Dispatch<SetStateAction<number | null>>;
     setSelectedTime: Dispatch<SetStateAction<string>>;
     setCurrentMonth: Dispatch<SetStateAction<number>>;
     setCurrentYear: Dispatch<SetStateAction<number>>;
-    months: string[];
-    daysOfWeek: string[];
-    timeSlots: string[];
+    employeeId?: string | null;
+    loading: Record<string, boolean>
 }) => {
-    const getDaysInMonth = (month: number, year: number) => {
-        return new Date(year, month + 1, 0).getDate();
-    };
-
-    const getFirstDayOfMonth = (month: number, year: number) => {
-        const firstDay = new Date(year, month, 1).getDay();
-        return firstDay === 0 ? 6 : firstDay - 1; // Convert Sunday (0) to 6, Monday (1) to 0, etc.
-    };
-
-    const getPreviousMonthDays = (month: number, year: number) => {
-        const prevMonth = month === 0 ? 11 : month - 1;
-        const prevYear = month === 0 ? year - 1 : year;
-        return getDaysInMonth(prevMonth, prevYear);
-    };
+    const [unavailableSlots, setUnavailableSlots] = useState<any[]>([]);
 
     const generateCalendarDays = () => {
         const daysInMonth = getDaysInMonth(currentMonth, currentYear);
         const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
         const prevMonthDays = getPreviousMonthDays(currentMonth, currentYear);
-
         const days = [];
 
         // Previous month's trailing days
@@ -85,11 +72,29 @@ const CalendarSelection = ({
         return days;
     };
 
-    const handleDateClick = (day: any, isCurrentMonth: boolean) => {
+    const handleDateClick = async (day: number, isCurrentMonth: boolean) => {
         if (isCurrentMonth) {
             setSelectedDate(day);
+            setSelectedTime('');
+            if (employeeId) {
+                await disableSomeDatesAreInCalendar(day);
+            }
         }
     };
+
+    const disableSomeDatesAreInCalendar = async (day: number) => {
+        // This function can be used to disable specific dates based on your logic
+        // For example, you can fetch unavailable dates from an API and set them in state
+        // Here we just return true for demonstration purposes
+        const timeSlots = await getAllTimeSlotsForTechnician(employeeId ?? "", `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+        if (timeSlots.data.length === 0) {
+            setUnavailableSlots([]);
+            return false;
+        }
+
+        setUnavailableSlots(timeSlots.data);
+        return true;
+    }
 
     const handlePrevMonth = () => {
         if (currentMonth === 0) {
@@ -159,12 +164,14 @@ const CalendarSelection = ({
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={handlePrevMonth}
+                        type="button"
                         className="p-2 hover:bg-gray-100 rounded-md"
                     >
                         <LeftOutlined className="w-4 h-4" />
                     </button>
                     <button
                         onClick={handleNextMonth}
+                        type="button"
                         className="p-2 hover:bg-gray-100 rounded-md"
                     >
                         <RightOutlined className="w-4 h-4" />
@@ -195,27 +202,35 @@ const CalendarSelection = ({
             } style={{ animationDelay: '70ms' }}>
                 {calendarDays.map((dateObj, index) => {
                     const isSelected = selectedDate === dateObj.day && dateObj.isCurrentMonth;
-                    const isToday = dateObj.day === 17 && dateObj.isCurrentMonth && currentMonth === 5 && currentYear === 2025; // June 17, 2025
+                    const isToday = dateObj.day === new Date().getDate() && dateObj.isCurrentMonth && currentMonth === new Date().getMonth() && currentYear === new Date().getFullYear();
+
+                    // Check if the date is in the past
+                    const isPastDate = dateObj.isCurrentMonth && isDateInPast(dateObj.day, currentMonth, currentYear);
+                    const isDisabled = isPastDate || !dateObj.isCurrentMonth;
 
                     return (
                         <button
                             key={index}
                             onClick={() => {
+                                if (isDisabled) return; // Prevent action for disabled dates
+
                                 if (selectedDate === dateObj.day) {
                                     setSelectedDate(null);
-                                }
-                                else {
+                                } else {
                                     handleDateClick(dateObj.day, dateObj.isCurrentMonth);
                                 }
                             }}
+                            disabled={isDisabled}
                             className={`
-                h-10 w-10 text-sm rounded-md transition-colors
-                ${dateObj.isCurrentMonth ? 'text-gray-900' : 'text-gray-300'}
-                ${isSelected ? 'bg-gray-800 text-white' : ''}
-                ${isToday && !isSelected ? 'bg-gray-200' : ''}
-                ${dateObj.isCurrentMonth ? 'hover:bg-gray-100' : ''}
-                ${isSelected ? 'hover:bg-gray-700' : ''}
-              `}
+                                h-10 w-10 text-sm rounded-md transition-colors
+                                ${dateObj.isCurrentMonth ? 'text-gray-900' : 'text-gray-300'}
+                                ${isPastDate ? 'text-gray-400 cursor-not-allowed opacity-50' : ''}
+                                ${isSelected ? 'bg-gray-800 text-white' : ''}
+                                ${isToday && !isSelected ? 'bg-gray-200' : ''}
+                                ${dateObj.isCurrentMonth && !isPastDate ? 'hover:bg-gray-100' : ''}
+                                ${isSelected ? 'hover:bg-gray-700' : ''}
+                                ${isDisabled ? 'hover:bg-transparent' : ''}
+                            `}
                             type="button"
                         >
                             {dateObj.day}
@@ -231,24 +246,41 @@ const CalendarSelection = ({
                         {months[currentMonth]} {selectedDate}, {currentYear} - 9:00 AM
                     </div>
 
-                    <div className="max-h-81 grid grid-cols-2 gap-y-2 gap-x-3">
-                        {timeSlots.map((timeSlot, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setSelectedTime(timeSlot)}
-                                className={
-                                    cn(
-                                        "w-full p-[4px] md:p-3 text-[12px] md:text-sm rounded-md border transition-colors",
-                                        selectedTime === timeSlot ? 'bg-black text-white border-black' : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200',
-                                        styles.slideUp
-                                    )}
-                                style={{ animationDelay: `${70 * index + Math.floor(Math.random() * 30)}ms` }}
-                                type="button"
-                            >
-                                {timeSlot}
-                            </button>
-                        ))}
-                    </div>
+                    {
+                        loading['get-time-slots'] ?
+                            <div className="flex items-center justify-center h-20">
+                                <div className="animate-spin h-10 w-10 rounded-full border-4 border-t-transparent"></div>
+                            </div>
+                            :
+                            <div className="max-h-full grid grid-cols-2 gap-y-2 gap-x-3">
+                                {timeSlots.map((timeSlot, index) => {
+                                    const [slotStart, slotEnd] = parseSlotRange(timeSlot, `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(selectedDate).padStart(2, '0')}`);
+                                    const isDisabled = isSlotOverlapping(slotStart, slotEnd, unavailableSlots);
+
+                                    return (
+                                        <button
+                                            key={index}
+                                            onClick={() => {
+                                                if (isDisabled) return;
+                                                setSelectedTime(timeSlot)
+                                            }}
+                                            className={
+                                                cn(
+                                                    "w-full p-[4px] md:p-3 text-[12px] md:text-sm rounded-md border transition-colors",
+                                                    selectedTime === timeSlot ? 'bg-black text-white border-black' : 'text-gray-700 border-gray-300 hover:bg-gray-200',
+                                                    styles.slideUp,
+                                                    isDisabled ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : ''
+                                                )}
+                                            style={{ animationDelay: `${70 * index + Math.floor(Math.random() * 30)}ms` }}
+                                            type="button"
+                                            disabled={isDisabled}
+                                        >
+                                            {timeSlot}
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                    }
                 </div>
             )}
         </div>

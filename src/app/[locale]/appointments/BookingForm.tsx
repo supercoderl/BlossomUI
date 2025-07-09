@@ -11,21 +11,22 @@ import { cn } from '@/utils/helpers';
 import { PhoneIcon } from '@/components/Icon/phone';
 import { ClockIcon } from '@/components/Icon/clock';
 import { LocationIcon } from '@/components/Icon/location';
+import { createBooking } from '../booking/api';
+import { Button } from 'antd';
+import { Service, ServiceOption } from '@/types/service';
+import { TechnicianInfo } from '@/types/user';
+import { parseStartTime } from '@/utils/date';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
 
-const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-];
-
-
-const BookingFormSection = () => {
+const BookingFormSection = ({ loading, router, font }: { loading: Record<string, boolean>, router: AppRouterInstance, font: NextFontWithVariable }) => {
     const [messageApi] = useGlobalMessage();
-    const [selectedService, setSelectedService] = useState('');
-    const [selectedEmployee, setSelectedEmployee] = useState('');
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedTime, setSelectedTime] = useState('9:00 AM - 10:00 AM');
-    const [currentMonth, setCurrentMonth] = useState(5); // June (0-indexed)
-    const [currentYear, setCurrentYear] = useState(2025);
+    const [selectedService, setSelectedService] = useState<(Service & { type: 'service' }) | (ServiceOption & { type: 'option' }) | null>(null);
+    const [selectedEmployee, setSelectedEmployee] = useState<TechnicianInfo | null>(null);
+    const [selectedDate, setSelectedDate] = useState<number | null>(null);
+    const [selectedTime, setSelectedTime] = useState('');
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth()); // June (0-indexed)
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear()); // Current year
     const [state, setState] = useState(1);
     const [information, setInformation] = useState({
         firstName: '',
@@ -36,7 +37,7 @@ const BookingFormSection = () => {
     const [isSubmit, setIsSubmit] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         switch (state) {
             case 1:
                 if (!selectedService) {
@@ -50,6 +51,11 @@ const BookingFormSection = () => {
                     messageApi.warning("Please select date!");
                     return;
                 }
+                if (!selectedTime || selectedTime === "") {
+                    messageApi.warning("Please select time!");
+                    return;
+                }
+
                 setState(prev => prev + 1);
                 break;
             case 3:
@@ -61,10 +67,31 @@ const BookingFormSection = () => {
                 break;
             case 4:
                 setState(prev => prev + 1);
+                const { hours, minutes } = parseStartTime(selectedTime);
+                const dateStr = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${selectedDate?.toString().padStart(2, '0')}`;
+                const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+                
+                await createBooking({
+                    customerId: null,
+                    technicianId: selectedEmployee?.id,
+                    scheduleTime: `${dateStr}T${timeStr}`,
+                    serviceId: selectedService?.type === "service" ? selectedService?.id : null,
+                    serviceOptionId: selectedService?.type === "option" ? selectedService?.serviceOptionId : null,
+                    quantity: 1,
+                    price: selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0,
+                    note: null,
+                    guestName: information.firstName + " " + information.lastName,
+                    guestPhone: information.phone,
+                    guestEmail: information.email
+                }).then((res: any) => {
+                    if (res && res.success) {
+                        messageApi.success('Booking created successfully');
+                        setIsSubmit(true);
+                    }
+                })
                 break;
         }
     }
-
 
     return (
         <section className="mt-[100px] mb-[70px] relative">
@@ -90,7 +117,9 @@ const BookingFormSection = () => {
                                                 <div className="pr-2 overflow-x-hidden max-w-md">
                                                     {
                                                         isSubmit ?
-                                                            <LeftContentSubmit />
+                                                            <LeftContentSubmit
+                                                                isCollapsed={isCollapsed}
+                                                            />
                                                             :
                                                             <LeftContent
                                                                 state={state}
@@ -99,7 +128,6 @@ const BookingFormSection = () => {
                                                                 selectedDate={selectedDate}
                                                                 information={information
                                                                 }
-                                                                months={months}
                                                                 currentMonth={currentMonth}
                                                                 currentYear={currentYear}
                                                                 selectedTime={selectedTime}
@@ -127,7 +155,15 @@ const BookingFormSection = () => {
                                                 <div className="overflow-hidden relative h-full">
                                                     {
                                                         isSubmit ?
-                                                            <RightContentSubmit />
+                                                            <RightContentSubmit
+                                                                selectedDate={selectedDate}
+                                                                selectedTime={selectedTime}
+                                                                selectedService={selectedService}
+                                                                selectedEmployee={selectedEmployee}
+                                                                currentMonth={currentMonth}
+                                                                currentYear={currentYear}
+                                                                information={information}
+                                                            />
                                                             :
                                                             <RightContent
                                                                 state={state}
@@ -137,7 +173,6 @@ const BookingFormSection = () => {
                                                                 selectedDate={selectedDate}
                                                                 selectedTime={selectedTime}
                                                                 information={information}
-                                                                months={months}
                                                                 currentMonth={currentMonth}
                                                                 currentYear={currentYear}
                                                                 setSelectedService={setSelectedService}
@@ -146,16 +181,28 @@ const BookingFormSection = () => {
                                                                 setSelectedTime={setSelectedTime}
                                                                 setCurrentMonth={setCurrentMonth}
                                                                 setCurrentYear={setCurrentYear}
-                                                                setInformation={setInformation} />
+                                                                setInformation={setInformation}
+                                                                messageApi={messageApi}
+                                                                loading={loading}
+                                                            />
                                                     }
-                                                    <div className="flex items-center justify-end w-full py-2 px-8 bg-transparent shadow-[0_-2px_3px_rgba(26,_44,_55,_0.15)]">
-                                                        <button
-                                                            className="bg-black text-white border border-solid border-black inline-flex items-center justify-center h-[40px] text-[15px] font-medium whitespace-nowrap decoration-none transition-all duration-300 ease-in-out py-2 px-5 rounded-[6px] cursor-pointer hover:bg-[rgba(0,_0,_0,_0.8)]"
-                                                            type="button"
-                                                            onClick={onSubmit}
+                                                    <div className="flex items-center justify-end w-full py-2.5 px-8 bg-transparent shadow-[0_-2px_3px_rgba(26,_44,_55,_0.15)]">
+                                                        <Button
+                                                            className="!bg-black text-white transition-all duration-300 ease-in-out cursor-pointer"
+                                                            onClick={() => {
+                                                                if (isSubmit) {
+                                                                    router.replace("/");
+                                                                } else {
+                                                                    onSubmit();
+                                                                }
+                                                            }}
+                                                            loading={loading["create-booking"]}
+                                                            disabled={loading["create-booking"]}
+                                                            size="large"
+                                                            type="primary"
                                                         >
-                                                            <span>Continue</span>
-                                                        </button>
+                                                            <span>{isSubmit ? 'Back to home' : 'Continue'}</span>
+                                                        </Button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -166,7 +213,12 @@ const BookingFormSection = () => {
                         </div>
                     </div>
                 </div>
-                <div className="w-full md:w-1/3 mt-24 md:m-0 relative min-h flex">
+                <div className={
+                    cn(
+                        "w-full md:w-1/3 mt-24 md:m-0 relative min-h flex",
+                        font.className
+                    )
+                }>
                     <div className="w-full pt-[10px] flex relative flex-wrap content-start">
                         <div className="w-full relative">
                             <div className="">
@@ -177,7 +229,7 @@ const BookingFormSection = () => {
                                         </div>
                                         <h6 className="mb-[10px] text-[20px] font-medium">Contact</h6>
                                         <div className="text-center px-[49px] text-[16px]">
-                                            <p className='mb-0'>T: +44 23 8061 3526<br />blossom_nails2018@outlook.com</p>
+                                            <p className='mb-0 text-[16px] font-[300] tracking-[0.02em] leading-[26px]'>T: +44 23 8061 3526<br />blossom_nails2018@outlook.com</p>
                                         </div>
                                     </div>
                                     <div className="mb-[50px] flex-[0_0_100%] max-w-full relative w-full min-h px-[15px]">
@@ -186,7 +238,7 @@ const BookingFormSection = () => {
                                         </div>
                                         <h6 className="mb-[10px] text-[20px] font-medium">Hours</h6>
                                         <div className="text-center px-[49px] text-[16px]">
-                                            <p className='mb-0'>Mon – Sat: 09:00 am — 06:00 pm<br />Sun: close</p>
+                                            <p className='mb-0 text-[16px] font-[300] tracking-[0.02em] leading-[26px]'>Mon – Sat: 09:00 am — 06:00 pm<br />Sun: close</p>
                                         </div>
                                     </div>
                                     <div className="mb-[50px] flex-[0_0_100%] max-w-full relative w-full min-h px-[15px]">
@@ -195,7 +247,7 @@ const BookingFormSection = () => {
                                         </div>
                                         <h6 className="mb-[10px] text-[20px] font-medium">Location</h6>
                                         <div className="text-center px-[49px] text-[16px]">
-                                            <p className='mb-0'>8c wells place SO50 5PP,<br />Eastleigh, UK</p>
+                                            <p className='mb-0 text-[16px] font-[300] tracking-[0.02em] leading-[26px]'>8c wells place SO50 5PP,<br />Eastleigh, UK</p>
                                         </div>
                                     </div>
                                 </div>

@@ -6,8 +6,7 @@ import {
     Form,
     Card,
     Typography,
-    DatePicker,
-    theme
+    DatePicker
 } from 'antd';
 import {
     PlusOutlined,
@@ -16,38 +15,38 @@ import {
 } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
 import Layout from '@/components/Layout';
-import { Schedule } from '@/types/workSchedule';
 import EmployeeManagement from './Employee';
 import CreateScheduleForm from './CreateForm';
 import { renderTimeSlot } from './timeSlotRender';
-import { createWorkSchedule, getTechnicians, getWorkSchedules } from '../api';
+import { createWorkSchedule, getTechnicians } from '../api';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import DailySummary from './DailySummary';
 import { TechnicianInfo } from '@/types/user';
 import { useGlobalMessage } from '@/providers/messageProvider';
+import { getBookings } from '../../booking/api';
+import { Booking } from '@/types/booking';
 
 const { Title, Text } = Typography;
 
 const DailyScheduleSystem = () => {
-    const [schedules, setSchedules] = useState<Schedule[]>([]);
     const [employees, setEmployees] = useState<TechnicianInfo[]>([]);
+    const [bookings, setBookings] = useState<Booking[]>([]);
     const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
-    const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
+    const [editingSchedule, setEditingSchedule] = useState<Booking | null>(null);
     const [form] = Form.useForm();
     const { loading } = useApiLoadingStore();
     const [messageApi] = useGlobalMessage();
-    const { token } = theme.useToken();
 
     const onLoad = async () => {
-        const [technicianRes, workScheduleRes] = await Promise.all([
+        const [technicianRes, bookingRes] = await Promise.all([
             getTechnicians({
                 query: { ...pageQuery },
                 searchTerm: '',
                 includeDeleted: false
             }),
-            getWorkSchedules({
+            getBookings({
                 query: { ...pageQuery },
                 searchTerm: '',
                 includeDeleted: false
@@ -55,14 +54,15 @@ const DailyScheduleSystem = () => {
         ]);
 
         const technicians = technicianRes?.data?.items || [];
-        const workSchedules = workScheduleRes?.data?.items || [];
+        const bookings = bookingRes?.data?.items || [];
+        console.log(bookings);
 
         if (technicians.length > 0) {
             setEmployees(technicians);
         }
 
-        if (workSchedules.length > 0) {
-            setSchedules(workSchedules);
+        if(bookings.length > 0) {
+            setBookings(bookings);
         }
     }
 
@@ -73,7 +73,7 @@ const DailyScheduleSystem = () => {
     // Generate time slots from 6 AM to 5 PM
     const generateTimeSlots = () => {
         const slots = [];
-        for (let hour = 6; hour <= 17; hour++) {
+        for (let hour = 9; hour <= 18; hour++) {
             const timeStr = `${hour.toString().padStart(2, '0')}:00`;
             const displayTime = hour === 12 ? '12:00 PM' :
                 hour > 12 ? `${hour - 12}:00 PM` : `${hour}:00 AM`;
@@ -90,19 +90,19 @@ const DailyScheduleSystem = () => {
 
     const getAllSchedulesForDate = (date: Dayjs) => {
         const dateStr = date.format('YYYY-MM-DD');
-        return schedules.filter(schedule => schedule.workDate === dateStr);
+        return bookings.filter(booking => dayjs(booking.scheduleTime).format('YYYY-MM-DD') === dateStr);
     };
 
-    const openScheduleModal = (timeSlot: string = '', schedule: any = null) => {
+    const openScheduleModal = (timeSlot: string = '', schedule: Booking | null = null) => {
         setEditingSchedule(schedule);
-
+        
         if (schedule) {
             form.setFieldsValue({
-                employeeId: schedule.employeeId,
-                startTime: dayjs(schedule.startTime, 'HH:mm'),
-                endTime: dayjs(schedule.endTime, 'HH:mm'),
-                shift: schedule.shift,
-                notes: schedule.notes
+                employeeId: schedule.technicianId,
+                startTime: dayjs(schedule.scheduleTime),
+                endTime: dayjs(schedule.scheduleTime).add(schedule.bookingDetails?.[0].service?.durationMinutes ?? 0, 'minutes'),
+                // shift: schedule.shift,
+                notes: schedule.note
             });
         } else {
             form.resetFields();
@@ -120,8 +120,8 @@ const DailyScheduleSystem = () => {
         const newSchedule = {
             technicianId: values.employeeId,
             workDate: selectedDate.format('YYYY-MM-DD'),
-            startTime: values.startTime.format('HH:mm:ss'),
-            endTime: values.endTime.format('HH:mm:ss'),
+            startTime: values.startTime.format('HH:mm'),
+            endTime: values.endTime.format('HH:mm'),
             isDayOff: values.isDayOff
         };
 
@@ -196,11 +196,11 @@ const DailyScheduleSystem = () => {
                         <div className="time-slots-container">
                             {timeSlots.map(timeSlot => renderTimeSlot(
                                 timeSlot,
-                                schedules,
+                                bookings,
                                 selectedDate,
                                 openScheduleModal,
                                 employees,
-                                setSchedules,
+                                setBookings,
                                 loading
                             ))}
                         </div>

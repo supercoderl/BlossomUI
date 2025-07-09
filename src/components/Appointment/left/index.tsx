@@ -7,6 +7,9 @@ import {
     UserOutlined
 } from '@ant-design/icons';
 import styles from '../index.module.css';
+import { Service, ServiceOption } from '@/types/service';
+import { TechnicianInfo } from '@/types/user';
+import { months } from '@/data/date';
 
 const LeftContent = ({
     state,
@@ -14,15 +17,14 @@ const LeftContent = ({
     selectedEmployee,
     selectedDate,
     information,
-    months,
     currentMonth,
     currentYear,
     selectedTime,
     isCollapsed
 }: {
     state: number,
-    selectedService: string,
-    selectedEmployee: string,
+    selectedService: (Service & { type: 'service' }) | (ServiceOption & { type: 'option' }) | null,
+    selectedEmployee: TechnicianInfo | null,
     selectedDate: any,
     information: {
         firstName: string;
@@ -30,7 +32,6 @@ const LeftContent = ({
         email: string;
         phone: string;
     },
-    months: string[],
     currentMonth: number,
     currentYear: number,
     selectedTime: string,
@@ -78,7 +79,7 @@ const LeftContent = ({
                                 selectedEmployee ? 'border-b border-dashed border-[rgba(0,_0,_0,_0.1)]' : ''
                             )
                         }>
-                            <span>{selectedService}</span>
+                            <span>{selectedService?.type === 'service' ? selectedService?.name : selectedService?.type === 'option' ? selectedService?.variantName : null}</span>
                         </p>
                     </span>
                 )}
@@ -95,7 +96,7 @@ const LeftContent = ({
                                     'text-[12px] pb-[4px] m-0 whitespace-pre',
                                 )
                             }>
-                                <span>{selectedEmployee}</span>
+                                <span>{selectedEmployee?.fullName}</span>
                             </p>
                         </span>
                     )

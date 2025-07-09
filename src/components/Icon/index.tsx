@@ -1,5 +1,9 @@
 import Icon from "@ant-design/icons";
 import { GetProps } from "antd";
+import { HairIcon } from "./hair";
+import { MakeUpIcon } from "./makeup";
+import { PolishIcon } from "./polish";
+import { CosmetologyIcon } from "./cosmetology";
 
 type CustomIconComponentProps = GetProps<typeof Icon>;
 
@@ -13,3 +17,10 @@ const TicketSvg = () => (
 export const TicketIcon = (props: Partial<CustomIconComponentProps>) => (
     <Icon component={TicketSvg} {...props} />
 );
+
+export const iconMap: Record<string, React.ElementType> = {
+  HairIcon,
+  MakeUpIcon,
+  PolishIcon,
+  CosmetologyIcon
+};

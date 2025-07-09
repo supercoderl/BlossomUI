@@ -7,6 +7,9 @@ import CalendarSelection from '../form/CalendarSelection';
 import Information from '../form/Information';
 import Confirmation from '../form/Confirmation';
 import ConfirmationSkeleton from '../form/Skeleton';
+import { Service, ServiceOption } from '@/types/service';
+import { TechnicianInfo } from '@/types/user';
+import { MessageInstance } from 'antd/es/message/interface';
 
 const RightContent = ({
     state,
@@ -16,7 +19,6 @@ const RightContent = ({
     selectedDate,
     selectedTime,
     information,
-    months,
     currentMonth,
     currentYear,
     setSelectedService,
@@ -25,13 +27,15 @@ const RightContent = ({
     setSelectedTime,
     setCurrentMonth,
     setCurrentYear,
-    setInformation
+    setInformation,
+    messageApi,
+    loading
 }: {
     state: number,
     setState: Dispatch<SetStateAction<number>>,
-    selectedService: string,
-    selectedEmployee: string,
-    selectedDate: any,
+    selectedService: (Service & { type: 'service' }) | (ServiceOption & { type: 'option' }) | null,
+    selectedEmployee: TechnicianInfo | null,
+    selectedDate: number | null,
     selectedTime: string,
     information: {
         firstName: string;
@@ -39,12 +43,11 @@ const RightContent = ({
         email: string;
         phone: string;
     },
-    months: string[],
     currentMonth: number,
     currentYear: number,
-    setSelectedService: Dispatch<SetStateAction<string>>,
-    setSelectedEmployee: Dispatch<SetStateAction<string>>,
-    setSelectedDate: Dispatch<SetStateAction<null>>,
+    setSelectedService: Dispatch<SetStateAction<(Service & { type: 'service' }) | (ServiceOption & { type: 'option' }) | null>>,
+    setSelectedEmployee: Dispatch<SetStateAction<TechnicianInfo | null>>,
+    setSelectedDate: Dispatch<SetStateAction<number | null>>,
     setSelectedTime: Dispatch<SetStateAction<string>>,
     setCurrentMonth: Dispatch<SetStateAction<number>>,
     setCurrentYear: Dispatch<SetStateAction<number>>,
@@ -53,25 +56,10 @@ const RightContent = ({
         lastName: string;
         email: string;
         phone: string;
-    }>>
+    }>>,
+    messageApi: MessageInstance,
+    loading: Record<string, boolean>
 }) => {
-    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-    const timeSlots = [
-        '9:00 AM - 10:00 AM',
-        '11:00 AM - 12:00 PM',
-        '11:30 AM - 12:30 PM',
-        '12:00 PM - 1:00 PM',
-        '12:30 PM - 1:30 PM',
-        '1:00 PM - 2:00 PM',
-        '1:30 PM - 2:30 PM',
-        '2:00 PM - 3:00 PM',
-        '2:30 PM - 3:30 PM',
-        '3:00 PM - 4:00 PM',
-        '3:30 PM - 4:30 PM',
-        '4:00 PM - 5:00 PM'
-    ];
-
     const renderHeader = () => {
         switch (state) {
             case 1:
@@ -131,6 +119,7 @@ const RightContent = ({
                         setSelectedService={setSelectedService}
                         selectedEmployee={selectedEmployee}
                         setSelectedEmployee={setSelectedEmployee}
+                        messageApi={messageApi}
                     />
                 );
             case 2:
@@ -144,9 +133,8 @@ const RightContent = ({
                         setSelectedTime={setSelectedTime}
                         setCurrentMonth={setCurrentMonth}
                         setCurrentYear={setCurrentYear}
-                        months={months}
-                        daysOfWeek={daysOfWeek}
-                        timeSlots={timeSlots}
+                        employeeId={selectedEmployee?.id}
+                        loading={loading}
                     />
                 );
             case 3:
@@ -170,6 +158,7 @@ const RightContent = ({
                         setSelectedService={setSelectedService}
                         selectedEmployee={selectedEmployee}
                         setSelectedEmployee={setSelectedEmployee}
+                        messageApi={messageApi}
                     />
                 );
         }

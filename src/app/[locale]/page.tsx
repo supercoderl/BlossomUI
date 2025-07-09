@@ -12,6 +12,21 @@ import ArticleSection from "@/components/Home/article";
 import FollowSection from "@/components/Home/follow";
 import InstagramSection from "@/components/Home/instagram";
 import ContactSection from "@/components/Home/contact";
+import { EB_Garamond, Jost } from "next/font/google";
+
+const eb = EB_Garamond({
+    subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+    display: "swap",
+    variable: "--font-inter",
+});
+
+const jost = Jost({
+    subsets: ["latin"],
+    weight: ["300", "400", "500", "600", "700"],
+    display: "swap",
+    variable: "--font-inter",
+});
 
 export default function Home() {
     const [messageApi, contextHolder] = message.useMessage();
@@ -23,16 +38,16 @@ export default function Home() {
         >
             {contextHolder}
             <div>
-                <HeroSection />
-                <ServiceSection />
-                <StorySection />
-                <ShopSection />
-                <AboutSection />
-                <BlogSection />
-                <ArticleSection />
-                <FollowSection />
-                <InstagramSection />
-                <ContactSection />
+                <HeroSection font={eb} font2={jost} />
+                <ServiceSection messageApi={messageApi} font={eb} font2={jost} />
+                <StorySection font={eb} font2={jost} />
+                <ShopSection font={eb} font2={jost} />
+                <AboutSection font={eb} font2={jost} />
+                <BlogSection font={eb} font2={jost} />
+                <ArticleSection font={eb} font2={jost} />
+                <FollowSection font={jost} />
+                <InstagramSection font={eb} font2={jost} />
+                <ContactSection font={jost} />
             </div>
         </HomeLayout>
     );

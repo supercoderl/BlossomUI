@@ -1,6 +1,7 @@
 import { BookingStatus } from '@/enums/bookingStatus';
+import { stringToColor } from '@/utils/color';
 import { formatter } from '@/utils/currency';
-import { Space, type TableProps } from 'antd';
+import { Space, Tag, type TableProps } from 'antd';
 
 interface DataType {
     id: string;
@@ -16,7 +17,7 @@ const getColumns = (): TableProps<DataType>['columns'] => [
         title: 'Time',
         dataIndex: 'scheduleTime',
         key: 'scheduleTime',
-        render: (date) => new Date(date).toDateString(),
+        render: (date) => new Date(date).toLocaleString(),
     },
     {
         title: 'Price',
@@ -29,7 +30,7 @@ const getColumns = (): TableProps<DataType>['columns'] => [
         title: 'Status',
         dataIndex: 'status',
         key: 'status',
-        render: (status) => BookingStatus[status],
+        render: (status) => <Tag color={stringToColor(BookingStatus[status])}>{BookingStatus[status]}</Tag>,
         align: 'center',
         width: 120
     },

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import {
     getMessages,
@@ -9,8 +8,6 @@ import "./globals.css";
 import { MessageProvider } from "@/providers/messageProvider";
 import { NextIntlClientProvider } from "next-intl";
 import 'aos/dist/aos.css'
-
-const inter = Inter({ subsets: ["latin"] });
 
 type Props = {
     children: React.ReactNode;
@@ -36,7 +33,7 @@ export default async function BasicLayout({ children, params: { locale } }: Read
         <html lang={locale}>
             <head>
             </head>
-            <body className={inter.className}>
+            <body>
                 <NextIntlClientProvider locale={locale} messages={messages}>
                     <MessageProvider>
                         <AntdRegistry>{children}</AntdRegistry>

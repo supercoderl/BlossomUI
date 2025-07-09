@@ -1,6 +1,14 @@
+import { cn } from "@/utils/helpers";
+import { NextFontWithVariable } from "next/dist/compiled/@next/font";
 import { useRef, useState, useEffect } from "react";
 
-const AboutSection = () => {
+const AboutSection = ({
+    font,
+    font2
+} : {
+    font: NextFontWithVariable,
+    font2: NextFontWithVariable
+}) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -136,12 +144,22 @@ const AboutSection = () => {
 
                         {/* Content Section */}
                         <div className="w-full lg:w-1/2">
-                            <h2 className="text-4xl lg:text-6xl font-light text-gray-900 mb-8 tracking-wide leading-tight">
+                            <h2 className={
+                                cn(
+                                    "text-4xl lg:text-6xl font-light text-gray-900 mb-8 tracking-wide leading-tight",
+                                    font.className
+                                )
+                            }>
                                 Beauty Box
                             </h2>
 
-                            <div className="text-gray-600 text-lg lg:text-xl leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
-                                <p>
+                            <div className={
+                                cn(
+                                    "text-gray-600 text-lg lg:text-xl leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0",
+                                    font2.className
+                                )
+                            }>
+                                <p className="text-[18px] font-[300] leading-[1.7em] text-left">
                                     Our beauty box is a set of best full-size products that are top
                                     sellers in our online shop. We want you to be able to try
                                     everything at once and make sure that our selection of products is
@@ -150,7 +168,12 @@ const AboutSection = () => {
                                 </p>
                             </div>
 
-                            <div className="inline-block text-center md:text-left w-full">
+                            <div className={
+                                cn(
+                                    "inline-block text-center md:text-left w-full",
+                                    font2.className
+                                )
+                            }>
                                 <a
                                     href="https://firstsight.design/cherie/beauty/product/beauty-box-2/"
                                     className="inline-block bg-transparent border-2 border-gray-900 text-gray-900 px-10 py-4 font-semibold tracking-widest text-sm uppercase hover:bg-gray-900 hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-4 focus:ring-gray-300"
@@ -171,12 +194,22 @@ const AboutSection = () => {
                         
                         {/* Content Section */}
                         <div className="w-full lg:w-1/2 order-2 lg:order-1">
-                            <h2 className="text-4xl lg:text-6xl font-light text-gray-900 mb-8 tracking-wide leading-tight">
+                            <h2 className={
+                                cn(
+                                    "text-4xl lg:text-6xl font-light text-gray-900 mb-8 tracking-wide leading-tight",
+                                    font.className
+                                )
+                            }>
                                 Gift Cards
                             </h2>
 
-                            <div className="text-gray-600 text-lg lg:text-xl leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0">
-                                <p>
+                            <div className={
+                                cn(
+                                    "text-gray-600 text-lg lg:text-xl leading-relaxed mb-10 max-w-xl mx-auto lg:mx-0",
+                                    font2.className
+                                )
+                            }>
+                                <p className="text-[18px] font-[300] leading-[1.7em] text-left">
                                     When in doubt what to buy as a gift, this is the best option. Our gift cards 
                                     have no expiration date and can be used to pay for all the services in our 
                                     beauty studio or in our cosmetic shop. You can choose physical or electronic 
@@ -185,7 +218,12 @@ const AboutSection = () => {
                                 </p>
                             </div>
 
-                            <div className="inline-block">
+                            <div className={
+                                cn(
+                                    "inline-block",
+                                    font2.className
+                                )
+                            }>
                                 <a
                                     href="https://firstsight.design/cherie/beauty/gift-cards/"
                                     className="inline-block bg-gray-900 text-white border-2 border-gray-900 px-10 py-4 font-semibold tracking-widest text-sm uppercase hover:bg-transparent hover:text-gray-900 transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-4 focus:ring-gray-300"
