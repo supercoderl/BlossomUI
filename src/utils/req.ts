@@ -80,7 +80,7 @@ instance.interceptors.response.use(function (response) {
 
               // Update token in storage/cookie
               await setTokenCookie(newAccessToken);
-              await setRefreshTokenCookie(newRefreshToken)
+              await setRefreshTokenCookie(newRefreshToken);
 
               // Update default authorization header
               instance.defaults.headers.common['Authorization'] = 'Bearer ' + newAccessToken;

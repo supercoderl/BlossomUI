@@ -22,3 +22,13 @@ export interface UserInfo {
     dateOfBirth: Date;
     technicianInfo?: TechnicianInfo | null;
 }
+
+export interface UserCookieInfo {
+    id: string;
+    email: string;
+    fullName: string;
+    phoneNumber: string;
+    role: string;
+    avatarUrl: string;
+    lastLogin?: Date | null;
+}

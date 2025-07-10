@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Table, theme, Typography } from 'antd';
+import { Card, Table, Typography } from 'antd';
 import AvaForm from './AvaForm';
 import { getColumns } from './column';
 import Layout from '@/components/Layout';
@@ -11,9 +11,9 @@ import { getBookings } from '../api';
 const { Title, Text } = Typography;
 
 export default function Service() {
-  const { token } = theme.useToken();
   const [bookings, setBookings] = useState([]);
   const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
+  const [totalPage, setTotalPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [includeDeleted, setIncludeDeleted] = useState(false);
   const { loading } = useApiLoadingStore();
@@ -29,13 +29,26 @@ export default function Service() {
     }).then((res) => {
       if (res && res.data && res.data.items.length > 0) {
         setBookings(res.data.items);
+        setTotalPage(res.data.count ?? 0);
       }
     })
   }
 
+  const onClear = () => {
+    setPageQuery({ page: 1, pageSize: 5 });
+    setSearchTerm("");
+  }
+
+  const handleTableChange = (paginationInfo: any) => {
+    setPageQuery({
+      ...pageQuery,
+      page: paginationInfo.current,
+    });
+  };
+
   useEffect(() => {
     onLoad();
-  }, []);
+  }, [pageQuery]);
 
   return (
     <Layout curActive='/booking/list'>
@@ -53,8 +66,8 @@ export default function Service() {
         <AvaForm
           filters={undefined}
           setFilters={() => { }}
-          applyFilters={() => { }}
-          clearFilters={() => { }}
+          applyFilters={onLoad}
+          clearFilters={onClear}
           onReload={onLoad}
         />
 
@@ -63,10 +76,11 @@ export default function Service() {
           <Table
             columns={getColumns()}
             dataSource={bookings}
-            pagination={{ pageSize: pageQuery.pageSize }}
+            pagination={{ pageSize: pageQuery.pageSize, total: totalPage }}
             scroll={{ x: 1000 }}
             rowKey="id"
             loading={loading['get-bookings']}
+            onChange={handleTableChange}
           />
         </Card>
       </main>

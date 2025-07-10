@@ -15,7 +15,7 @@ import moment from 'moment';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import { useGlobalMessage } from '@/providers/messageProvider';
 import { Gender } from '@/enums/gender';
-import { setRefreshTokenCookie, setTokenCookie } from '@/utils/cookie';
+import { setRefreshTokenCookie, setTokenCookie, setUserInfo } from '@/utils/cookie';
 
 type FieldType = {
     email?: string;
@@ -47,6 +47,7 @@ export default function Home() {
                     if (res.data) {
                         setTokenCookie(res.data.accessToken);
                         setRefreshTokenCookie(res.data.refreshToken);
+                        setUserInfo(res.data.userInfo);
                         router.push('/dashboard');
                     }
                 });

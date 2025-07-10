@@ -27,6 +27,9 @@ const CustomerReviewManager = () => {
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [selectedReview, setSelectedReview] = useState<any>(null);
+  const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
+  const [totalPage, setTotalPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const { loading } = useApiLoadingStore();
   const [filters, setFilters] = useState<{
     rating: number | null,
@@ -38,19 +41,20 @@ const CustomerReviewManager = () => {
 
   const onLoad = async () => {
     await getReviews({
-      query: { page: 1, pageSize: 5 },
-      searchTerm: '',
+      ...pageQuery,
+      searchTerm,
       includeDeleted: false
     }).then((res) => {
       if (res && res.data && res.data.items.length > 0) {
         setReviews(res.data.items);
+        setTotalPage(res.data.count ?? 0);
       }
     })
   }
 
   useEffect(() => {
-
-  }, []);
+    onLoad();
+  }, [pageQuery]);
 
   const getRatingColor = (rating: number) => {
     if (rating >= 4) return '#52c41a';
@@ -72,12 +76,17 @@ const CustomerReviewManager = () => {
     message.success('Review deleted successfully');
   };
 
-  const applyFilters = () => {
-
+  const handleTableChange = (paginationInfo: any) => {
+    setPageQuery({
+      ...pageQuery,
+      page: paginationInfo.current,
+    });
   };
 
   const clearFilters = () => {
     setFilters({ rating: null, product: null });
+    setPageQuery({ page: 1, pageSize: 5 });
+    setSearchTerm("");
   };
 
   // const avgRating = reviews.length > 0
@@ -100,7 +109,7 @@ const CustomerReviewManager = () => {
         <AvaForm
           filters={filters}
           setFilters={setFilters}
-          applyFilters={applyFilters}
+          applyFilters={onLoad}
           clearFilters={clearFilters}
           onReload={onLoad}
         />
@@ -116,10 +125,12 @@ const CustomerReviewManager = () => {
               pageSize: 5,
               showSizeChanger: true,
               showQuickJumper: true,
+              total: totalPage,
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} reviews`,
             }}
             scroll={{ x: 800 }}
+            onChange={handleTableChange}
           />
         </Card>
 

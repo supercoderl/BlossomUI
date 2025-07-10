@@ -36,13 +36,15 @@ const ContentSection = ({
                         <div className="w-full relative">
                             <div className={font2.className}>
                                 <p className="m-0 text-[18px] font-[300] leading-[1.7em] text-left">
-                                    <span>Dear friends, I would certainly love to meet you all in persone, so come and just say hi. If it’s not possible at the moment, I would loke to introduce myself‚ I’m Vicky, the founder of Cherie Beauty Studio. I’m certain that new haircut, professional makup or just getting your nails done — is a pretty easy way to make your day or week better. I guarantee that you will appreciate the atmosphere of our place. Looking forward to meeting you!</span>
+                                    <span>Welcome to our world of elegance and self-expression. At Cherie Beauty Studio, we believe that beauty is found in the smallest details — like a delicate flower on your fingertips. Our passion lies in helping you feel confident, refreshed, and radiant with every visit.
+
+From custom nail art to relaxing beauty rituals, our mission is to create a space where you feel cared for, seen, and celebrated. Whether you're here to treat yourself or simply take a break from the busy world, we’re so glad you found us.</span>
                                 </p>
                             </div>
                         </div>
                         <div className="w-full relative">
                             <div className={cn("mt-[30px]", font2.className)}>
-                                <h6 className="mb-4 text-[16px] md:text-[20px] font-medium">– Emma Underwood</h6>
+                                <h6 className="mb-4 text-[16px] md:text-[20px] font-medium">– Vicky, Founder of Cherie Beauty Studio</h6>
                             </div>
                         </div>
                     </div>

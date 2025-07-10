@@ -5,7 +5,7 @@ import { useRef, useState, useEffect } from "react";
 const AboutSection = ({
     font,
     font2
-} : {
+}: {
     font: NextFontWithVariable,
     font2: NextFontWithVariable
 }) => {
@@ -17,15 +17,15 @@ const AboutSection = ({
     const sliderRef = useRef(null);
 
     const images = [
-        "https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/1.jpg",
-        "https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/4.jpg",
-        "https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/3.jpg",
-        "https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/2.jpg"
+        "/gallery/box-1.jpg",
+        "/gallery/box-2.jpg",
+        "/gallery/box-3.jpg",
+        "/gallery/box-4.jpg"
     ];
 
     const giftCardImages = [
-        "https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/Gift-Card-1-1@1.5x.jpg",
-        "https://firstsight.design/cherie/beauty/wp-content/uploads/2020/09/Gift-Card-3@1.5x.jpg"
+        "/gallery/box-5.jpg",
+        "/gallery/box-6.jpg"
     ];
 
     // Auto-play for gift cards
@@ -91,15 +91,14 @@ const AboutSection = ({
             <section className="bg-rose-50 py-16 lg:py-24 scroll-smooth">
                 <div className="container mx-auto px-4 max-w-7xl">
                     <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-                        
+
                         {/* Image Slider Section */}
                         <div className="w-full lg:w-1/2">
                             <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-white">
                                 <div
                                     ref={sliderRef}
-                                    className={`flex transition-all ease-out select-none ${
-                                        isDragging ? 'cursor-grabbing duration-75' : 'cursor-grab duration-700'
-                                    }`}
+                                    className={`flex transition-all ease-out select-none ${isDragging ? 'cursor-grabbing duration-75' : 'cursor-grab duration-700'
+                                        }`}
                                     style={{
                                         transform: `translateX(${translateX - currentSlide * 100}%)`
                                     }}
@@ -131,11 +130,10 @@ const AboutSection = ({
                                     <button
                                         key={index}
                                         onClick={() => goToSlide(index)}
-                                        className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-110 ${
-                                            currentSlide === index
+                                        className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-110 ${currentSlide === index
                                                 ? 'bg-rose-500 shadow-lg scale-125'
                                                 : 'bg-gray-300 hover:bg-rose-300'
-                                        }`}
+                                            }`}
                                         aria-label={`Go to slide ${index + 1}`}
                                     />
                                 ))}
@@ -150,7 +148,7 @@ const AboutSection = ({
                                     font.className
                                 )
                             }>
-                                Beauty Box
+                                Nail Art Box
                             </h2>
 
                             <div className={
@@ -160,11 +158,7 @@ const AboutSection = ({
                                 )
                             }>
                                 <p className="text-[18px] font-[300] leading-[1.7em] text-left">
-                                    Our beauty box is a set of best full-size products that are top
-                                    sellers in our online shop. We want you to be able to try
-                                    everything at once and make sure that our selection of products is
-                                    about quality, our products just do their job, no compromises. You
-                                    can subscribe and get our beauty box every month or just buy it once.
+                                    Our Nail Art Box is a curated set of trendy nail essentials inspired by the latest styles — like these bold checkered and black-tipped designs. Whether you’re into sleek minimalism or daring patterns, we’ve got everything you need to recreate salon-worthy looks at home. Try once or subscribe monthly to keep your nails always on point.
                                 </p>
                             </div>
 
@@ -175,7 +169,7 @@ const AboutSection = ({
                                 )
                             }>
                                 <a
-                                    href="https://firstsight.design/cherie/beauty/product/beauty-box-2/"
+                                    href="/beauty-box-2/"
                                     className="inline-block bg-transparent border-2 border-gray-900 text-gray-900 px-10 py-4 font-semibold tracking-widest text-sm uppercase hover:bg-gray-900 hover:text-white transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-4 focus:ring-gray-300"
                                     rel="nofollow"
                                 >
@@ -191,7 +185,7 @@ const AboutSection = ({
             <section className="bg-white py-16 lg:py-24 scroll-smooth">
                 <div className="container mx-auto px-4 max-w-7xl">
                     <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
-                        
+
                         {/* Content Section */}
                         <div className="w-full lg:w-1/2 order-2 lg:order-1">
                             <h2 className={
@@ -200,7 +194,7 @@ const AboutSection = ({
                                     font.className
                                 )
                             }>
-                                Gift Cards
+                                Color Your Way
                             </h2>
 
                             <div className={
@@ -210,11 +204,7 @@ const AboutSection = ({
                                 )
                             }>
                                 <p className="text-[18px] font-[300] leading-[1.7em] text-left">
-                                    When in doubt what to buy as a gift, this is the best option. Our gift cards 
-                                    have no expiration date and can be used to pay for all the services in our 
-                                    beauty studio or in our cosmetic shop. You can choose physical or electronic 
-                                    format of the gift card. Amount is also flexible. You can personalize your 
-                                    gift card with a message.
+                                    Let them express themselves in every shade! Our gift cards unlock a world of colors — from bold neons to chic pastels. Whether it’s for a new look, a mood boost, or just some self-care, this is the gift that fits every style. No expiry, total freedom. Perfect for birthdays, thank-yous, or just because.
                                 </p>
                             </div>
 
@@ -225,7 +215,7 @@ const AboutSection = ({
                                 )
                             }>
                                 <a
-                                    href="https://firstsight.design/cherie/beauty/gift-cards/"
+                                    href="/gift-cards/"
                                     className="inline-block bg-gray-900 text-white border-2 border-gray-900 px-10 py-4 font-semibold tracking-widest text-sm uppercase hover:bg-transparent hover:text-gray-900 transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-4 focus:ring-gray-300"
                                 >
                                     Learn More
@@ -261,11 +251,10 @@ const AboutSection = ({
                                     <button
                                         key={index}
                                         onClick={() => setGiftCardSlide(index)}
-                                        className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-110 ${
-                                            giftCardSlide === index
+                                        className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-110 ${giftCardSlide === index
                                                 ? 'bg-gray-700 shadow-lg scale-125'
                                                 : 'bg-gray-300 hover:bg-gray-500'
-                                        }`}
+                                            }`}
                                         aria-label={`Go to gift card slide ${index + 1}`}
                                     />
                                 ))}

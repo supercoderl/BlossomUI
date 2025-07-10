@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Table, theme, Typography } from 'antd';
+import { Card, Table, Typography } from 'antd';
 import AvaForm from './AvaForm';
 import { getColumns } from './column';
 import Layout from '@/components/Layout';
@@ -15,11 +15,11 @@ import UploadImageForm from './UploadImageForm';
 const { Title, Text } = Typography;
 
 export default function Service() {
-  const { token } = theme.useToken();
   const [services, setServices] = useState([]);
   const [categories, setCategories] = useState([]);
   const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
   const [searchTerm, setSearchTerm] = useState('');
+  const [totalPage, setTotalPage] = useState(0);
   const [includeDeleted, setIncludeDeleted] = useState(false);
   const { loading } = useApiLoadingStore();
   const [isServiceOpen, setIsServiceOpen] = useState(false);
@@ -50,7 +50,7 @@ export default function Service() {
         searchTerm,
         includeDeleted
       }),
-      getCategories()
+      getCategories({})
     ]);
 
     const services = serviceRes?.data?.items || [];
@@ -58,6 +58,7 @@ export default function Service() {
 
     if (services.length > 0) {
       setServices(services);
+      setTotalPage(serviceRes?.data?.count ?? 0);
     }
 
     setCategories(categoryList.map((cat: any) => ({
@@ -75,9 +76,21 @@ export default function Service() {
     })
   }
 
+  const handleTableChange = (paginationInfo: any) => {
+    setPageQuery({
+      ...pageQuery,
+      page: paginationInfo.current,
+    });
+  };
+
+  const onClear = () => {
+    setPageQuery({ page: 1, pageSize: 5 });
+    setSearchTerm("");
+  }
+
   useEffect(() => {
     onLoad();
-  }, []);
+  }, [pageQuery]);
 
   return (
     <Layout curActive='/service/list'>
@@ -95,10 +108,12 @@ export default function Service() {
         <AvaForm
           filters={undefined}
           setFilters={() => { }}
-          applyFilters={() => { }}
-          clearFilters={() => { }}
+          applyFilters={onLoad}
+          clearFilters={onClear}
           onReload={onLoad}
           onOpen={handleOpenService}
+          search={searchTerm}
+          handleValue={setSearchTerm}
         />
 
         {/* Review Table */}
@@ -106,10 +121,11 @@ export default function Service() {
           <Table
             columns={getColumns(onDelete, loading['delete-service'], setIsUploadImageOpen)}
             dataSource={services}
-            pagination={{ pageSize: pageQuery.pageSize }}
+            pagination={{ pageSize: pageQuery.pageSize, total: totalPage }}
             scroll={{ x: 1000 }}
             rowKey="id"
             loading={loading['get-services'] || loading['get-categories']}
+            onChange={handleTableChange}
           />
         </Card>
       </main>

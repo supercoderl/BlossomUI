@@ -24,7 +24,11 @@ const ProductSection = ({
                         </div>
                         <div className="w-full relative">
                             <div className={cn(font2.className)}>
-                                <p className="m-0 text-[18px] font-[300] leading-[1.7em] text-left">All our products are cruelty-free, it’s a category containing all cosmetics that have not been tested on animals. Each cosmetic is subject to strict control by independent inspection bodies chosen by the Coalition for Consumer Information in Cosmetics (CCIC), which is an NGO founded by 8 international animal protection groups such as: American Anti-Vivisection Society, Animal Alliance of Canada, Doris Day Animal League, etc.</p>						</div>
+                                <p className="m-0 text-[18px] font-[300] leading-[1.7em] text-left">
+                                    We believe beauty is an art — and your nails are the perfect canvas. From bold swirls to elegant patterns, our products are carefully selected to inspire creativity and long-lasting results. Every polish, gel, and accessory in our collection is handpicked for quality, durability, and style.
+                                    No matter your vibe — minimalist or maximalist — we’ve got everything you need to express yourself right at your fingertips.
+                                </p>
+                            </div>
                         </div>
                         <div className="w-full relative">
                             <div className="mt-[50px]">
@@ -34,7 +38,7 @@ const ProductSection = ({
                                         font2.className
                                     )
                                 }>
-                                    <a href="https://firstsight.design/cherie/beauty/shop/" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black bg-transparent tranition-all duration-300 hover:bg-black hover:text-white inline-block py-[14px] px-[31px]">Shop now</a>
+                                    <a href="/shop" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black bg-transparent tranition-all duration-300 hover:bg-black hover:text-white inline-block py-[14px] px-[31px]">Shop now</a>
                                 </div>
                             </div>
                         </div>

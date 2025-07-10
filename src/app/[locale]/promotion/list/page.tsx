@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, Table, theme, Typography, } from 'antd';
+import { Card, Table, Typography, } from 'antd';
 import AvaForm from './AvaForm';
 import { getColumns } from './column';
 import Layout from '@/components/Layout';
@@ -13,9 +13,9 @@ import DiscountCreator from './CreateForm';
 const { Title, Text } = Typography;
 
 export default function Promotion() {
-  const { token } = theme.useToken();
   const [promotions, setPromotions] = useState([]);
   const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
+  const [totalPage, setTotalPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [includeDeleted, setIncludeDeleted] = useState(false);
   const { loading } = useApiLoadingStore();
@@ -38,6 +38,7 @@ export default function Promotion() {
     }).then((res) => {
       if (res && res.data && res.data.items.length > 0) {
         setPromotions(res.data.items);
+        setTotalPage(res.data.count ?? 0);
       }
     })
   }
@@ -51,9 +52,21 @@ export default function Promotion() {
     })
   }
 
+  const handleTableChange = (paginationInfo: any) => {
+    setPageQuery({
+      ...pageQuery,
+      page: paginationInfo.current,
+    });
+  };
+
+  const onClose = () => {
+    setPageQuery({ page: 1, pageSize: 5 });
+    setSearchTerm("");
+  }
+
   useEffect(() => {
     onLoad();
-  }, []);
+  }, [pageQuery]);
 
   return (
     <Layout curActive='/promotion'>
@@ -73,8 +86,10 @@ export default function Promotion() {
           onOpen={handleOpenPromotion}
           filters={undefined}
           setFilters={() => { }}
-          applyFilters={() => { }}
-          clearFilters={() => { }}
+          applyFilters={onLoad}
+          clearFilters={onClose}
+          search={searchTerm}
+          handleValue={setSearchTerm}
         />
 
         {/* Review Tables */}
@@ -82,10 +97,11 @@ export default function Promotion() {
           <Table
             columns={getColumns(onDelete, loading['delete-promotion'])}
             dataSource={promotions}
-            pagination={{ pageSize: pageQuery.pageSize }}
+            pagination={{ pageSize: pageQuery.pageSize, total: totalPage }}
             scroll={{ x: 1000 }}
             rowKey="id"
             loading={loading['get-promotions']}
+            onChange={handleTableChange}
           />
         </Card>
       </main>

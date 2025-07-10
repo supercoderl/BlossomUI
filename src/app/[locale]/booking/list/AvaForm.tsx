@@ -28,7 +28,7 @@ const AdvancedSearchForm = ({
                     <Text strong>Filters:</Text>
 
                     <Input
-                        placeholder="Service name"
+                        placeholder="Input key..."
                         style={{ width: 180 }}
                         value={""}
                         onChange={(e) => { }}

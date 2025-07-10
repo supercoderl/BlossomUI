@@ -29,7 +29,7 @@ const FollowSection = ({
                                         <p className="mb-[30px] text-[18px] font-[300] leading-[1.7em]">Don’t miss promotions, follow us for the latest news</p>
                                         <div className="flex items-center justify-center">
                                             <a
-                                                href="https://instagram.com/firstsight.design?igshid=1l15xjywpp9gt"
+                                                href="https://www.instagram.com/blossom_nails.eastleigh"
                                                 target="_blank"
                                                 rel="nofollow"
                                                 className="text-black px-[15px] decoration-none"
@@ -37,7 +37,7 @@ const FollowSection = ({
                                                 <InstagramOutlined className='text-[32px]' />
                                             </a>
                                             <a
-                                                href="https://www.facebook.com/Firstsightdesign-108914574269860"
+                                                href="https://www.facebook.com/blossomnailseastleigh"
                                                 target="_blank"
                                                 rel="nofollow"
                                                 className="text-black px-[15px] decoration-none"

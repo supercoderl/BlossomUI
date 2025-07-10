@@ -13,6 +13,8 @@ import {
 import { getThemeBg } from '@/utils';
 import { Link, usePathname } from '../../navigation';
 import styles from './index.module.css';
+import { getUserInfo } from '@/utils/cookie';
+import { UserCookieInfo } from '@/types/user';
 
 const { Text } = Typography;
 
@@ -48,7 +50,7 @@ const items: MenuProps['items'] = [
     {
         key: '3',
         label: (
-            <a target="_blank" onClick={onLogout} rel="noopener noreferrer" href="/user/login">
+            <a onClick={onLogout} rel="noopener noreferrer" href="/user/login">
                 Log out
             </a>
         ),
@@ -69,6 +71,8 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     const pathname = usePathname();
     const navList = getNavList(t);
 
+    const [userInfo, setUserInfo] = useState<UserCookieInfo>();
+
     const [curTheme, setCurTheme] = useState<boolean>(false);
     const toggleTheme = () => {
         const _curTheme = !curTheme;
@@ -87,6 +91,16 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     useEffect(() => {
         const isDark = !!localStorage.getItem("isDarkTheme");
         setCurTheme(isDark);
+
+        const getInfo = async () => {
+            var infoPromise = await getUserInfo();
+            if (infoPromise && JSON.parse(infoPromise.value)) {
+                var info = JSON.parse(infoPromise.value);
+                setUserInfo(info);
+            }
+        };
+
+        getInfo();
     }, []);
 
     return (
@@ -145,7 +159,12 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
                             </span>
                             <div className={styles.avatar}>
                                 <Dropdown menu={{ items }} placement="bottomLeft" arrow>
-                                    <Avatar style={{ color: '#fff', backgroundColor: colorTextBase }}>Admin</Avatar>
+                                    <Avatar
+                                        src={userInfo?.avatarUrl}
+                                        style={{ color: '#fff', backgroundColor: colorTextBase }}
+                                    >
+                                        {userInfo?.fullName}
+                                    </Avatar>
                                 </Dropdown>
                             </div>
                         </div>

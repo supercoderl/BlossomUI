@@ -46,7 +46,11 @@ export default function DiscountCreator({
     const onFinish = async (values: PromotionFormData) => {
         try {
             // Prepare form data for API submission
-            await createPromotion(values).then((res: any) => {
+            await createPromotion({
+                ...values,
+                startDate: moment(values.startDate).format('YYYY-MM-DD'),
+                endDate: moment(values.endDate).format('YYYY-MM-DD')
+            }).then((res: any) => {
                 if (res && res.success) {
                     messageApi.success('Promotion created successfully');
                     form.resetFields();
@@ -170,6 +174,7 @@ export default function DiscountCreator({
                                     style={{ width: '100%' }}
                                     disabledDate={(current) => current && current < moment().subtract(1, 'day')}
                                     format="DD-MM-YYYY"
+                                    key="startDate"
                                 />
                             </Form.Item>
                         </Col>
@@ -189,6 +194,7 @@ export default function DiscountCreator({
                                     style={{ width: '100%' }}
                                     disabledDate={(current) => current && current < moment().subtract(1, 'day')}
                                     format="DD-MM-YYYY"
+                                    key="endDate"
                                 />
                             </Form.Item>
                         </Col>

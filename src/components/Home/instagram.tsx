@@ -41,11 +41,11 @@ const InstagramSection = ({
                                         {/* Instagram header */}
                                         <div className="sb_instagram_header sbi_medium sbi_no_avatar" style={{ padding: 5, paddingBottom: 8, marginBottom: 10 }}>
                                             <a
-                                                href="https://www.instagram.com/cherie.wp.theme/"
+                                                href="https://www.instagram.com/blossom_nails.eastleigh"
                                                 target="_blank"
                                                 rel="nofollow noopener"
-                                                title="@cherie.wp.theme"
-                                                className="sbi_header_link flex items-center"
+                                                title="@blossom.nails"
+                                                className="flex items-center"
                                             >
                                                 {/* Profile avatar */}
                                                 <div className="w-[80px] h-[80px] rounded-full flex-shrink-0 overflow-hidden bg-[#333] text-white flex items-center justify-center">
@@ -171,12 +171,12 @@ const InstagramSection = ({
                                 <div className="mt-[18px]">
                                     <div className="text-center">
                                         <a
-                                            href="https://instagram.com/firstsight.design?igshid=1l15xjywpp9gt"
+                                            href="https://www.instagram.com/blossom_nails.eastleigh"
                                             rel="nofollow noopener"
                                             target="_blank"
                                             className="no-underline font-medium text-center uppercase text-white border border-solid border-white inline-block py-[14px] px-[31px] hover:bg-white hover:text-black transition-all duration-300"
                                         >
-                                            Follow Us @firstsight.design
+                                            Follow Us @blossom_nails.eastleigh
                                         </a>
                                     </div>
                                 </div>

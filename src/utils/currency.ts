@@ -1,6 +1,6 @@
-export const formatter = (currency: string = 'GBP') => new Intl.NumberFormat('en-GB', {
+export const formatter = (currency: string = 'GBP', fractionDigits?: number) => new Intl.NumberFormat('en-GB', {
     style: 'currency',
     currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    minimumFractionDigits: fractionDigits ?? 0,
+    maximumFractionDigits: fractionDigits ?? 0
 })

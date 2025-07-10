@@ -95,7 +95,7 @@ const ServiceSection = ({ font, font2 }: { font: NextFontWithVariable, font2: Ne
                                                                     font2.className
                                                                 )
                                                             }>
-                                                                <a href={item.url} className="flex flex-col items-center decoration-none relative z-200 text-black">
+                                                                <a href={`${item.url}`} className="flex flex-col items-center decoration-none relative z-200 text-black">
                                                                     <Icon className={
                                                                         cn(
                                                                             "transition-all duration-300",
@@ -127,7 +127,7 @@ const ServiceSection = ({ font, font2 }: { font: NextFontWithVariable, font2: Ne
                                         </div>
                                     </div>
                                     <div className="flex">
-                                        <div className="relative overflow-visible min-h w-full mx-auto">
+                                        <div className="relative min-h w-full mx-auto">
                                             <div className="pb-[1px] static">
                                                 {
                                                     categories.map((category, index) => (

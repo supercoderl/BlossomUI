@@ -52,7 +52,7 @@ const getColumns = (): TableProps<DataType>['columns'] => [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/booking/${record.id}/edit`}>Edit</a>
+                <a href={`/booking/${record.id}/edit`}>View details</a>
             </Space>
         ),
     },

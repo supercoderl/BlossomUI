@@ -1,9 +1,16 @@
+import { Filter } from "@/types/filter";
 import { withApiLoading } from "@/utils/helpers";
 import req from "@/utils/req";
 
-export const getCategories = () =>
+export const getCategories = (filter: Filter) =>
     withApiLoading('get-categories', () =>
-        req.get(`/Category`));
+        req.get(`/Category`, {
+            params: {
+                ...filter.query,
+                searchTerm: filter.searchTerm,
+                includeDeleted: filter.includeDeleted
+            }
+        }));
 
 export const createCategory = (data: any) =>
     withApiLoading('create-category', () =>
