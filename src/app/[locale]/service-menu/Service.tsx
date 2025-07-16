@@ -21,7 +21,7 @@ const ServiceSection = ({ font, font2 }: { font: NextFontWithVariable, font2: Ne
 
     const onLoad = async () => {
         try {
-            const [serviceRes, categoryRes] = await Promise.all([getServices({ query: { page: 1, pageSize: 50 } }), getCategories()])
+            const [serviceRes, categoryRes] = await Promise.all([getServices({ query: { page: 1, pageSize: 50 } }), getCategories({})])
 
             const services = serviceRes?.data?.items || [];
             const categories = categoryRes?.data?.items || [];
