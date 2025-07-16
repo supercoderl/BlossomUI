@@ -1,6 +1,6 @@
 'use client';
 import { useTranslations } from 'next-intl';
-import { Card, Table, theme, Typography } from 'antd';
+import { Card, Table, Typography } from 'antd';
 import AvaForm from './AvaForm';
 import { columns, technicianColumns } from './column';
 import Layout from '@/components/Layout';
@@ -8,14 +8,15 @@ import { useEffect, useState } from 'react';
 import { getUsers } from '../api';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import { UserRoles } from '@/enums/userRoles';
+import { paginationOptions } from '@/data/pagination';
 
 const { Title, Text } = Typography;
 
 export default function User() {
   const t = useTranslations('user');
-  const { token } = theme.useToken();
   const [users, setUsers] = useState([]);
   const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
+  const [totalPage, setTotalPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [includeDeleted, setIncludeDeleted] = useState(false);
   const { loading } = useApiLoadingStore();
@@ -23,19 +24,32 @@ export default function User() {
 
   const onLoad = async () => {
     await getUsers({
-      query: pageQuery,
+      ...pageQuery,
       searchTerm,
       includeDeleted
     }).then((res) => {
       if (res && res.data) {
         setUsers(res.data.items || []);
+        setTotalPage(res.data.count ?? 0);
       }
     });
   }
 
+  const handleTableChange = (paginationInfo: any) => {
+    setPageQuery({
+      pageSize: paginationInfo.showSizeChanger ? paginationInfo.pageSize : pageQuery.pageSize,
+      page: paginationInfo.current,
+    });
+  };
+
+  const onClear = () => {
+    setPageQuery({ page: 1, pageSize: 5 });
+    setSearchTerm("");
+  }
+
   useEffect(() => {
     onLoad();
-  }, []);
+  }, [pageQuery]);
 
   return (
     <Layout curActive='/user'>
@@ -54,8 +68,10 @@ export default function User() {
           onReload={onLoad}
           filters={undefined}
           setFilters={() => { }}
-          applyFilters={() => { }}
-          clearFilters={() => { }}
+          applyFilters={onLoad}
+          clearFilters={onClear}
+          search={searchTerm}
+          handleValue={setSearchTerm}
         />
 
         {/* Review Table */}
@@ -63,7 +79,13 @@ export default function User() {
           <Table
             columns={columns}
             dataSource={users}
-            pagination={{ pageSize: pageQuery.pageSize }}
+            pagination={{
+              pageSize: pageQuery.pageSize,
+              total: totalPage,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} reviews`,
+              ...paginationOptions
+            }}
             expandable={{
               expandedRowRender: (record) => {
                 const technicianData = record.technicianInfo
@@ -113,6 +135,7 @@ export default function User() {
                 cursor: record.role === UserRoles.Technician ? 'pointer' : 'default',
               },
             })}
+            onChange={handleTableChange}
           />
         </Card>
       </main>

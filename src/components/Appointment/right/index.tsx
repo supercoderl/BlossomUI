@@ -10,6 +10,7 @@ import ConfirmationSkeleton from '../form/Skeleton';
 import { Service, ServiceOption } from '@/types/service';
 import { TechnicianInfo } from '@/types/user';
 import { MessageInstance } from 'antd/es/message/interface';
+import { PromotionChecker } from '@/types/promotion';
 
 const RightContent = ({
     state,
@@ -29,7 +30,9 @@ const RightContent = ({
     setCurrentYear,
     setInformation,
     messageApi,
-    loading
+    loading,
+    promotion,
+    setPromotion
 }: {
     state: number,
     setState: Dispatch<SetStateAction<number>>,
@@ -58,7 +61,9 @@ const RightContent = ({
         phone: string;
     }>>,
     messageApi: MessageInstance,
-    loading: Record<string, boolean>
+    loading: Record<string, boolean>,
+    promotion: PromotionChecker | null,
+    setPromotion: Dispatch<SetStateAction<PromotionChecker | null>>
 }) => {
     const renderHeader = () => {
         switch (state) {
@@ -146,7 +151,13 @@ const RightContent = ({
                 );
             case 4:
                 return (
-                    <Confirmation />
+                    <Confirmation
+                        loading={loading}
+                        messageApi={messageApi}
+                        promotion={promotion}
+                        selectedService={selectedService}
+                        setPromotion={setPromotion}
+                    />
                 );
             case 5: return (
                 <ConfirmationSkeleton />

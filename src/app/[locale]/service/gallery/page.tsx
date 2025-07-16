@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import {
     Card,
     Button,
-    Modal,
     Input,
     Select,
     Space,
@@ -26,35 +25,37 @@ import {
     MoreOutlined,
     AppstoreOutlined,
     BarsOutlined,
-    FilterOutlined
+    FilterOutlined,
+    CheckOutlined
 } from '@ant-design/icons';
-import Layout from '@/components/Layout';
-import { getServiceImages } from './api';
+import { deleteImages, getServiceImages } from './api';
 import moment from 'moment';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import Lottie from 'lottie-react';
 import EditServiceImageForm from './EditForm';
 import { useGlobalMessage } from '@/providers/messageProvider';
 import { GalleryImage } from '@/types/image';
+import Layout from '@/components/Layout';
+import { ConfirmationModal } from '@/components/Modal/confirmation';
 
 const { Option } = Select;
 const { Title, Text } = Typography;
 
 export default function GalleryManagement() {
     const [images, setImages] = useState<GalleryImage[]>([]);
-    const [selectedImages, setSelectedImages] = useState<number[]>([]);
+    const [selectedImages, setSelectedImages] = useState<string[]>([]);
     const [viewMode, setViewMode] = useState('grid');
     const [isEditModalVisible, setIsEditModalVisible] = useState(false);
     const [currentEditImage, setCurrentEditImage] = useState(null);
-    const [pageQuery, setPageQuery] = useState({
-        page: 1,
-        pageSize: 5
-    });
+    const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 10 });
+    const [totalPage, setTotalPage] = useState(0);
     const [filterCategory, setFilterCategory] = useState('all');
     const [searchTerm, setSearchTerm] = useState('');
     const [includeDeleted, setIncludeDeleted] = useState(false);
     const { loading } = useApiLoadingStore();
     const [messageApi] = useGlobalMessage();
+    const [bulkDeleteModal, setBulkDeleteModal] = useState(false);
+    const [singleDeleteModal, setSingleDeleteModal] = useState(false);
 
     const categories = ['Nature', 'Architecture', 'Art', 'Portrait', 'Street', 'Abstract'];
 
@@ -66,40 +67,31 @@ export default function GalleryManagement() {
         }).then((res) => {
             if (res && res.data && res.data.items.length > 0) {
                 setImages(res.data.items);
+                setTotalPage(res.data.count ?? 0);
             }
         })
     }
 
     useEffect(() => {
         onLoad()
-    }, []);
+    }, [pageQuery]);
 
-    const handleDelete = (imageId: any) => {
-        Modal.confirm({
-            title: 'Delete Image?',
-            content: 'This action cannot be undone.',
-            onOk: () => {
-                setImages(prev => prev.filter(img => img.id !== imageId));
-                setSelectedImages(prev => prev.filter(id => id !== imageId));
-                message.success('Image deleted successfully!');
-            }
-        });
+    const handlePaginationChange = (page: number, pageSize: number) => {
+        setPageQuery({ pageSize, page });
     };
 
-    const handleBulkDelete = () => {
-        if (selectedImages.length === 0) {
-            message.warning('Please select images to delete');
-            return;
-        }
-
-        Modal.confirm({
-            title: `Delete ${selectedImages.length} images?`,
-            content: 'This action cannot be undone.',
-            onOk: () => {
-                setSelectedImages([]);
-                message.success(`${selectedImages.length} images deleted successfully!`);
+    const handleDelete = (type: "bulk" | "single", imageId?: string) => {
+        if (type === "bulk") {
+            if (selectedImages.length === 0) {
+                message.warning('Please select images to delete');
+                return;
             }
-        });
+            setBulkDeleteModal(true)
+        }
+        else if (imageId) {
+            setSingleDeleteModal(true);
+            setSelectedImages([imageId]);
+        }
     };
 
     const handleEdit = (image: any) => {
@@ -107,7 +99,7 @@ export default function GalleryManagement() {
         setIsEditModalVisible(true);
     };
 
-    const handleImageSelect = (imageId: any) => {
+    const handleImageSelect = (imageId: string) => {
         setSelectedImages(prev =>
             prev.includes(imageId)
                 ? prev.filter(id => id !== imageId)
@@ -116,7 +108,16 @@ export default function GalleryManagement() {
     };
 
     const handleSelectAll = () => {
-
+        if (selectedImages.length === images.length && selectedImages.length > 0) {
+            setSelectedImages([]);
+        } else {
+            images.map(item => {
+                setSelectedImages(prev =>
+                    !prev.includes(item.id)
+                        ? [...prev, item.id] : [...prev]
+                );
+            })
+        }
     };
 
     const getImageMenu = (image: any) => ({
@@ -133,8 +134,8 @@ export default function GalleryManagement() {
                 label: 'Download',
                 onClick: () => {
                     const link = document.createElement('a');
-                    link.href = image.url;
-                    link.download = image.title;
+                    link.href = image.imageUrl;
+                    link.download = image.imageName;
                     link.click();
                 }
             },
@@ -143,7 +144,7 @@ export default function GalleryManagement() {
                 icon: <DeleteOutlined />,
                 label: 'Delete',
                 danger: true,
-                onClick: () => handleDelete(image.id)
+                onClick: () => handleDelete("single", image.id)
             }
         ]
     });
@@ -203,13 +204,13 @@ export default function GalleryManagement() {
                                     <Button
                                         danger
                                         icon={<DeleteOutlined />}
-                                        onClick={handleBulkDelete}
+                                        onClick={() => handleDelete("bulk")}
                                     >
                                         Delete Selected ({selectedImages.length})
                                     </Button>
                                 )}
                                 <Button onClick={handleSelectAll}>
-                                    Select All
+                                    {selectedImages.length === images.length && selectedImages.length > 0 ? "Unselect All" : "Select All"}
                                 </Button>
                                 <Button type="primary" danger onClick={onLoad}>
                                     Reload
@@ -280,7 +281,8 @@ export default function GalleryManagement() {
                                                                     height: 20,
                                                                     border: '2px solid #fff',
                                                                     borderRadius: '4px',
-                                                                    background: 'transparent',
+                                                                    borderColor: selectedImages.some(x => x === image.id) ? '#9929EA' : '#fff',
+                                                                    background: selectedImages.some(x => x === image.id) ? '#9929EA' : 'transparent',
                                                                     cursor: 'pointer',
                                                                     display: 'flex',
                                                                     alignItems: 'center',
@@ -288,7 +290,7 @@ export default function GalleryManagement() {
                                                                 }}
                                                                 onClick={() => handleImageSelect(image.id)}
                                                             >
-
+                                                                {selectedImages.some(x => x === image.id) && <CheckOutlined className='!text-white' />}
                                                             </div>
                                                             <Dropdown
                                                                 menu={getImageMenu(image)}
@@ -376,9 +378,10 @@ export default function GalleryManagement() {
                                                         style={{
                                                             width: 20,
                                                             height: 20,
-                                                            border: '2px solid #d9d9d9',
+                                                            border: '2px solid',
                                                             borderRadius: '4px',
-                                                            background: 'transparent',
+                                                            borderColor: selectedImages.some(x => x === image.id) ? '#9929EA' : '#d9d9d9',
+                                                            background: selectedImages.some(x => x === image.id) ? '#9929EA' : 'transparent',
                                                             cursor: 'pointer',
                                                             display: 'flex',
                                                             alignItems: 'center',
@@ -386,7 +389,7 @@ export default function GalleryManagement() {
                                                         }}
                                                         onClick={() => handleImageSelect(image.id)}
                                                     >
-
+                                                        {selectedImages.some(x => x === image.id) && <CheckOutlined className='!text-white' />}
                                                     </div>
                                                     <Image
                                                         src={image.imageUrl}
@@ -397,8 +400,14 @@ export default function GalleryManagement() {
                                                     />
                                                     <div style={{ flex: 1 }}>
                                                         <h4 style={{ margin: 0, marginBottom: '4px' }}>{image.imageName}</h4>
+                                                        <div style={{
+                                                            fontSize: '12px',
+                                                            color: '#666',
+                                                        }}>
+                                                            Service: {image.serviceName}
+                                                        </div>
                                                         <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-                                                            {image.createdAt}
+                                                            {moment(image.createdAt).format("YYYY-MM-DD HH:mm:ss")}
                                                         </div>
                                                     </div>
                                                     <Dropdown menu={getImageMenu(image)} trigger={['click']}>
@@ -415,11 +424,13 @@ export default function GalleryManagement() {
                                     <Pagination
                                         current={pageQuery.page}
                                         pageSize={pageQuery.pageSize}
+                                        total={totalPage}
                                         showSizeChanger={false}
                                         showQuickJumper
                                         showTotal={(total, range) =>
                                             `${range[0]}-${range[1]} of ${total} images`
                                         }
+                                        onChange={handlePaginationChange}
                                     />
                                 </div>
                             </>
@@ -434,6 +445,31 @@ export default function GalleryManagement() {
                     onReload={onLoad}
                     currentEditImage={currentEditImage}
                     loading={loading}
+                />
+
+                {/* Bulk Delete Modal */}
+                <ConfirmationModal
+                    open={bulkDeleteModal || singleDeleteModal}
+                    onConfirm={async () => {
+                        await deleteImages(selectedImages).then(() => {
+                            setBulkDeleteModal(false);
+                            setSingleDeleteModal(false);
+                            setSelectedImages([]);
+                            onLoad();
+                        })
+                    }}
+                    onCancel={() => {
+                        if (singleDeleteModal && selectedImages.length === 1) setSelectedImages([]);
+                        setBulkDeleteModal(false);
+                        setSingleDeleteModal(false);
+                    }}
+                    title={`Delete ${singleDeleteModal ? 'image' : `${selectedImages.length} images`}?`}
+                    content={`This action cannot be undone. ${singleDeleteModal ? "The image will be permanently deleted." : "All selected images will be permanently deleted."}`}
+                    confirmText={`Delete ${bulkDeleteModal ? "All" : ""}`}
+                    cancelText="Cancel"
+                    type="error"
+                    danger={true}
+                    loading={loading["delete-service-images"]}
                 />
             </main>
         </Layout>

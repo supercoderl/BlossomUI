@@ -35,6 +35,7 @@ const DailyScheduleSystem = () => {
     const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
     const [editingSchedule, setEditingSchedule] = useState<Booking | null>(null);
+    const [disableTimeSelection, setDisableTimeSelection] = useState(false);
     const [form] = Form.useForm();
     const { loading } = useApiLoadingStore();
     const [messageApi] = useGlobalMessage();
@@ -55,7 +56,6 @@ const DailyScheduleSystem = () => {
 
         const technicians = technicianRes?.data?.items || [];
         const bookings = bookingRes?.data?.items || [];
-        console.log(bookings);
 
         if (technicians.length > 0) {
             setEmployees(technicians);
@@ -96,6 +96,8 @@ const DailyScheduleSystem = () => {
     const openScheduleModal = (timeSlot: string = '', schedule: Booking | null = null) => {
         setEditingSchedule(schedule);
         
+        if(timeSlot) setDisableTimeSelection(true);
+
         if (schedule) {
             form.setFieldsValue({
                 employeeId: schedule.technicianId,
@@ -226,8 +228,12 @@ const DailyScheduleSystem = () => {
                 {/* Schedule Modal */}
                 <CreateScheduleForm
                     editingSchedule={editingSchedule}
+                    disable={disableTimeSelection}
                     isOpen={isScheduleModalOpen}
-                    onClose={() => setIsScheduleModalOpen(false)}
+                    onClose={() => {
+                        setIsScheduleModalOpen(false);
+                        setDisableTimeSelection(false);
+                    }}
                     form={form}
                     onSubmit={handleScheduleSubmit}
                     employees={employees}

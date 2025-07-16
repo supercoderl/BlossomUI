@@ -1,11 +1,13 @@
+import { Booking } from "@/types/booking";
 import { TechnicianInfo } from "@/types/user";
 import { stringToColor } from "@/utils/color";
 import { Button, Form, FormInstance, Input, Modal, Select, Space, TimePicker } from "antd"
 
 const { Option } = Select;
 
-const CreateScheduleForm = ({ editingSchedule, isOpen, onClose, form, onSubmit, employees, loading }: {
-    editingSchedule: any,
+const CreateScheduleForm = ({ editingSchedule, disable, isOpen, onClose, form, onSubmit, employees, loading }: {
+    editingSchedule: Booking | null,
+    disable: boolean,
     isOpen: boolean,
     onClose: () => void,
     form: FormInstance<any>,
@@ -63,29 +65,54 @@ const CreateScheduleForm = ({ editingSchedule, isOpen, onClose, form, onSubmit, 
                     <Form.Item
                         label="Start Time"
                         name="startTime"
-                        rules={[{ required: true, message: 'Please select start time' }]}
+                        rules={[{ required: !disable, message: 'Please select start time' }]}
                     >
-                        <TimePicker format="HH:mm" style={{ width: '100%' }} size="large" />
+                        <TimePicker
+                            format="HH:mm"
+                            style={{ width: '100%' }}
+                            size="large"
+                            readOnly
+                            disabled={disable}
+                        />
                     </Form.Item>
 
                     <Form.Item
                         label="End Time"
                         name="endTime"
-                        rules={[{ required: true, message: 'Please select end time' }]}
+                        rules={[{ required: !disable, message: 'Please select end time' }]}
                     >
-                        <TimePicker format="HH:mm" style={{ width: '100%' }} size="large" />
+                        <TimePicker
+                            format="HH:mm"
+                            style={{ width: '100%' }}
+                            size="large"
+                            readOnly
+                            disabled={disable}
+                        />
                     </Form.Item>
                 </div>
 
                 <Form.Item
-                    label="Is off?"
-                    name="isDayOff"
-                    rules={[{ required: true, message: 'Please select day off' }]}
+                    label="Guest Name"
+                    name="guestName"
+                    rules={[{ required: true, message: 'Please input guest name' }]}
                 >
-                    <Select placeholder="Select day off" size="large">
-                        <Option value={true}>Off</Option>
-                        <Option value={false}>Not</Option>
-                    </Select>
+                    <Input placeholder="Enter guest name" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Phone Number"
+                    name="guestPhone"
+                    rules={[{ required: true, message: 'Please input phone number' }]}
+                >
+                    <Input placeholder="Enter phone number" />
+                </Form.Item>
+
+                <Form.Item
+                    label="Email"
+                    name="guestEmail"
+                    rules={[{ required: true, message: 'Please input email' }]}
+                >
+                    <Input placeholder="Enter email" type="email" />
                 </Form.Item>
 
                 <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>

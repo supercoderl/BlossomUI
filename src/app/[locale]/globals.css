@@ -3,6 +3,12 @@
 @tailwind utilities;
 @import "tailwindcss";
 
+@layer utilities {
+  .upload-gallery .ant-upload-list-picture-card {
+    @apply mt-4;
+  }
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

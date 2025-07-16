@@ -2,6 +2,7 @@ import { Button, Card, Input, Typography } from "antd";
 import {
     FilterOutlined
 } from '@ant-design/icons';
+import { Dispatch, SetStateAction } from "react";
 
 const { Text } = Typography;
 
@@ -10,13 +11,17 @@ const AdvancedSearchForm = ({
     setFilters,
     applyFilters,
     clearFilters,
-    onReload
+    onReload,
+    search,
+    handleValue
 }: {
     filters: any,
     setFilters: (filters: any) => void,
     applyFilters: () => void,
     clearFilters: () => void,
-    onReload: () => void
+    onReload: () => void,
+    search: string,
+    handleValue: Dispatch<SetStateAction<string>>
 }) => {
     return (
         <Card style={{ marginBottom: '24px' }}>
@@ -26,10 +31,10 @@ const AdvancedSearchForm = ({
                     <Text strong>Filters:</Text>
 
                     <Input
-                        placeholder="Service name"
+                        placeholder="Input key..."
                         style={{ width: 180 }}
-                        value={""}
-                        onChange={(e) => { }}
+                        value={search}
+                        onChange={(e) => handleValue(e.target.value)}
                     />
 
                     <Button type="primary" onClick={applyFilters}>

@@ -103,11 +103,11 @@ const getNavList = (t: any) => {
             icon: <CommentOutlined />,
             label: t('reviewList')
         },
-        // {
-        //     key: '/agents',
-        //     icon: <OpenAIOutlined />,
-        //     label: t('agents')
-        // },
+        {
+            key: '/agents',
+            icon: <OpenAIOutlined />,
+            label: t('agents')
+        },
         // {
         //     key: '/excel',
         //     icon: <FileExcelOutlined />,

@@ -1,7 +1,8 @@
 import { BookingStatus } from '@/enums/bookingStatus';
 import { stringToColor } from '@/utils/color';
 import { formatter } from '@/utils/currency';
-import { Space, Tag, type TableProps } from 'antd';
+import { Button, Space, Tag, type TableProps } from 'antd';
+import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
 
 interface DataType {
     id: string;
@@ -12,7 +13,7 @@ interface DataType {
     updatedAt: Date;
 }
 
-const getColumns = (): TableProps<DataType>['columns'] => [
+const getColumns = (onChangeStatus: (id: string, status: BookingStatus) => void, loading: Record<string, boolean>): TableProps<DataType>['columns'] => [
     {
         title: 'Time',
         dataIndex: 'scheduleTime',
@@ -30,7 +31,7 @@ const getColumns = (): TableProps<DataType>['columns'] => [
         title: 'Status',
         dataIndex: 'status',
         key: 'status',
-        render: (status) => <Tag color={stringToColor(BookingStatus[status])}>{BookingStatus[status]}</Tag>,
+        render: (status) => <Tag color={stringToColor("booking_status_" + BookingStatus[status])}>{BookingStatus[status]}</Tag>,
         align: 'center',
         width: 120
     },
@@ -52,7 +53,30 @@ const getColumns = (): TableProps<DataType>['columns'] => [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/booking/${record.id}/edit`}>View details</a>
+                <Button
+                    type="text"
+                    href='`/booking/${record.id}/edit`'
+                    disabled={loading['update-booking-status']}
+                    className='!p-2'
+                >
+                    <EyeOutlined />
+                </Button>
+                <Button
+                    type="text"
+                    onClick={() => onChangeStatus(record.id, BookingStatus.Confirmed)}
+                    disabled={loading['update-booking-status'] || record.status !== BookingStatus.Pending}
+                    className='!p-2'
+                >
+                    <CheckOutlined className='!text-[#DC3C22]' />
+                </Button>
+                <Button
+                    type="text"
+                    onClick={() => onChangeStatus(record.id, BookingStatus.Canceled)}
+                    disabled={loading['update-booking-status'] || record.status !== BookingStatus.Pending}
+                    className='!p-2'
+                >
+                    <CloseOutlined className='!text-[#687FE5]' />
+                </Button>
             </Space>
         ),
     },

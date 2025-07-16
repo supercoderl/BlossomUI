@@ -6,7 +6,7 @@ export const getServiceImages = (filter: Filter) =>
     withApiLoading('get-service-images', () =>
         req.get(`/ServiceImage`, {
             params: {
-                query: filter.query,
+                ...filter.query,
                 searchTerm: filter.searchTerm,
                 includeDeleted: filter.includeDeleted
             }
@@ -20,4 +20,9 @@ export const createServiceImage = (formData: any) =>
 export const updateServiceImage = (data: any) =>
     withApiLoading('update-service-image', () =>
         req.put(`/ServiceImage`, data)
+    );
+
+    export const deleteImages = (data: any[]) =>
+    withApiLoading('delete-service-images', () =>
+        req.post(`/ServiceImage/images`, data)
     );

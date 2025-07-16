@@ -26,6 +26,10 @@ export const createBooking = (data: unknown) =>
     withApiLoading('create-booking', () =>
         req.post(`/Booking`, data));
 
+export const updateBookingStatus = (data: unknown) =>
+    withApiLoading('update-booking-status', () =>
+        req.put(`/Booking/status`, data));
+
 export const getAllTimeSlotsForTechnician = (technicianId: string, date: string) => {
     return withApiLoading('get-time-slots', () =>
         req.get(`/Booking/time-slots`, {

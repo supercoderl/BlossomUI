@@ -1,7 +1,8 @@
 export interface Filter {
     query?: Page;
     searchTerm?: string;
-    includeDeleted?: boolean;  
+    includeDeleted?: boolean;
+    [key: string]: any
 }
 
 interface Page {

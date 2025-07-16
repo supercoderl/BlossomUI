@@ -60,7 +60,7 @@ export default function ServiceEditor() {
         try {
             const [serviceRes, categoryRes] = await Promise.all([
                 getServiceById(id as string),
-                getCategories()
+                getCategories({})
             ]);
 
             const service = serviceRes?.data;

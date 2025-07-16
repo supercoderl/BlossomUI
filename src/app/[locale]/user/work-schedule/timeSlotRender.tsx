@@ -141,7 +141,7 @@ export const renderTimeSlot = (
                         </div>
                     ) : (
                         <div style={{ marginTop: '8px', textAlign: 'center' }}>
-                            {loading['get-work-schedules'] ? <LoadingOutlined style={{ color: '#ccc', fontSize: '16px' }} /> : <PlusOutlined style={{ color: '#ccc', fontSize: '16px' }} />}
+                            {loading['get-bookings'] ? <LoadingOutlined style={{ color: '#ccc', fontSize: '16px' }} /> : <PlusOutlined style={{ color: '#ccc', fontSize: '16px' }} />}
                             <Text style={{ color: '#999', fontSize: '12px', display: 'block' }}>
                                 Click to add schedule
                             </Text>

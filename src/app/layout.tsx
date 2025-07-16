@@ -1,10 +1,6 @@
 "use client"
 
-import { ReactNode, useEffect } from 'react';
-
-type Props = {
-  children: ReactNode;
-};
+import { useEffect } from 'react';
 
 export default function RootLayout({ children }: any) {
   useEffect(() => {

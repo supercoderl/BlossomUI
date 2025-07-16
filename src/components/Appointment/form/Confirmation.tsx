@@ -1,8 +1,47 @@
 import { cn } from "@/utils/helpers";
 import styles from "../index.module.css";
 import { TicketIcon } from "@/components/Icon";
+import { Dispatch, SetStateAction, useState } from "react";
+import { checkPromotion } from "@/app/[locale]/promotion/api";
+import { MessageInstance } from "antd/es/message/interface";
+import { PromotionChecker } from "@/types/promotion";
+import { Service, ServiceOption } from "@/types/service";
+import { getTotalPriceValue } from "@/utils/text";
 
-const Confirmation = () => {
+const Confirmation = ({
+    loading,
+    messageApi,
+    selectedService,
+    promotion,
+    setPromotion
+}: {
+    loading: Record<string, boolean>,
+    messageApi: MessageInstance,
+    selectedService: (Service & {
+        type: "service";
+    }) | (ServiceOption & {
+        type: "option";
+    }) | null,
+    promotion: PromotionChecker | null,
+    setPromotion: Dispatch<SetStateAction<PromotionChecker | null>>
+}) => {
+    const [code, setCode] = useState('');
+
+    const handleCheck = async () => {
+        if (code) {
+            await checkPromotion(code).then((res: any) => {
+                if (!res.data.isValid) {
+                    messageApi.error("Your code is invalid, please input another code");
+                    return;
+                }
+
+                setPromotion(res.data);
+                messageApi.success("Apply promotion successfully!");
+            });
+            setCode("");
+        }
+    }
+
     return (
         <div className="">
             <div className={
@@ -32,10 +71,10 @@ const Confirmation = () => {
                             </div>
                             <div className="w-full">
                                 <div className="w-full flex justify-between transition-all duration-300 ease-in-out">
-                                    <p className="text-[13px] font-medium text-[#1A2C37] m-0">classNameic Haircut ($39.00)
+                                    <p className="text-[13px] font-medium text-[#1A2C37] m-0">classNameic Haircut ({getTotalPriceValue(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0).label})
                                         <span>x 1 person</span>
                                     </p>
-                                    <p className="whitespace-nowrap text-[13px] font-medium text-[#1A2C37] m-0">$39.00</p>
+                                    <p className="whitespace-nowrap text-[13px] font-medium text-[#1A2C37] m-0">{getTotalPriceValue(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0).label}</p>
                                 </div>
                             </div>
                         </div>
@@ -43,13 +82,20 @@ const Confirmation = () => {
                     <div className="">
                         <div className="flex justify-between border-b border-dashed border-[rgba(26,_44,_55,_0.3)] pb-4 mt-4">
                             <span className="text-[14px] font-medium text-[#1A2C37]">Subtotal:</span>
-                            <span className="whitespace-nowrap text-[14px] font-medium text-[#1A2C37]">$39.00</span>
+                            <span className="whitespace-nowrap text-[14px] font-medium text-[#1A2C37]">{getTotalPriceValue(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0).label}</span>
                         </div>
                         <div className="w-full flex my-4 text-[14px] gap-4 text-[#1A2C37] whitespace-nowrap items-center" >
                             <span className="mr-[3px]">Coupon:</span>
                             <div className="w-full relative">
                                 <div className="w-full">
-                                    <input className="w-full h-[32px] text-[15px] border border-solid border-[#D1D5D7] text-[#1A2C37] bg-white rounded-[6px] py-[4px] pr-2 pl-[34px] transition-box-shadow duration-150" name="" type="text" autoComplete="off" />
+                                    <input
+                                        className="w-full h-[32px] text-[15px] border border-solid border-[#D1D5D7] text-[#1A2C37] bg-white rounded-[6px] py-[4px] pr-2 pl-[34px] transition-box-shadow duration-150"
+                                        name="code"
+                                        type="text"
+                                        autoComplete="off"
+                                        value={code}
+                                        onChange={(e) => setCode(e.target.value)}
+                                    />
                                     <span className="inline-flex absolute h-full left-[6px] top-0 text-center text-[#c0c4cc] transition-all duration-300">
                                         <span className="items-center inline-flex">
                                             <TicketIcon className="text-[24px] text-[#1A2C37]" />
@@ -57,7 +103,12 @@ const Confirmation = () => {
                                     </span>
                                 </div>
                             </div>
-                            <button id="" className="border border-solid border-black inline-flex items-center justify-center h-[32px] text-[14px] whitespace-nowrap rounded-[6px] py-[6px] px-4 transition-all duration-300 ease-in-out bg-black text-white" type="button">
+                            <button
+                                id=""
+                                className="border border-solid border-black inline-flex items-center justify-center h-[32px] text-[14px] whitespace-nowrap rounded-[6px] py-[6px] px-4 transition-all duration-300 ease-in-out bg-black text-white cursor-pointer"
+                                type="button"
+                                onClick={handleCheck}
+                            >
                                 <span className="flex items-center justify-center overflow-hidden">Add</span>
                             </button>
                         </div>
@@ -74,13 +125,17 @@ const Confirmation = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="hidden">
-                            <span>Discount:</span>
-                            <span className="whitespace-nowrap text-[14px] font-medium text-[#1A2C37]">$0.00</span>
-                        </div>
+                        {
+                            promotion && (
+                                <div className="flex justify-between text-[15px] font-medium text-[#1A2C37]">
+                                    <span>Discount:</span>
+                                    <span className="whitespace-nowrap text-[14px] font-medium text-[#1A2C37]">{getTotalPriceValue(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0, promotion).discountValue}</span>
+                                </div>
+                            )
+                        }
                         <div className="pt-4 flex justify-between text-[15px] font-medium text-[#1A2C37]">
                             <span>Total Amount:</span>
-                            <span className="whitespace-nowrap text-[14px] font-medium text-[#1A2C37]">$39.00</span>
+                            <span className="whitespace-nowrap text-[14px] font-medium text-[#1A2C37]">{getTotalPriceValue(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0, promotion).label}</span>
                         </div>
                     </div>
                 </div>

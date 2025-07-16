@@ -11,7 +11,7 @@ const ServiceSection = ({ messageApi, font, font2 }: { messageApi: MessageInstan
 
     const onLoad = async () => {
         try {
-            await getCategories().then((res) => {
+            await getCategories({}).then((res) => {
                 if (res && res.data) {
                     setCategories(res.data.items ?? []);
                 }

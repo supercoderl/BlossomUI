@@ -19,6 +19,7 @@ import { getReviews } from '../api';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import Layout from '@/components/Layout';
 import AvaForm from './AvaForm';
+import { paginationOptions } from '@/data/pagination';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -78,7 +79,7 @@ const CustomerReviewManager = () => {
 
   const handleTableChange = (paginationInfo: any) => {
     setPageQuery({
-      ...pageQuery,
+      pageSize: paginationInfo.showSizeChanger ? paginationInfo.pageSize : pageQuery.pageSize,
       page: paginationInfo.current,
     });
   };
@@ -123,11 +124,11 @@ const CustomerReviewManager = () => {
             rowKey="id"
             pagination={{
               pageSize: 5,
-              showSizeChanger: true,
               showQuickJumper: true,
               total: totalPage,
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} reviews`,
+              ...paginationOptions
             }}
             scroll={{ x: 800 }}
             onChange={handleTableChange}

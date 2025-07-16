@@ -16,6 +16,7 @@ const LoadingBackground: React.FC<LoadingBackgroundProps> = ({
     text = "Wait a minute...",
 }) => {
     const antIcon = <LoadingOutlined style={{ fontSize: 48, color: '#1890ff' }} spin />;
+    console.log(loading);
 
     return (
         <>

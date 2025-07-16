@@ -40,6 +40,10 @@ export const getUserById = (id: string) =>
     withApiLoading('get-user-by-id', () =>
         req.get(`/User/${id}`));
 
+export const getMyProfile = () =>
+    withApiLoading('get-my-profile', () =>
+        req.get(`/User/me`));
+
 export const updateUser = (formData: any) =>
     withApiLoading('update-user', () =>
         req.put(`/User`, formData));

@@ -7,10 +7,13 @@ import Layout from '@/components/Layout';
 import { useEffect, useState } from 'react';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import { useGlobalMessage } from '@/providers/messageProvider';
-import { getBookings } from '../api';
+import { getBookings, updateBookingStatus } from '../api';
+import { paginationOptions } from '@/data/pagination';
+import { Booking } from '@/types/booking';
+import { BookingStatus } from '@/enums/bookingStatus';
 const { Title, Text } = Typography;
 
-export default function Service() {
+export default function BookingList() {
   const [bookings, setBookings] = useState([]);
   const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
   const [totalPage, setTotalPage] = useState(0);
@@ -41,10 +44,26 @@ export default function Service() {
 
   const handleTableChange = (paginationInfo: any) => {
     setPageQuery({
-      ...pageQuery,
+      pageSize: paginationInfo.showSizeChanger ? paginationInfo.pageSize : pageQuery.pageSize,
       page: paginationInfo.current,
     });
   };
+
+  const onChangeStatus = async (bookingId: string, status: BookingStatus) => {
+    const data = {
+      id: bookingId,
+      status
+    };
+
+    messageApi.info('Updating...');
+
+    await updateBookingStatus(data).then(async (res: any) => {
+      if (res && res.success) {
+        messageApi.success("Booking was updated!");
+        await onLoad();
+      }
+    })
+  }
 
   useEffect(() => {
     onLoad();
@@ -74,9 +93,15 @@ export default function Service() {
         {/* Review Table */}
         <Card>
           <Table
-            columns={getColumns()}
+            columns={getColumns(onChangeStatus, loading)}
             dataSource={bookings}
-            pagination={{ pageSize: pageQuery.pageSize, total: totalPage }}
+            pagination={{
+              pageSize: pageQuery.pageSize,
+              total: totalPage,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} reviews`,
+              ...paginationOptions
+            }}
             scroll={{ x: 1000 }}
             rowKey="id"
             loading={loading['get-bookings']}

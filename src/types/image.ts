@@ -6,3 +6,16 @@ export interface GalleryImage {
     createdAt: string;
     serviceName: string;
 };
+
+export interface UploadProgress {
+    serviceId: string;
+    progress: number;
+    currentFile: number;
+    totalFiles: number;
+    currentFileName: string;
+}
+
+export interface UploadCompleted {
+    serviceId: string;
+    message: string;
+}

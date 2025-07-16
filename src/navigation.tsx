@@ -14,6 +14,10 @@ export const pathnames = {
     '/': '/',
     '/user': '/user',
     '/dashboard': '/dashboard',
+    '/profile/me': {
+        en: '/profile/me',
+        zh: '/profile/ho-so'
+    }
     // '/client': '/client',
     // '/client/redirect': '/client/redirect',
     // '/nested': {

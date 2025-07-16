@@ -9,6 +9,7 @@ import { useApiLoadingStore } from '@/stores/loadingStore';
 import { useGlobalMessage } from '@/providers/messageProvider';
 import { deletePromotion, getPromotions } from '../api';
 import DiscountCreator from './CreateForm';
+import { paginationOptions } from '@/data/pagination';
 
 const { Title, Text } = Typography;
 
@@ -54,7 +55,7 @@ export default function Promotion() {
 
   const handleTableChange = (paginationInfo: any) => {
     setPageQuery({
-      ...pageQuery,
+      pageSize: paginationInfo.showSizeChanger ? paginationInfo.pageSize : pageQuery.pageSize,
       page: paginationInfo.current,
     });
   };
@@ -97,7 +98,13 @@ export default function Promotion() {
           <Table
             columns={getColumns(onDelete, loading['delete-promotion'])}
             dataSource={promotions}
-            pagination={{ pageSize: pageQuery.pageSize, total: totalPage }}
+            pagination={{
+              pageSize: pageQuery.pageSize,
+              total: totalPage,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} reviews`,
+              ...paginationOptions
+            }}
             scroll={{ x: 1000 }}
             rowKey="id"
             loading={loading['get-promotions']}

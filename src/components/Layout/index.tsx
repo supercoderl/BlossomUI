@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Layout, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps, Typography } from 'antd';
 import getNavList from './menu';
 import { useRouter } from 'next/navigation';
@@ -13,8 +13,11 @@ import {
 import { getThemeBg } from '@/utils';
 import { Link, usePathname } from '../../navigation';
 import styles from './index.module.css';
-import { getUserInfo } from '@/utils/cookie';
 import { UserCookieInfo } from '@/types/user';
+import { useSignalRContext } from '@/providers/signalRProvider';
+import { UserRoles } from '@/enums/userRoles';
+import { AdminNotification } from '@/types/notification';
+import { UserContext } from '@/providers/userProvider';
 
 const { Text } = Typography;
 
@@ -34,9 +37,9 @@ const items: MenuProps['items'] = [
     {
         key: '1',
         label: (
-            <a target="_blank" rel="noopener noreferrer" href="#">
+            <Link rel="noopener noreferrer" href="/profile/me">
                 Personal Center
-            </a>
+            </Link>
         ),
     },
     {
@@ -66,11 +69,13 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
 
     const locale = useLocale();
     const otherLocale: any = locale === 'en' ? ['zh', '中'] : ['en', 'En'];
-
+    const alertSound = useRef<HTMLAudioElement | null>(null);
+    const [interacted, setInteracted] = useState(false);
     const router = useRouter();
     const pathname = usePathname();
     const navList = getNavList(t);
-
+    const { isConnected, connection } = useSignalRContext();
+    const [unreadCount, setUnreadCount] = useState(0);
     const [userInfo, setUserInfo] = useState<UserCookieInfo>();
 
     const [curTheme, setCurTheme] = useState<boolean>(false);
@@ -91,17 +96,52 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     useEffect(() => {
         const isDark = !!localStorage.getItem("isDarkTheme");
         setCurTheme(isDark);
+        alertSound.current = new Audio("/audios/alert.mp3");
+    }, []);
 
-        const getInfo = async () => {
-            var infoPromise = await getUserInfo();
-            if (infoPromise && JSON.parse(infoPromise.value)) {
-                var info = JSON.parse(infoPromise.value);
-                setUserInfo(info);
-            }
+    useEffect(() => {
+        const handleInteraction = () => {
+            setInteracted(true);
+            document.removeEventListener("click", handleInteraction);
         };
 
-        getInfo();
+        document.addEventListener("click", handleInteraction);
+        return () => document.removeEventListener("click", handleInteraction);
     }, []);
+
+    useEffect(() => {
+        if (!isConnected || !connection) return;
+
+        console.log("connected");
+
+        connection.on("getProfileInfo", (data?: UserCookieInfo | null) => {
+            if (data) {
+                setUserInfo(data);
+
+                if (data.role === UserRoles.Admin) {
+                    connection.invoke("JoinGroup", "administrators");
+                }
+            }
+        });
+
+        connection.on("receiveData", (data?: AdminNotification) => {
+            setUnreadCount((count) => count + 1);
+            alertSound?.current?.play().catch(console.warn);
+        })
+
+        return () => {
+            connection.off("getProfileInfo");
+            connection.off("receiveData");
+        };
+    }, [isConnected, connection]);
+
+    useEffect(() => {
+        if (unreadCount > 0) {
+            document.title = `(${unreadCount}) You have new message | Blossom UI`;
+        } else {
+            document.title = "Blossom UI";
+        }
+    }, [unreadCount]);
 
     return (
         <ConfigProvider
@@ -112,80 +152,82 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
                 }
             }}
         >
-            <Layout style={{ minHeight: "100vh" }}>
-                <Sider
-                    theme={curTheme ? "dark" : "light"}
-                    breakpoint="lg"
-                    collapsedWidth="0"
-                    onBreakpoint={(broken) => {
-                    }}
-                    onCollapse={(collapsed, type) => {
-                    }}
-                >
-                    <span className={styles.logo}>
-                        <Link href="/" className={styles.logoLink}>
-                            <img className='w-full' src={curTheme ? '/logo.png' : '/logo.png'} alt="logo" />
-                        </Link>
-                    </span>
-                    <Menu
+            <UserContext.Provider value={userInfo}>
+                <Layout style={{ minHeight: "100vh" }}>
+                    <Sider
                         theme={curTheme ? "dark" : "light"}
-                        mode="inline"
-                        defaultSelectedKeys={[curActive]}
-                        items={navList}
-                        defaultOpenKeys={defaultOpen}
-                        onSelect={handleSelect}
-                    />
-                </Sider>
-                <Layout>
-                    <Header style={{ padding: 0, paddingRight: 16, ...getThemeBg(curTheme), display: 'flex' }}>
-                        <div className={styles.rightControl}>
-                            <span className={styles.group}>
-                                <Popover content={<div style={{ width: '100%' }}><img width={180} src="/pay.png" /></div>} title="Support the author below!!">
-                                    <DollarOutlined style={{ color: 'red' }} /> Buy me a coffee
-                                </Popover>
-                            </span>
-                            <span className={styles.msg}>
-                                <Badge dot>
-                                    <BellOutlined />
-                                </Badge>
-                            </span>
-                            <Link href={pathname as any} locale={otherLocale[0]} className={styles.i18n}>
-                                <Text>{otherLocale[1]}</Text>
+                        breakpoint="lg"
+                        collapsedWidth="0"
+                        onBreakpoint={(broken) => {
+                        }}
+                        onCollapse={(collapsed, type) => {
+                        }}
+                    >
+                        <span className={styles.logo}>
+                            <Link href="/" className={styles.logoLink}>
+                                <img className='w-full' src={curTheme ? '/logo.png' : '/logo.png'} alt="logo" />
                             </Link>
-                            <span onClick={toggleTheme} className={styles.theme}>
-                                {
-                                    !curTheme ? <SunOutlined style={{ color: colorWarningText }} /> : <MoonOutlined />
-                                }
-                            </span>
-                            <div className={styles.avatar}>
-                                <Dropdown menu={{ items }} placement="bottomLeft" arrow>
-                                    <Avatar
-                                        src={userInfo?.avatarUrl}
-                                        style={{ color: '#fff', backgroundColor: colorTextBase }}
-                                    >
-                                        {userInfo?.fullName}
-                                    </Avatar>
-                                </Dropdown>
+                        </span>
+                        <Menu
+                            theme={curTheme ? "dark" : "light"}
+                            mode="inline"
+                            defaultSelectedKeys={[curActive]}
+                            items={navList}
+                            defaultOpenKeys={defaultOpen}
+                            onSelect={handleSelect}
+                        />
+                    </Sider>
+                    <Layout>
+                        <Header style={{ padding: 0, paddingRight: 16, ...getThemeBg(curTheme), display: 'flex' }}>
+                            <div className={styles.rightControl}>
+                                <span className={styles.group}>
+                                    <Popover content={<div style={{ width: '100%' }}><img width={180} src="/pay.png" /></div>} title="Support the author below!!">
+                                        <DollarOutlined style={{ color: 'red' }} /> Buy me a coffee
+                                    </Popover>
+                                </span>
+                                <span className={styles.msg}>
+                                    <Badge dot>
+                                        <BellOutlined />
+                                    </Badge>
+                                </span>
+                                <Link href={pathname as any} locale={otherLocale[0]} className={styles.i18n}>
+                                    <Text>{otherLocale[1]}</Text>
+                                </Link>
+                                <span onClick={toggleTheme} className={styles.theme}>
+                                    {
+                                        !curTheme ? <SunOutlined style={{ color: colorWarningText }} /> : <MoonOutlined />
+                                    }
+                                </span>
+                                <div className={styles.avatar}>
+                                    <Dropdown menu={{ items }} placement="bottomLeft" arrow>
+                                        <Avatar
+                                            src={userInfo?.avatarUrl}
+                                            style={{ color: '#fff', backgroundColor: colorTextBase }}
+                                        >
+                                            {userInfo?.firstName + " " + userInfo?.lastName}
+                                        </Avatar>
+                                    </Dropdown>
+                                </div>
                             </div>
-                        </div>
-                    </Header>
-                    <Content style={{ margin: '24px 16px 0' }}>
-                        <div
-                            style={{
-                                padding: 24,
-                                minHeight: 520,
-                                ...getThemeBg(curTheme),
-                                borderRadius: borderRadiusLG,
-                            }}
-                        >
-                            {children}
-                        </div>
-                    </Content>
-                    <Footer style={{ textAlign: 'center' }}>
-                        Blossom Nails ©{new Date().getFullYear()} Created by <a href="https://github.com/supercoderl">Supercoderl</a>
-                    </Footer>
+                        </Header>
+                        <Content style={{ margin: '24px 16px 0' }}>
+                            <div
+                                style={{
+                                    padding: 24,
+                                    minHeight: 520,
+                                    ...getThemeBg(curTheme),
+                                    borderRadius: borderRadiusLG,
+                                }}
+                            >
+                                {children}
+                            </div>
+                        </Content>
+                        <Footer style={{ textAlign: 'center' }}>
+                            Blossom Nails ©{new Date().getFullYear()} Created by <a href="https://github.com/supercoderl">Supercoderl</a>
+                        </Footer>
+                    </Layout>
                 </Layout>
-            </Layout>
+            </UserContext.Provider>
         </ConfigProvider>
     );
 };

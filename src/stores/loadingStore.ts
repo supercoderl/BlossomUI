@@ -1,3 +1,4 @@
+import { defaultLoading } from '@/data/loading';
 import { create } from 'zustand';
 
 interface ApiLoadingStore {
@@ -6,9 +7,16 @@ interface ApiLoadingStore {
 }
 
 export const useApiLoadingStore = create<ApiLoadingStore>((set) => ({
-    loading: {},
+    loading: { ...defaultLoading },
     setLoading: (key, value) =>
         set((state) => ({
             loading: { ...state.loading, [key]: value },
         })),
 }));
+
+export const preloadLoadingKeys = (keys: string[]) => {
+    const { setLoading } = useApiLoadingStore.getState();
+    keys.forEach((key) => {
+        setLoading(key, true);
+    });
+};

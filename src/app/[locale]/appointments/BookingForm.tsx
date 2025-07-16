@@ -18,6 +18,8 @@ import { TechnicianInfo } from '@/types/user';
 import { parseStartTime } from '@/utils/date';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
+import { PromotionChecker } from '@/types/promotion';
+import { getTotalPriceValue } from '@/utils/text';
 
 const BookingFormSection = ({ loading, router, font }: { loading: Record<string, boolean>, router: AppRouterInstance, font: NextFontWithVariable }) => {
     const [messageApi] = useGlobalMessage();
@@ -36,6 +38,7 @@ const BookingFormSection = ({ loading, router, font }: { loading: Record<string,
     })
     const [isSubmit, setIsSubmit] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [promotion, setPromotion] = useState<PromotionChecker | null>(null);
 
     const onSubmit = async () => {
         switch (state) {
@@ -78,7 +81,7 @@ const BookingFormSection = ({ loading, router, font }: { loading: Record<string,
                     serviceId: selectedService?.type === "service" ? selectedService?.id : null,
                     serviceOptionId: selectedService?.type === "option" ? selectedService?.serviceOptionId : null,
                     quantity: 1,
-                    price: selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0,
+                    price: getTotalPriceValue(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0, promotion).totalPrice,
                     note: null,
                     guestName: information.firstName + " " + information.lastName,
                     guestPhone: information.phone,
@@ -163,6 +166,7 @@ const BookingFormSection = ({ loading, router, font }: { loading: Record<string,
                                                                 currentMonth={currentMonth}
                                                                 currentYear={currentYear}
                                                                 information={information}
+                                                                promotion={promotion}
                                                             />
                                                             :
                                                             <RightContent
@@ -184,6 +188,8 @@ const BookingFormSection = ({ loading, router, font }: { loading: Record<string,
                                                                 setInformation={setInformation}
                                                                 messageApi={messageApi}
                                                                 loading={loading}
+                                                                promotion={promotion}
+                                                                setPromotion={setPromotion}
                                                             />
                                                     }
                                                     <div className="flex items-center justify-end w-full py-2.5 px-8 bg-transparent shadow-[0_-2px_3px_rgba(26,_44,_55,_0.15)]">

@@ -4,6 +4,8 @@ import { Service, ServiceOption } from "@/types/service";
 import { TechnicianInfo } from "@/types/user";
 import { formatter } from "@/utils/currency";
 import { months } from "@/data/date";
+import { PromotionChecker } from "@/types/promotion";
+import { getTotalPriceValue } from "@/utils/text";
 
 const RightContentSubmit = ({
     selectedDate,
@@ -12,7 +14,8 @@ const RightContentSubmit = ({
     selectedEmployee,
     currentMonth,
     currentYear,
-    information
+    information,
+    promotion
 }: {
     selectedDate: number | null;
     selectedTime: string;
@@ -25,7 +28,8 @@ const RightContentSubmit = ({
         lastName: string;
         email: string;
         phone: string;
-    }
+    },
+    promotion: PromotionChecker | null
 }) => {
 
     return (
@@ -110,7 +114,7 @@ const RightContentSubmit = ({
                     }
                         style={{ animationDelay: '400ms' }}>
                         <span className='text-[rgba(26,_44,_55,_0.4)]'>Payment:</span>
-                        <span className='text-[#1A2C37]'>{formatter().format(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService.priceFrom : 0)}</span>
+                        <span className='text-[#1A2C37]'>{getTotalPriceValue(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService.priceFrom : 0, promotion).label}</span>
                     </div>
                     <div className={
                         cn(

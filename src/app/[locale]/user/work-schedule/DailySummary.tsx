@@ -23,7 +23,7 @@ const DailySummary = ({ allDaySchedules, employees, loading }: {
             }}
         >
             {
-                loading['get-work-schedules'] ?
+                loading['get-bookings'] ?
                     <BasicLoading
                         className="w-1/2 h-1/2 mx-auto"
                     />

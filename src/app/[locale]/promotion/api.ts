@@ -16,6 +16,14 @@ export const createPromotion = (data: any) =>
     withApiLoading('create-promotion', () =>
         req.post(`/Promotion`, data));
 
+export const checkPromotion = (code: string) =>
+    withApiLoading('check-promotion', () =>
+        req.get(`/Promotion/check`, {
+            params: {
+                code
+            }
+        }));
+
 export const deletePromotion = (id: string) =>
     withApiLoading('delete-promotion', () =>
         req.delete(`/Promotion/${id}`));

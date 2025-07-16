@@ -9,6 +9,7 @@ import { useApiLoadingStore } from '@/stores/loadingStore';
 import { useGlobalMessage } from '@/providers/messageProvider';
 import { deleteCategory, getCategories } from '../api';
 import CategoryCreator from '@/components/Category/CategoryFormCreator';
+import { paginationOptions } from '@/data/pagination';
 const { Title, Text } = Typography;
 
 export default function Service() {
@@ -53,7 +54,7 @@ export default function Service() {
 
   const handleTableChange = (paginationInfo: any) => {
     setPageQuery({
-      ...pageQuery,
+      pageSize: paginationInfo.showSizeChanger ? paginationInfo.pageSize : pageQuery.pageSize,
       page: paginationInfo.current,
     });
   };
@@ -96,7 +97,13 @@ export default function Service() {
           <Table
             columns={getColumns(onDelete, loading['delete-category'])}
             dataSource={categories}
-            pagination={{ pageSize: pageQuery.pageSize, total: totalPage }}
+            pagination={{
+              pageSize: pageQuery.pageSize,
+              total: totalPage,
+              showTotal: (total, range) =>
+                `${range[0]}-${range[1]} of ${total} reviews`,
+              ...paginationOptions
+            }}
             scroll={{ x: 1000 }}
             rowKey="id"
             loading={loading['get-categories']}
