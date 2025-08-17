@@ -57,7 +57,7 @@ const WorkSchedule = ({
                         <div className="w-full relative">
                             <div className="">
                                 <div className="text-center">
-                                    <Link href="/appointments" className="text-[14px] font-medium text-center uppercase inline-block border border-solid border-black text-black py-[14px] px-[31px] bg-transparent transition duration-300 hover:bg-black hover:text-white">Book Appointment</Link>
+                                    <Link href="/appointments" className="text-[14px] font-medium text-center uppercase inline-block border border-solid border-black text-black py-[14px] px-[31px] bg-transparent transition duration-300 hover:bg-black hover:text-white hover:scale-110">Book Appointment</Link>
                                 </div>
                             </div>
                         </div>

@@ -8,11 +8,7 @@ import moment from "moment";
 export const getUsers = (filter: Filter) =>
     withApiLoading('get-users', () =>
         req.get('/User', {
-            params: {
-                query: filter.query,
-                searchTerm: filter.searchTerm,
-                includeDeleted: filter.includeDeleted
-            }
+            params: filter
         }));
 
 export const loginApi = (email: string, pwd: string) =>
@@ -22,7 +18,17 @@ export const loginApi = (email: string, pwd: string) =>
             password: pwd,
         }));
 
-export const registerApi = (email: string, pwd: string, firstName: string, lastName: string, phoneNumber: string, gender: Gender, dateOfBirth: Date) =>
+export const registerApi = (
+    email: string,
+    pwd: string,
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
+    gender: Gender,
+    dateOfBirth: Date,
+    website: string,
+    role?: UserRoles
+) =>
     withApiLoading('register', () =>
         req.post('/User', {
             email,
@@ -32,7 +38,8 @@ export const registerApi = (email: string, pwd: string, firstName: string, lastN
             gender,
             dateOfBirth: moment(new Date(dateOfBirth)).format('YYYY-MM-DD'),
             password: pwd,
-            role: UserRoles.Customer
+            website,
+            role: role ?? UserRoles.Customer
         })
     );
 
@@ -64,10 +71,23 @@ export const getWorkSchedules = (filter: Filter) =>
             params: {
                 query: filter.query,
                 searchTerm: filter.searchTerm,
-                includeDeleted: filter.includeDeleted
+                includeDeleted: filter.includeDeleted,
+                excludeBot: filter.excludeBot
             }
         }));
 
 export const createWorkSchedule = (data: any) =>
     withApiLoading('create-work-schedule', () =>
         req.post('/WorkSchedule', data));
+
+export const forgotPassword = (identifier: string) =>
+    withApiLoading('forgot-password', () =>
+        req.post('/User/forgot-password', { identifier }));
+
+export const resetPassword = (code: string, newPassword: string) =>
+    withApiLoading('reset-password', () =>
+        req.post('/User/reset-password', { code, newPassword }));
+
+export const subscribe = (email: string) =>
+    withApiLoading('subscribe', () =>
+        req.post('/Subscriber', { email })); 

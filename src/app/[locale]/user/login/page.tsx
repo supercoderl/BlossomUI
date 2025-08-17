@@ -1,5 +1,5 @@
 'use client'
-import { Button, DatePicker, Divider, Form, Input, Segmented, Select, type FormProps } from 'antd';
+import { Button, Checkbox, DatePicker, Divider, Form, Input, Segmented, Select, type FormProps } from 'antd';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { loginApi, registerApi } from '../api';
@@ -7,8 +7,6 @@ import {
     GoogleOutlined,
     FacebookOutlined,
     GithubOutlined,
-    TwitterOutlined,
-    LinkedinOutlined
 } from '@ant-design/icons';
 import styles from './index.module.css';
 import moment from 'moment';
@@ -16,6 +14,9 @@ import { useApiLoadingStore } from '@/stores/loadingStore';
 import { useGlobalMessage } from '@/providers/messageProvider';
 import { Gender } from '@/enums/gender';
 import { setRefreshTokenCookie, setTokenCookie, setUserInfo } from '@/utils/cookie';
+import Link from 'next/link';
+import { Jost } from 'next/font/google';
+import { cn } from '@/utils/helpers';
 
 type FieldType = {
     email?: string;
@@ -30,6 +31,13 @@ type FieldType = {
 };
 
 const mode = ['Login', 'Register'];
+
+const jost = Jost({
+    subsets: ["latin"],
+    weight: ["300", "400", "500", "600", "700"],
+    display: "swap",
+    variable: "--font-inter",
+});
 
 export default function Home() {
     const [curMode, setCurMode] = useState(mode[0]);
@@ -108,7 +116,10 @@ export default function Home() {
             </div>
             <div className={styles.content}>
                 <div className={styles.innerContent}>
-                    <h1>Welcome to Blossom management system</h1>
+                    <h1 className={cn(
+                        "font-medium text-3xl",
+                        jost.className
+                    )}>Welcome to Blossom management system</h1>
                     <Segmented<string>
                         options={mode}
                         size="large"
@@ -151,8 +162,28 @@ export default function Home() {
                                         <Input.Password size='large' placeholder='Please enter password' variant="filled" />
                                     </Form.Item>
 
+                                    <div className='flex items-center justify-between'>
+                                        <Form.Item<FieldType>
+                                            name="remember"
+                                            valuePropName="checked"
+                                            initialValue={true}
+                                            className='flex items-center gap-2'
+                                        >
+                                            <Checkbox>
+                                                Remember me
+                                            </Checkbox>
+                                        </Form.Item>
+
+                                        <Form.Item<FieldType>>
+                                            <Link href="/user/forgot" className="text-pink-800 hover:underline hover:text-pink-600">
+                                                Forgot password?
+                                            </Link>
+                                        </Form.Item>
+                                    </div>
+
                                     <Form.Item wrapperCol={{ span: 24 }}>
                                         <Button
+                                            id="antd-button"
                                             type="primary"
                                             htmlType="submit"
                                             block

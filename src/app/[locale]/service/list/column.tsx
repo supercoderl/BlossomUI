@@ -1,6 +1,7 @@
 import { formatter } from '@/utils/currency';
 import { Popconfirm, Space, type TableProps } from 'antd';
 import { deleteService } from '../api';
+import { CloudUploadOutlined, DeleteFilled, EditFilled } from '@ant-design/icons';
 
 interface DataType {
     id: string;
@@ -57,7 +58,9 @@ const getColumns = (onDelete: (id: string) => void, loading: boolean, onUpload: 
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/service/${record.id}/edit`}>Edit</a>
+                <a href={`/service/${record.id}/edit`}>
+                    <EditFilled style={{ color: '#E43636' }} />
+                </a>
                 <Popconfirm
                     title={`Are you sure to delete the service - ${record.name}?`}
                     onConfirm={() => onDelete(record.id)}
@@ -65,9 +68,11 @@ const getColumns = (onDelete: (id: string) => void, loading: boolean, onUpload: 
                     okButtonProps={{ loading: loading, disabled: loading }}
                     cancelText="No"
                 >
-                    <a>Delete</a>
+                    <DeleteFilled style={{ color: '#E43636' }} />
                 </Popconfirm>
-                <a onClick={() => onUpload(record.id)}>Upload</a>
+                <a onClick={() => onUpload(record.id)}>
+                    <CloudUploadOutlined style={{ color: '#E43636' }} />
+                </a>
             </Space>
         ),
     },

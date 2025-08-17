@@ -1,15 +1,9 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
-import { Layout, Menu, theme, Avatar, Dropdown, ConfigProvider, Badge, Popover, type MenuProps, Typography } from 'antd';
+import { Layout, Menu, theme, ConfigProvider, type MenuProps } from 'antd';
 import getNavList from './menu';
 import { useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import {
-    BellOutlined,
-    DollarOutlined,
-    MoonOutlined,
-    SunOutlined
-} from '@ant-design/icons';
 import { getThemeBg } from '@/utils';
 import { Link, usePathname } from '../../navigation';
 import styles from './index.module.css';
@@ -18,8 +12,7 @@ import { useSignalRContext } from '@/providers/signalRProvider';
 import { UserRoles } from '@/enums/userRoles';
 import { AdminNotification } from '@/types/notification';
 import { UserContext } from '@/providers/userProvider';
-
-const { Text } = Typography;
+import { AdminHeader } from './header';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -79,6 +72,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     const [userInfo, setUserInfo] = useState<UserCookieInfo>();
 
     const [curTheme, setCurTheme] = useState<boolean>(false);
+
     const toggleTheme = () => {
         const _curTheme = !curTheme;
         setCurTheme(_curTheme);
@@ -143,6 +137,8 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
         }
     }, [unreadCount]);
 
+    const divRef = useRef<HTMLDivElement>(null);
+
     return (
         <ConfigProvider
             theme={{
@@ -153,7 +149,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
             }}
         >
             <UserContext.Provider value={userInfo}>
-                <Layout style={{ minHeight: "100vh" }}>
+                <Layout style={{ minHeight: "100vh" }} ref={divRef}>
                     <Sider
                         theme={curTheme ? "dark" : "light"}
                         breakpoint="lg"
@@ -179,36 +175,12 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
                     </Sider>
                     <Layout>
                         <Header style={{ padding: 0, paddingRight: 16, ...getThemeBg(curTheme), display: 'flex' }}>
-                            <div className={styles.rightControl}>
-                                <span className={styles.group}>
-                                    <Popover content={<div style={{ width: '100%' }}><img width={180} src="/pay.png" /></div>} title="Support the author below!!">
-                                        <DollarOutlined style={{ color: 'red' }} /> Buy me a coffee
-                                    </Popover>
-                                </span>
-                                <span className={styles.msg}>
-                                    <Badge dot>
-                                        <BellOutlined />
-                                    </Badge>
-                                </span>
-                                <Link href={pathname as any} locale={otherLocale[0]} className={styles.i18n}>
-                                    <Text>{otherLocale[1]}</Text>
-                                </Link>
-                                <span onClick={toggleTheme} className={styles.theme}>
-                                    {
-                                        !curTheme ? <SunOutlined style={{ color: colorWarningText }} /> : <MoonOutlined />
-                                    }
-                                </span>
-                                <div className={styles.avatar}>
-                                    <Dropdown menu={{ items }} placement="bottomLeft" arrow>
-                                        <Avatar
-                                            src={userInfo?.avatarUrl}
-                                            style={{ color: '#fff', backgroundColor: colorTextBase }}
-                                        >
-                                            {userInfo?.firstName + " " + userInfo?.lastName}
-                                        </Avatar>
-                                    </Dropdown>
-                                </div>
-                            </div>
+                            <AdminHeader
+                                curTheme={curTheme}
+                                userInfo={userInfo}
+                                ref={divRef}
+                                toggleTheme={toggleTheme}
+                            />
                         </Header>
                         <Content style={{ margin: '24px 16px 0' }}>
                             <div

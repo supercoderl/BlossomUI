@@ -9,25 +9,27 @@ import { getUsers } from '../api';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import { UserRoles } from '@/enums/userRoles';
 import { paginationOptions } from '@/data/pagination';
+import { Filter } from '@/types/filter';
+import UserCreator from './CreateForm';
 
 const { Title, Text } = Typography;
 
 export default function User() {
   const t = useTranslations('user');
   const [users, setUsers] = useState([]);
-  const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 5 });
+  const [filter, setFilter] = useState<Filter>({
+    query: { page: 1, pageSize: 5 },
+    searchTerm: '',
+    includeDeleted: false,
+    excludeBot: true, // Exclude bot users
+  })
   const [totalPage, setTotalPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [includeDeleted, setIncludeDeleted] = useState(false);
   const { loading } = useApiLoadingStore();
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
+  const [isUserOpen, setIsUserOpen] = useState(false);
 
   const onLoad = async () => {
-    await getUsers({
-      ...pageQuery,
-      searchTerm,
-      includeDeleted
-    }).then((res) => {
+    await getUsers(filter).then((res) => {
       if (res && res.data) {
         setUsers(res.data.items || []);
         setTotalPage(res.data.count ?? 0);
@@ -36,20 +38,27 @@ export default function User() {
   }
 
   const handleTableChange = (paginationInfo: any) => {
-    setPageQuery({
-      pageSize: paginationInfo.showSizeChanger ? paginationInfo.pageSize : pageQuery.pageSize,
-      page: paginationInfo.current,
-    });
+    setFilter(prev => ({
+      ...prev,
+      query: {
+        pageSize: paginationInfo.showSizeChanger ? paginationInfo.pageSize : filter.query?.pageSize,
+        page: paginationInfo.current,
+      }
+    }));
   };
 
   const onClear = () => {
-    setPageQuery({ page: 1, pageSize: 5 });
-    setSearchTerm("");
+    setFilter({
+      query: { page: 1, pageSize: 5 },
+      searchTerm: '',
+      includeDeleted: false,
+      excludeBot: true,
+    });
   }
 
   useEffect(() => {
     onLoad();
-  }, [pageQuery]);
+  }, [filter]);
 
   return (
     <Layout curActive='/user'>
@@ -66,12 +75,13 @@ export default function User() {
         {/* Filter */}
         <AvaForm
           onReload={onLoad}
-          filters={undefined}
-          setFilters={() => { }}
+          filters={filter}
+          setFilters={setFilter}
           applyFilters={onLoad}
           clearFilters={onClear}
-          search={searchTerm}
-          handleValue={setSearchTerm}
+          search={filter.searchTerm ?? ''}
+          onOpen={() => setIsUserOpen(true)}
+          handleValue={(value) => setFilter(prev => ({ ...prev, searchTerm: value }))}
         />
 
         {/* Review Table */}
@@ -80,7 +90,7 @@ export default function User() {
             columns={columns}
             dataSource={users}
             pagination={{
-              pageSize: pageQuery.pageSize,
+              pageSize: filter.query?.pageSize,
               total: totalPage,
               showTotal: (total, range) =>
                 `${range[0]}-${range[1]} of ${total} reviews`,
@@ -139,6 +149,13 @@ export default function User() {
           />
         </Card>
       </main>
+
+      {/* User Creator Modal */}
+      <UserCreator
+        isOpen={isUserOpen}
+        onClose={() => setIsUserOpen(false)}
+        onReload={onLoad}
+      />
     </Layout>
   );
 }

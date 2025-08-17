@@ -1,5 +1,5 @@
 import { DiscountType } from '@/enums/discountType';
-import { formatter } from '@/utils/currency';
+import { EditFilled, DeleteFilled } from '@ant-design/icons';
 import { Popconfirm, Space, type TableProps } from 'antd';
 
 interface DataType {
@@ -57,7 +57,9 @@ const getColumns = (onDelete: (id: string) => void, loading: boolean): TableProp
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/promotion/${record.id}/edit`}>Edit</a>
+                <a href={`/promotion/${record.id}/edit`}>
+                    <EditFilled style={{ color: '#E43636' }} />
+                </a>
                 <Popconfirm
                     title={`Are you sure to delete the promotion - ${record.code}?`}
                     onConfirm={() => onDelete(record.id)}
@@ -65,7 +67,7 @@ const getColumns = (onDelete: (id: string) => void, loading: boolean): TableProp
                     okButtonProps={{ loading: loading, disabled: loading }}
                     cancelText="No"
                 >
-                    <a>Delete</a>
+                    <DeleteFilled style={{ color: '#E43636' }} />
                 </Popconfirm>
             </Space>
         ),

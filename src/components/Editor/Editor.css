@@ -1,0 +1,111 @@
+/* components/SimpleRichTextEditor.css */
+.simple-rich-editor {
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.simple-rich-editor:focus-within {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+.simple-rich-editor .toolbar {
+  background-color: #fafafa;
+  border-bottom: 1px solid #d9d9d9;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.simple-rich-editor .editor-content {
+  padding: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(0, 0, 0, 0.85);
+  background-color: #fff;
+  outline: none;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.simple-rich-editor .editor-content:empty::before {
+  content: attr(data-placeholder);
+  color: rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  position: absolute;
+}
+
+.simple-rich-editor .editor-content p {
+  margin: 0 0 1em 0;
+}
+
+.simple-rich-editor .editor-content h1,
+.simple-rich-editor .editor-content h2,
+.simple-rich-editor .editor-content h3 {
+  margin: 0.5em 0;
+  font-weight: 600;
+}
+
+.simple-rich-editor .editor-content ul,
+.simple-rich-editor .editor-content ol {
+  margin: 0.5em 0;
+  padding-left: 2em;
+}
+
+.simple-rich-editor .editor-content li {
+  margin: 0.25em 0;
+}
+
+.simple-rich-editor .editor-content a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+.simple-rich-editor .editor-content a:hover {
+  text-decoration: underline;
+}
+
+.simple-rich-editor .editor-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.simple-rich-editor .editor-content blockquote {
+  margin: 1em 0;
+  padding-left: 1em;
+  border-left: 4px solid #d9d9d9;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .simple-rich-editor {
+    border-color: #424242;
+  }
+  
+  .simple-rich-editor:focus-within {
+    border-color: #1890ff;
+  }
+  
+  .simple-rich-editor .toolbar {
+    background-color: #141414;
+    border-bottom-color: #424242;
+  }
+  
+  .simple-rich-editor .editor-content {
+    background-color: #1f1f1f;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  
+  .simple-rich-editor .editor-content:empty::before {
+    color: rgba(255, 255, 255, 0.25);
+  }
+}

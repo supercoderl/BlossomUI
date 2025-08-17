@@ -49,7 +49,7 @@ const StorySection = ({ font, font2 }: { font: NextFontWithVariable, font2: Next
                         <div className="w-full relative">
                             <div className="mt-[50px]">
                                 <div className="text-center md:text-left">
-                                    <a href="/our-story" className="decoration-none font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] hover:bg-black hover:text-white transition-all duration-300">Learn More</a>
+                                    <a href="/our-story" className="decoration-none font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] hover:bg-black hover:text-white transition-all duration-300 hover:scale-110">Learn More</a>
                                 </div>
                             </div>
                         </div>

@@ -1,13 +1,57 @@
 import { cn } from "@/utils/helpers";
+import { MessageInstance } from "antd/es/message/interface";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+import { useState } from "react";
+import { createContact } from "./api";
+import { Button } from "antd";
 
 const FormSection = ({
     font,
-    font2
-} : {
+    font2,
+    messageApi,
+    loading
+}: {
     font: NextFontWithVariable,
-    font2: NextFontWithVariable
+    font2: NextFontWithVariable,
+    messageApi: MessageInstance,
+    loading: Record<string, boolean>
 }) => {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [message, setMessage] = useState('');
+
+    const onSubmit = async () => {
+        if (!name || !email || !message) {
+            messageApi.error('Please fill in all fields.');
+            return;
+        }
+
+        try {
+            await createContact({
+                name,
+                email,
+                message
+            }).then(() => {
+                messageApi.success('Contact created successfully');
+                setName('');
+                setEmail('');
+                setMessage('');
+            });
+        } catch (error: any) {
+            if (error && error.response && error.response.data) {
+                const errors = error.response.data.errors;
+                if (errors && errors.length > 0) {
+                    errors.forEach((error: any) => {
+                        messageApi.error(error || 'Contact failed');
+                    })
+                }
+            }
+            else {
+                messageApi.error("Request failed, please try again later");
+            }
+        }
+    }
+
     return (
         <>
             <section className="mt-[50px] md:mt-[150px] relative">
@@ -63,32 +107,56 @@ const FormSection = ({
                                             </div>
                                             <form action="" method="post" className="" aria-label="Contact form" noValidate={true}>
                                                 <div className="flex -mx-[15px]">
-                                                    <p className="m-0 w-full grid md:grid-cols-3">
+                                                    <p className="m-0 w-full grid md:grid-cols-2">
                                                         <span className="px-[15px] mb-[30px] w-full" data-name="your-name">
-                                                            <input size={40} className="border border-solid border-black text-black w-full h-[50px] px-4 text-[14px]" placeholder="Name *" value="" type="text" name="your-name" readOnly />
+                                                            <input
+                                                                size={40}
+                                                                className="border border-solid border-black text-black w-full h-[50px] px-4 text-[14px]"
+                                                                placeholder="Name *"
+                                                                value={name}
+                                                                onChange={(e) => setName(e.target.value)}
+                                                                type="text"
+                                                                name="your-name"
+                                                            />
                                                         </span>
                                                         <span className="px-[15px] mb-[30px] w-full" data-name="your-email">
-                                                            <input size={40} className="border border-solid border-black text-black w-full h-[50px] px-4 text-[14px]" placeholder="Email Address *" value="" type="email" name="your-email" readOnly />
-                                                        </span>
-                                                        <span className="px-[15px] mb-[30px] w-full" data-name="tel-550">
-                                                            <input size={40} className="border border-solid border-black text-black w-full h-[50px] px-4 text-[14px]" placeholder="Phone" value="" type="tel" name="tel-550" readOnly />
+                                                            <input
+                                                                size={40}
+                                                                className="border border-solid border-black text-black w-full h-[50px] px-4 text-[14px]"
+                                                                placeholder="Email Address *"
+                                                                value={email}
+                                                                onChange={(e) => setEmail(e.target.value)}
+                                                                type="email"
+                                                                name="your-email"
+                                                            />
                                                         </span>
                                                     </p>
                                                 </div>
                                                 <p className="mb-[30px]">
                                                     <span className="relative">
-                                                        <input size={40} placeholder="Subject" className="border border-solid border-black text-black w-full h-[50px] px-4 text-[14px]" readOnly />
-                                                    </span>
-                                                </p>
-                                                <p className="mb-[30px]">
-                                                    <span className="relative">
-                                                        <textarea cols={40} rows={10} className="w-full h-[240px] p-4 text-black border border-solid border-black text-[14px]" placeholder="Message *" name="your-message"></textarea>
+                                                        <textarea
+                                                            cols={40}
+                                                            rows={10}
+                                                            className="w-full h-[240px] p-4 text-black border border-solid border-black text-[14px]"
+                                                            placeholder="Message *"
+                                                            name="your-message"
+                                                            value={message}
+                                                            onChange={(e) => setMessage(e.target.value)}
+                                                        ></textarea>
                                                     </span>
                                                 </p>
                                                 <div className="flex justify-end">
                                                     <p className="m-0 flex flex-row-reverse">
-                                                        <input className="text-[14px] font-medium text-center uppercase text-white bg-black inline-block pt-4 px-8 pb-[14px]" type="submit" value="Send Message" readOnly />
-                                                        <span className="visibility-hidden inline-block bg-[#23282d] opacity-75 w-[24px] h-[24px] rounded-full mx-6 relative"></span>
+                                                        <Button
+                                                            className="!border !border-solid !border-black !h-12 !px-8 !rounded-none font-medium text-center uppercase !text-white !bg-black !inline-block hover:!bg-white hover:!text-inherit hover:!scale-110"
+                                                            type="text"
+                                                            value="Send Message"
+                                                            loading={loading['create-contact']}
+                                                            disabled={loading['create-contact']}
+                                                            onClick={onSubmit}
+                                                        >
+                                                            <span className={loading['create-contact'] ? "ml-2" : ""}>Send Message</span>
+                                                        </Button>
                                                     </p>
                                                 </div>
                                                 <div className="hidden mt-[2em] mx-[0.5em] mb-[1em] py-[0.2em] px-[1em] border-2 border-solid border-[#00a0d2]"></div>

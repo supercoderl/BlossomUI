@@ -37,7 +37,9 @@
         "mdDoc": "Markdown编辑器",
         "outlink": "flowmix/docx(otherLink)",
         "workSchedule": "Work schedule",
-        "transactions": "Transactions"
+        "transactions": "Transactions",
+        "contact": "Contact",
+        "contactList": "Contact List"
     },
     "user": {
         "userList": "User List"

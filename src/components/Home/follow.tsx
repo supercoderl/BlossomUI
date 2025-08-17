@@ -1,15 +1,47 @@
+import { subscribe } from '@/app/[locale]/user/api';
 import { cn } from '@/utils/helpers';
 import {
     FacebookOutlined,
     InstagramOutlined
 } from '@ant-design/icons';
+import { Button } from 'antd';
+import { MessageInstance } from 'antd/es/message/interface';
 import { NextFontWithVariable } from 'next/dist/compiled/@next/font';
+import { useState } from 'react';
 
 const FollowSection = ({
-    font
+    font,
+    messageApi,
+    loading
 }: {
-    font: NextFontWithVariable
+    font: NextFontWithVariable,
+    messageApi: MessageInstance,
+    loading: Record<string, boolean>
 }) => {
+    const [email, setEmail] = useState('');
+
+    const onSubscribe = async () => {
+        try {
+            await subscribe(email).then(() => {
+                messageApi.success("Subscribed successfully! You will receive updates to your email.");
+                setEmail('');
+            })
+        } catch (error: any) {
+            console.error('Subscribe error:', error);
+            if (error && error.response && error.response.data) {
+                const errors = error.response.data.errors;
+                if (errors && errors.length > 0) {
+                    errors.forEach((error: any) => {
+                        messageApi.error(error || 'Subscribe failed');
+                    })
+                }
+            }
+            else {
+                messageApi.error("Request failed, please try again later");
+            }
+        }
+    }
+
     return (
         <section className={
             cn(
@@ -17,7 +49,6 @@ const FollowSection = ({
                 font.className
             )
         } data-aos="fade-zoom-in">
-            <div className="bg-[#F6EBE7] h-full w-full absolute top-0 left-0"></div>
             <div className="max-w-[767px] md:max-w-[1170px] flex mx-auto relative">
                 <div className="w-full relative min-h flex">
                     <div className="p-[10px] flex relative w-full flex-wrap content-start">
@@ -32,7 +63,7 @@ const FollowSection = ({
                                                 href="https://www.instagram.com/blossom_nails.eastleigh"
                                                 target="_blank"
                                                 rel="nofollow"
-                                                className="text-black px-[15px] decoration-none"
+                                                className="text-black px-[15px] decoration-none transition-all duration-300 ease hover:text-inherit hover:scale-110"
                                             >
                                                 <InstagramOutlined className='text-[32px]' />
                                             </a>
@@ -40,7 +71,7 @@ const FollowSection = ({
                                                 href="https://www.facebook.com/blossomnailseastleigh"
                                                 target="_blank"
                                                 rel="nofollow"
-                                                className="text-black px-[15px] decoration-none"
+                                                className="text-black px-[15px] decoration-none transition-all duration-300 ease hover:text-inherit hover:scale-110"
                                             >
                                                 <FacebookOutlined className='text-[32px]' />
                                             </a>
@@ -53,8 +84,24 @@ const FollowSection = ({
                                         <form className="" method="post" data-id="226" data-name="First form">
                                             <div className="">
                                                 <p className="mb-0 relative max-w-[420px] mx-auto bg-white">
-                                                    <input className="pr-[160px] pl-[15px] border border-solid border-black text-black w-full h-[50px]" type="email" name="EMAIL" placeholder="you@example.com" required readOnly />
-                                                    <input type="submit" value="subscribe" className="absolute top-0 right-0 font-medium text-center uppercase text-black border-l border-solid border-black inline-block py-[14px] px-[31px]" readOnly />
+                                                    <input
+                                                        className="pr-[160px] pl-[15px] border border-solid border-black text-black w-full h-[50px]"
+                                                        type="email"
+                                                        name="EMAIL"
+                                                        placeholder="you@example.com"
+                                                        required
+                                                        value={email}
+                                                        onChange={(e) => setEmail(e.target.value)}
+                                                    />
+                                                    <Button
+                                                        loading={loading['subscribe']}
+                                                        disabled={loading['subscribe']}
+                                                        type="text"
+                                                        className="!absolute !h-full !rounded-none top-0 right-0 font-medium text-center uppercase !border-l !border-solid !border-black inline-block hover:!bg-black hover:!text-white !opacity-100"
+                                                        onClick={onSubscribe}
+                                                    >
+                                                        Subscribe
+                                                    </Button>
                                                 </p>
                                             </div>
                                             <div className="text-center"></div>

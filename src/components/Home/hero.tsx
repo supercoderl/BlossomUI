@@ -17,7 +17,7 @@ const HeroSection = ({
                             <div className="">
                                 <div className="bg-cover bg-top md:min-h-[760px] relative m-0 pb-[30px] md:pt-[30px] md:p-0"
                                     style={{
-                                        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('https://scontent.fhan4-5.fna.fbcdn.net/v/t1.6435-9/48393953_2315425375409055_8308650539470553088_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeHjud0_6qFJsRdt4UFjitk8guY67UjiN3CC5jrtSOI3cOXOgBe5M2HdWoMxvEiTXoMqm88WE8Hm86vPw-KT9vic&_nc_ohc=3QTJoLS_6nEQ7kNvwH7D2EO&_nc_oc=Adk86BpjYeJ4agr86Zl-0gGq3KH3qn_PNCFwTzosOom08OxbSV0D8S4Ft-JM1X0WDTE&_nc_zt=23&_nc_ht=scontent.fhan4-5.fna&_nc_gid=L2ZikWHz-YBvmi9LDQeZsw&oh=00_AfOWzwUSmoLCuk3wePYsCKHaJX_3DmNaTOfMWWc3MwiDBQ&oe=688AC6C9')`,
+                                        backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7)), url('/gallery/banner.jpg')`,
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'center',
                                         backgroundRepeat: 'no-repeat',
@@ -33,10 +33,10 @@ const HeroSection = ({
                                                 }>Always Make Room for a Little Beauty in Your Life</h1>
                                                 <div className="flex flex-col md:flex-row justify-center">
                                                     <div className="mb-4 md:m-0 px-[13px]">
-                                                        <a href="/appointments" className="decoration-none font-medium text-center text-[14px] uppercase text-black bg-white inline-block pt-[16px] px-[32px] pb-[14px]">Book Appointment</a>
+                                                        <a href="/appointments" className="decoration-none font-medium text-center text-[14px] uppercase text-black bg-white inline-block pt-[16px] px-[32px] pb-[14px] transition-all duration-300 hover:text-black hover:scale-110">Book Appointment</a>
                                                     </div>
                                                     <div className="mb-4 md:m-0 px-[13px]">
-                                                        <a href="/service-menu" className="decoration-none font-medium text-center text-[14px] uppercase text-white border border-solid border-white inline-block py-[14px] px-[31px] hover:bg-white hover:text-black transition-all duration-300">View Service Menu</a>
+                                                        <a href="/service-menu" className="decoration-none font-medium text-center text-[14px] uppercase text-white border border-solid border-white inline-block py-[14px] px-[31px] transition-all duration-300 hover:bg-white hover:text-black hover:scale-110">View Service Menu</a>
                                                     </div>
                                                 </div>
                                             </div>

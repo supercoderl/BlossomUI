@@ -66,10 +66,6 @@ export default function ServiceCreator({
                 formData.append('RepresentativeImage', fileList[0].originFileObj);
             }
 
-            Array.from(formData.entries()).forEach(([key, value]) => {
-                console.log(`${key}: ${value}`);
-            });
-
             await createService(formData).then((res: any) => {
                 if (res && res.success) {
                     messageApi.success('Service created successfully');

@@ -138,7 +138,10 @@ const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpe
                         <div className="-mx-[7px] hidden md:block">
                             <Link
                                 className={
-                                    scrolled || isDark ? "text-black" : "text-white group-hover:text-black"
+                                    cn(
+                                        "inline-block transition-all duration-300 hover:scale-110",
+                                        scrolled || isDark ? "text-black" : "text-white group-hover:text-black"
+                                    )
                                 }
                                 href="https://www.instagram.com/blossom_nails.eastleigh"
                             >
@@ -146,7 +149,10 @@ const HomeHeader = ({ isDark, handleOpen, isOpen }: { isDark: boolean, handleOpe
                             </Link>
                             <Link
                                 className={
-                                    scrolled || isDark ? "text-black" : "text-white group-hover:text-black"
+                                    cn(
+                                        "inline-block transition-all duration-300 hover:scale-110",
+                                        scrolled || isDark ? "text-black" : "text-white group-hover:text-black"
+                                    )
                                 }
                                 href="https://www.facebook.com/blossomnailseastleigh">
                                 <FacebookOutlined className='px-[7px] text-[19px]' />

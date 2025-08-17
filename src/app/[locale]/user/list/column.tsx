@@ -3,6 +3,7 @@ import { UserStatus } from '@/enums/userStatus';
 import { TechnicianInfo, UserInfo } from '@/types/user';
 import { stringToColor } from '@/utils/color';
 import { Space, Tag, type TableProps } from 'antd';
+import { DeleteFilled, EditFilled } from '@ant-design/icons';
 
 const columns: TableProps<UserInfo>['columns'] = [
     {
@@ -61,8 +62,12 @@ const columns: TableProps<UserInfo>['columns'] = [
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/user/${record.id}/edit`}>Edit</a>
-                <a>Delete</a>
+                <a href={`/user/${record.id}/edit`}>
+                    <EditFilled style={{ color: '#E43636' }} />
+                </a>
+                <a>
+                    <DeleteFilled style={{ color: '#E43636' }} />
+                </a>
             </Space>
         ),
     },

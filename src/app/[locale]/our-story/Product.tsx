@@ -38,7 +38,7 @@ const ProductSection = ({
                                         font2.className
                                     )
                                 }>
-                                    <a href="/shop" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black bg-transparent tranition-all duration-300 hover:bg-black hover:text-white inline-block py-[14px] px-[31px]">Shop now</a>
+                                    <a href="/shop" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black bg-transparent transition-all duration-300 hover:bg-black hover:text-white hover:scale-110 inline-block py-[14px] px-[31px]">Shop now</a>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +48,7 @@ const ProductSection = ({
                     <div className="px-[15px] flex relative w-full flex-wrap content-start">
                         <div className="flex text-center relative">
                             <div className="">
-                                <img decoding="async" width="833" height="833" src="https://scontent.fhan4-3.fna.fbcdn.net/v/t39.30808-6/494098197_1247518567379387_1819519410571707430_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeFPc6w9gRwAc9w9KLUgxewXWv90DxXlzkha_3QPFeXOSKHGhISuWLt8tCljkQwSKoBT437O0luJpRhi8xLB7YnS&_nc_ohc=DnS6Hitu_zAQ7kNvwF38kpU&_nc_oc=AdmDKcvtyMvGyrAYJKF_pOzChnn-d6CRfBUMU2iglNzuHXd236mIGRYUaATNI6V4qYs&_nc_zt=23&_nc_ht=scontent.fhan4-3.fna&_nc_gid=YPeq2Jf8if42c5dDcbLbtA&oh=00_AfNKzuPGyGpYAdnfZKK0k2t2bQZvQpnIOs7qeotLPz_FXQ&oe=68692CA8" sizes="(max-width: 833px) 100vw, 833px" />
+                                <img decoding="async" width="833" height="833" src="/gallery/box-7.jpg" sizes="(max-width: 833px) 100vw, 833px" />
                             </div>
                         </div>
                     </div>

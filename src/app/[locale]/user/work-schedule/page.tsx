@@ -104,7 +104,10 @@ const DailyScheduleSystem = () => {
                 startTime: dayjs(schedule.scheduleTime),
                 endTime: dayjs(schedule.scheduleTime).add(schedule.bookingDetails?.[0].service?.durationMinutes ?? 0, 'minutes'),
                 // shift: schedule.shift,
-                notes: schedule.note
+                notes: schedule.note,
+                guestName: schedule.guestName,
+                guestPhone: schedule.guestPhone,
+                guestEmail: schedule.guestEmail
             });
         } else {
             form.resetFields();

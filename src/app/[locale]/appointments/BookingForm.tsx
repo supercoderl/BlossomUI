@@ -74,6 +74,20 @@ const BookingFormSection = ({ loading, router, font }: { loading: Record<string,
                 const dateStr = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${selectedDate?.toString().padStart(2, '0')}`;
                 const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
                 
+                console.log({
+                    customerId: null,
+                    technicianId: selectedEmployee?.id,
+                    scheduleTime: `${dateStr}T${timeStr}`,
+                    serviceId: selectedService?.type === "service" ? selectedService?.id : null,
+                    serviceOptionId: selectedService?.type === "option" ? selectedService?.serviceOptionId : null,
+                    quantity: 1,
+                    price: getTotalPriceValue(selectedService?.type === "service" ? (selectedService?.price ?? 0) : selectedService?.type === "option" ? selectedService?.priceFrom : 0, promotion).totalPrice,
+                    note: null,
+                    guestName: information.firstName + " " + information.lastName,
+                    guestPhone: information.phone,
+                    guestEmail: information.email
+                });
+
                 await createBooking({
                     customerId: null,
                     technicianId: selectedEmployee?.id,

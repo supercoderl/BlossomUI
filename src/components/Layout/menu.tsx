@@ -21,7 +21,9 @@ import {
     TransactionOutlined,
     AccountBookOutlined,
     AppstoreOutlined,
-    FileImageOutlined
+    FileImageOutlined,
+    ContactsOutlined,
+    ProfileOutlined
 } from '@ant-design/icons';
 import React from 'react';
 
@@ -86,7 +88,7 @@ const getNavList = (t: any) => {
                     icon: <AppstoreOutlined />,
                     label: 'Category'
                 },
-                                {
+                {
                     key: '/service/gallery',
                     icon: <FileImageOutlined />,
                     label: 'Gallery'
@@ -160,6 +162,30 @@ const getNavList = (t: any) => {
         //     icon: <WalletOutlined />,
         //     label: t('resource')
         // },
+        {
+            key: '/contact',
+            icon: <ContactsOutlined />,
+            label: t('contact'),
+            children: [
+                {
+                    key: '/contact/list',
+                    icon: <ContactsOutlined />,
+                    label: t('contactList')
+                },
+            ]
+        },
+        {
+            key: '/blog',
+            icon: <ProfileOutlined />,
+            label: 'Blog',
+            children: [
+                {
+                    key: '/blog/list',
+                    icon: <ProfileOutlined />,
+                    label: 'Blog'
+                },
+            ]
+        }
     ]
 }
 

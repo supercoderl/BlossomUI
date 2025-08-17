@@ -28,7 +28,7 @@ const CareerSection = ({
                                             <p className="m-0 text-[18px] font-[300] leading-[1.7em]">Please send us an email at blossom_nails2018@outlook.com telling us a bit about yourself. Oh…and attach your resume.</p>
                                         </div>
                                         <div className="">
-                                            <a href="/career-archive" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] bg-transparent transition-all duration-300 hover:bg-black hover:text-white">View Positions</a>
+                                            <a href="/career-archive" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] bg-transparent transition-all duration-300 hover:bg-black hover:text-white hover:scale-110">View Positions</a>
                                         </div>
                                     </div>
                                     <div className="w-full md:w-1/2 text-center md:border-l border-solid p-[40px] md:py-4 md:px-[40px] border-black">
@@ -40,7 +40,7 @@ const CareerSection = ({
                                             <p className="m-0 text-[18px] font-[300] leading-[1.7em]">Interested in a Blossom Tech? Drop us a line on blossom_nails2018@outlook.com and find out more.</p>
                                         </div>
                                         <div className="">
-                                            <a href="/franchise" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] bg-transparent transition-all duration-300 hover:bg-black hover:text-white">Tell Me More</a>
+                                            <a href="/franchise" className="text-[14px] font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] bg-transparent transition-all duration-300 hover:bg-black hover:text-white hover:scale-110">Tell Me More</a>
                                         </div>
                                     </div>
                                 </div>

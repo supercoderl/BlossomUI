@@ -14,5 +14,6 @@ export const defaultLoading = {
     'get-service-by-id': true,
     'get-technicians': true,
     'get-work-schedules': true,
-    'get-my-profile': true
+    'get-my-profile': true,
+    'get-blog-by-id': true
 }

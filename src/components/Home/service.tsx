@@ -114,7 +114,7 @@ const ServiceSection = ({ messageApi, font, font2 }: { messageApi: MessageInstan
                             <div className="w-full relative">
                                 <div className="mt-[37px]">
                                     <div className="text-center">
-                                        <a href="/service-menu/" className="decoration-none font-medium text-center uppercase text-white bg-black inline-block pt-[16px] pb-[14px] px-[32px]">VIEW SERVICE MENU</a>
+                                        <a href="/service-menu/" className="border decoration-none font-medium text-center uppercase text-white bg-black inline-block pt-[16px] pb-[14px] px-[32px] transition-all duration-500 ease hover:text-black hover:bg-white hover:scale-110">VIEW SERVICE MENU</a>
                                     </div>
                                 </div>
                             </div>

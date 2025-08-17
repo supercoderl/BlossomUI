@@ -9,6 +9,10 @@ import Sortable from 'sortablejs';
 import boardList from './board';
 
 import styles from './index.module.css';
+import { PageTitle } from '@/components/Dashboard/title';
+import { FirstCharts } from '@/components/Dashboard/chart/first';
+import { SecondCharts } from '@/components/Dashboard/chart/second';
+import { ThirdCharts } from '@/components/Dashboard/chart/third';
 
 
 export default function Dashboard() {
@@ -27,15 +31,16 @@ export default function Dashboard() {
     return (
         <Layout curActive='/dashboard'>
             <main className={styles.dashboardWrap}>
-                <div className={styles.content} id='dashboard'>
-                    {
-                        boardList.map((v, i) => {
-                            return <div key={i} style={{ width: v.w, height: v.h }} className={styles.card}>
-                                <span className='moveBtn'><HolderOutlined /></span>
-                                <Chart data={v.data} type={v.type} id={v.id} />
-                            </div>
-                        })
-                    }
+                <div className="main-content">
+                    <div className='container-fluid'>
+                        <PageTitle />
+
+                        <FirstCharts />
+
+                        <SecondCharts />
+
+                        <ThirdCharts />
+                    </div>
                 </div>
             </main>
         </Layout>

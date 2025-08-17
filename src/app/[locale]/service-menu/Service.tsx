@@ -50,6 +50,26 @@ const ServiceSection = ({ font, font2 }: { font: NextFontWithVariable, font2: Ne
         return services.filter(s => s.categoryId === category.id);
     }
 
+    // Add smooth scroll function
+    const scrollToCategory = (e: React.MouseEvent<HTMLAnchorElement>, category: Category) => {
+        e.preventDefault(); // Prevent default anchor behavior
+        
+        const targetElement = document.getElementById(category.url);
+        if (targetElement) {
+            // Calculate offset to account for sticky header
+            const headerOffset = 120; // Adjust this value based on your header height
+            const elementPosition = targetElement.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+        
+        setSelectedCategory(category);
+    }
+
     useEffect(() => {
         onLoad();
         const handleScroll = () => {
@@ -95,7 +115,11 @@ const ServiceSection = ({ font, font2 }: { font: NextFontWithVariable, font2: Ne
                                                                     font2.className
                                                                 )
                                                             }>
-                                                                <a href={`${item.url}`} className="flex flex-col items-center decoration-none relative z-200 text-black">
+                                                                <a
+                                                                    href={`#${item.url}`}
+                                                                    className="group flex flex-col items-center decoration-none relative z-200 text-black transition-all duration-300 ease hover:text-inherit hover:scale-110 cursor-pointer"
+                                                                    onClick={(e) => scrollToCategory(e, item)}
+                                                                >
                                                                     <Icon className={
                                                                         cn(
                                                                             "transition-all duration-300",
@@ -105,7 +129,7 @@ const ServiceSection = ({ font, font2 }: { font: NextFontWithVariable, font2: Ne
                                                                     />
                                                                     <span className={
                                                                         cn(
-                                                                            "border-solid border-black font-medium text-[13px] pb-[5px] uppercase",
+                                                                            "border-solid border-black border-0 font-medium text-[13px] pb-[5px] uppercase transition-all duration-300 group-hover:border-b",
                                                                             scrolled ? "text-xs mt-3" : "text-md mt-[22px]",
                                                                             selectedCategory?.id === item.id ? "border-b" : ""
                                                                         )

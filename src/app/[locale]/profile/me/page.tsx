@@ -14,6 +14,8 @@ import { UserRoles } from '@/enums/userRoles';
 import { GlobalIcon } from '@/components/Icon/global';
 import { cn } from '@/utils/helpers';
 import { getMyProfile, updateUser } from '../../user/api';
+import ImageEditModal from '@/components/Modal/image-edit';
+import { RcFile } from 'antd/es/upload/interface';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -41,6 +43,11 @@ export default function PersonalInfo() {
     const [messageApi] = useGlobalMessage();
     const { loading } = useApiLoadingStore();
 
+    // Image edit modal states
+    const [isImageEditModalVisible, setIsImageEditModalVisible] = useState(false);
+    const [currentEditFile, setCurrentEditFile] = useState<File | null>(null);
+    const [editingType, setEditingType] = useState<'avatar' | 'cover' | null>(null);
+
     const formStyle: React.CSSProperties = {
         maxWidth: 'none',
         background: token.colorFillAlter,
@@ -50,7 +57,6 @@ export default function PersonalInfo() {
 
     const onLoad = async () => {
         try {
-            // Uncomment and implement your API call
             const response = await getMyProfile();
             if (response && response.data) {
                 const user = response.data;
@@ -63,11 +69,9 @@ export default function PersonalInfo() {
                     gender: user.gender,
                     dateOfBirth: user.dateOfBirth ? dayjs(user.dateOfBirth) : null,
                     role: user.role,
-                    // bio: user.bio,
                     website: user.website
                 });
 
-                // Set avatar if exists
                 if (user.avatarUrl) {
                     setAvatarFileList([{
                         uid: '-1',
@@ -77,7 +81,6 @@ export default function PersonalInfo() {
                     }]);
                 }
 
-                // Set cover photo if exists
                 if (user.coverPhotoUrl) {
                     setCoverFileList([{
                         uid: '-2',
@@ -87,7 +90,6 @@ export default function PersonalInfo() {
                     }]);
                 }
             }
-
         } catch (error: any) {
             if (error && error.response && error.response.data) {
                 const errors = error.response.data.errors;
@@ -109,7 +111,6 @@ export default function PersonalInfo() {
     const onFinish = async (values: ServiceFormData) => {
         try {
             console.log(values);
-            // Prepare form data for API submission
             const formData = new FormData();
             formData.append('Id', values.id || '');
             formData.append('Email', values.email);
@@ -119,15 +120,12 @@ export default function PersonalInfo() {
             formData.append('Gender', values.gender.toString());
             formData.append('DateOfBirth', dayjs(values.dateOfBirth).format('YYYY-MM-DD'));
             formData.append('Role', values.role.toString());
-            // formData.append('Bio', values.bio);
             formData.append('Website', values.website);
 
-            // Add avatar file if selected
             if (avatarFileList.length > 0 && avatarFileList[0].originFileObj) {
                 formData.append('AvatarFile', avatarFileList[0].originFileObj);
             }
 
-            // Add cover photo file if selected
             if (coverFileList.length > 0 && coverFileList[0].originFileObj) {
                 formData.append('CoverPhoto', coverFileList[0].originFileObj);
             }
@@ -140,6 +138,43 @@ export default function PersonalInfo() {
         } catch (error) {
             messageApi.error('Failed to update profile');
         }
+    };
+
+    // Handle image selection and open edit modal
+    const handleImageSelect = (file: File, type: 'avatar' | 'cover') => {
+        setCurrentEditFile(file);
+        setEditingType(type);
+        setIsImageEditModalVisible(true);
+        return false; // Prevent upload
+    };
+
+    // Handle edited image from modal
+    const handleImageEditSave = (blob: Blob) => {
+        const url = URL.createObjectURL(blob)
+
+        const uploadFile: UploadFile = {
+            uid: Date.now().toString(),
+            name: `file-${Date.now().toString()}`,
+            status: 'done',
+            url,
+            originFileObj: new File([blob], `file-${Date.now().toString()}`, { type: 'image/png' }) as RcFile,
+        };
+
+        if (editingType === 'avatar') {
+            setAvatarFileList([uploadFile]);
+        } else if (editingType === 'cover') {
+            setCoverFileList([uploadFile]);
+        }
+
+        setIsImageEditModalVisible(false);
+        setCurrentEditFile(null);
+        setEditingType(null);
+    };
+
+    const handleImageEditCancel = () => {
+        setIsImageEditModalVisible(false);
+        setCurrentEditFile(null);
+        setEditingType(null);
     };
 
     const avatarUploadProps: UploadProps = {
@@ -155,11 +190,13 @@ export default function PersonalInfo() {
                 message.error('Image must be smaller than 10MB!');
                 return false;
             }
-            return false; // Prevent auto upload
+            return handleImageSelect(file, 'avatar');
         },
         onChange: ({ fileList: newFileList }) => {
-            console.log(newFileList.slice(-1));
-            setAvatarFileList(newFileList.slice(-1)); // Keep only the last file
+            // Only update if not opening edit modal
+            if (!isImageEditModalVisible) {
+                setAvatarFileList(newFileList.slice(-1));
+            }
         },
         onRemove: () => {
             setAvatarFileList([]);
@@ -180,10 +217,12 @@ export default function PersonalInfo() {
                 message.error('Image must be smaller than 10MB!');
                 return false;
             }
-            return false; // Prevent auto upload
+            return handleImageSelect(file, 'cover');
         },
         onChange: ({ fileList: newFileList }) => {
-            setCoverFileList(newFileList.slice(-1)); // Keep only the last file
+            if (!isImageEditModalVisible) {
+                setCoverFileList(newFileList.slice(-1));
+            }
         },
         onRemove: () => {
             setCoverFileList([]);
@@ -424,6 +463,14 @@ export default function PersonalInfo() {
                             </div>
                         </div>
                     </Form>
+
+                    {/* Image Edit Modal */}
+                    <ImageEditModal
+                        visible={isImageEditModalVisible}
+                        onCancel={handleImageEditCancel}
+                        onSave={handleImageEditSave}
+                        originalFile={currentEditFile}
+                    />
                 </main>
             </LoadingBackground>
         </Layout>

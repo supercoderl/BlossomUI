@@ -3,13 +3,13 @@ import { formatter } from "./currency";
 import { DiscountType } from "@/enums/discountType";
 
 export const getTotalPriceValue = (totalPrice: number, promotion?: PromotionChecker | null) => {
-    if(!promotion) return {
+    if (!promotion) return {
         discountValue: formatter().format(0),
-        totalPrice: formatter().format(totalPrice),
+        totalPrice: totalPrice,
         label: formatter().format(totalPrice)
     }
 
-    if(promotion.type === DiscountType.Fixed) {
+    if (promotion.type === DiscountType.Fixed) {
         return {
             discountValue: formatter().format(promotion.value),
             totalPrice: totalPrice - promotion.value,
@@ -22,4 +22,28 @@ export const getTotalPriceValue = (totalPrice: number, promotion?: PromotionChec
         totalPrice: totalPrice - (totalPrice * (promotion.value / 100)),
         label: formatter().format(totalPrice - (totalPrice * (promotion.value / 100)))
     };
+}
+
+export function generatePassword(length = 12) {
+    const lower = 'abcdefghijklmnopqrstuvwxyz';
+    const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numbers = '0123456789';
+    const symbols = '!@#$%^&*()_+[]{}|;:,.<>?';
+
+    const allChars = lower + upper + numbers + symbols;
+
+    let password = '';
+
+    password += lower[Math.floor(Math.random() * lower.length)];
+    password += upper[Math.floor(Math.random() * upper.length)];
+    password += numbers[Math.floor(Math.random() * numbers.length)];
+    password += symbols[Math.floor(Math.random() * symbols.length)];
+
+    for (let i = password.length; i < length; i++) {
+        password += allChars[Math.floor(Math.random() * allChars.length)];
+    }
+
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+
+    return password;
 }

@@ -36,6 +36,13 @@ const AboutSection = ({
         return () => clearInterval(interval);
     }, [giftCardImages.length]);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentSlide(prev => (prev + 1) % images.length);
+        }, 2000);
+        return () => clearInterval(interval);
+    }, [images.length]);
+
     const nextSlide = () => {
         setCurrentSlide((prev) => (prev + 1) % images.length);
     };
@@ -75,16 +82,6 @@ const AboutSection = ({
         setTranslateX(0);
     };
 
-    // Mouse events
-    const handleMouseDown = (e: any) => handleStart(e.clientX);
-    const handleMouseMove = (e: any) => handleMove(e.clientX);
-    const handleMouseUp = () => handleEnd();
-
-    // Touch events
-    const handleTouchStart = (e: any) => handleStart(e.touches[0].clientX);
-    const handleTouchMove = (e: any) => handleMove(e.touches[0].clientX);
-    const handleTouchEnd = () => handleEnd();
-
     return (
         <div className="w-full" data-aos="fade-zoom-in">
             {/* Beauty Box Section */}
@@ -102,13 +99,6 @@ const AboutSection = ({
                                     style={{
                                         transform: `translateX(${translateX - currentSlide * 100}%)`
                                     }}
-                                    onMouseDown={handleMouseDown}
-                                    onMouseMove={handleMouseMove}
-                                    onMouseUp={handleMouseUp}
-                                    onMouseLeave={handleMouseUp}
-                                    onTouchStart={handleTouchStart}
-                                    onTouchMove={handleTouchMove}
-                                    onTouchEnd={handleTouchEnd}
                                 >
                                     {images.map((image, index) => (
                                         <div key={index} className="w-full flex-shrink-0">
@@ -131,8 +121,8 @@ const AboutSection = ({
                                         key={index}
                                         onClick={() => goToSlide(index)}
                                         className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-110 ${currentSlide === index
-                                                ? 'bg-rose-500 shadow-lg scale-125'
-                                                : 'bg-gray-300 hover:bg-rose-300'
+                                            ? 'bg-rose-500 shadow-lg scale-125'
+                                            : 'bg-gray-300 hover:bg-rose-300'
                                             }`}
                                         aria-label={`Go to slide ${index + 1}`}
                                     />
@@ -252,8 +242,8 @@ const AboutSection = ({
                                         key={index}
                                         onClick={() => setGiftCardSlide(index)}
                                         className={`w-3 h-3 rounded-full transition-all duration-300 transform hover:scale-110 ${giftCardSlide === index
-                                                ? 'bg-gray-700 shadow-lg scale-125'
-                                                : 'bg-gray-300 hover:bg-gray-500'
+                                            ? 'bg-gray-700 shadow-lg scale-125'
+                                            : 'bg-gray-300 hover:bg-gray-500'
                                             }`}
                                         aria-label={`Go to gift card slide ${index + 1}`}
                                     />

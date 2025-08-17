@@ -9,6 +9,7 @@ export interface TechnicianInfo {
     rating: number;
     yearsOfExperience: number;
     fullName: string;
+    avatarUrl: string;
 }
 
 export interface UserInfo {

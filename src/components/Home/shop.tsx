@@ -96,7 +96,7 @@ const ShopSection = ({
                             <div className="w-full relative">
                                 <div className="mt-[40px] mb-[50px] md:mb-[100px]">
                                     <div className="text-center">
-                                        <a href="/shop" className="decoration-none font-family text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] hover:bg-black hover:text-white transition-all duration-300">SHOP ALL</a>
+                                        <a href="/shop" className="decoration-none font-medium text-center uppercase text-black border border-solid border-black inline-block py-[14px] px-[31px] hover:bg-black hover:text-white transition-all duration-300 hover:scale-110">SHOP ALL</a>
                                     </div>
                                 </div>
                             </div>

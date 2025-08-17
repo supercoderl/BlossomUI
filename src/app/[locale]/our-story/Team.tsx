@@ -1,13 +1,53 @@
+import { TechnicianInfo } from "@/types/user";
 import { cn } from "@/utils/helpers";
+import { MessageInstance } from "antd/es/message/interface";
 import { NextFontWithVariable } from "next/dist/compiled/@next/font";
+import { useEffect, useState } from "react";
+import { getTechnicians } from "../user/api";
+import { Filter } from "@/types/filter";
 
 const TeamSection = ({
     font,
-    font2
+    font2,
+    messageApi
 }: {
     font: NextFontWithVariable,
-    font2: NextFontWithVariable
+    font2: NextFontWithVariable,
+    messageApi: MessageInstance
 }) => {
+    const [technicians, setTechnicians] = useState<TechnicianInfo[]>([]);
+    const [filter, setFilter] = useState<Filter>({
+        query: { page: 1, pageSize: 8 },
+        includeDeleted: false,
+        searchTerm: ''
+    })
+
+    const onLoad = async () => {
+        try {
+            await getTechnicians(filter).then((res: any) => {
+                if (res && res.success) {
+                    setTechnicians(res.data.items);
+                }
+            });
+        } catch (error: any) {
+            if (error && error.response && error.response.data) {
+                const errors = error.response.data.errors;
+                if (errors && errors.length > 0) {
+                    errors.forEach((error: any) => {
+                        messageApi.error(error || 'Get technicians failed');
+                    })
+                }
+            }
+            else {
+                messageApi.error("Request failed, please try again later");
+            }
+        }
+    }
+
+    useEffect(() => {
+        onLoad();
+    }, []);
+
     return (
         <>
             <section className="mt-[50px] md:mt-[100px] mb-6 md:mb-[34px] relative">
@@ -31,217 +71,44 @@ const TeamSection = ({
                                 <div className="">
                                     <div className={cn(font2.className)}>
                                         <div className="grid md:grid-cols-4 gap-x-8">
-                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
-                                                <div className="text-center">
-                                                    <a href="#art-team-member-685602409dced-popup-1" className="">
-                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-12.webp" alt="Team Member" />
-                                                    </a>
-                                                    <a href="#art-team-member-685602409dced-popup-1" className="block mb-2.5">
-                                                        <span className="text-black text-[16px] font-medium">Dr. Victoria De Vito</span>
-                                                    </a>
-                                                    <span className="block text-[14px]">Founder – MD, Facts</span>
-                                                </div>
-                                                <div className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
-                                                    <div className="art-team-widget-popup">
-                                                        <div className="art-team-popup-container">
-                                                            <div className="art-team-popup-left">
-                                                                <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-12.webp" alt="Team Member" />
-                                                            </div>
-                                                            <div className="art-team-popup-right">
-                                                                <div className="member-popup-title art-h2">Dr. Victoria De Vito</div>
-                                                                <span className="member-popup-position text-[16px] font-medium">Founder – MD, Facts</span>
-                                                                <div className="art-popup-member-description">
-                                                                    <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
+                                            {
+                                                technicians.map((technician) => (
+                                                    <div
+                                                        className="mb-[40px] md:mb-[45px] px-[15px] md:p-0"
+                                                        key={technician.id}
+                                                    >
+                                                        <div className="text-center h-[62%]">
+                                                            <a className="block h-full w-full overflow-hidden flex items-center justify-center mb-[30px] bg-pink-100">
+                                                                <img
+                                                                    className="max-h-full max-w-full object-contain"
+                                                                    decoding="async"
+                                                                    src={technician.avatarUrl}
+                                                                    alt={technician.fullName}
+                                                                />
+                                                            </a>
+                                                            <a href="#art-team-member-685602409dced-popup-1" className="block mb-2.5">
+                                                                <span className="text-black text-[16px] font-medium">{technician.fullName}</span>
+                                                            </a>
+                                                            <span className="block text-[14px]">Professional with {technician.yearsOfExperience} YOE</span>
+                                                        </div>
+                                                        <div className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
+                                                            <div className="art-team-widget-popup">
+                                                                <div className="art-team-popup-container">
+                                                                    <div className="art-team-popup-left">
+                                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-12.webp" alt="Team Member" />
+                                                                    </div>
+                                                                    <div className="art-team-popup-right">
+                                                                        <div className="member-popup-title art-h2">Dr. Victoria De Vito</div>
+                                                                        <span className="member-popup-position text-[16px] font-medium">Founder – MD, Facts</span>
+                                                                        <div className="art-popup-member-description">
+                                                                            <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
-                                                <div className="text-center">
-                                                    <a href="#art-team-member-685602409dcf4-popup-2" className="">
-                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-42.webp" alt="Team Member" />
-                                                    </a>
-                                                    <a href="#art-team-member-685602409dcf4-popup-2" className="block mb-2.5">
-                                                        <span className="text-black text-[16px] font-medium">Dr. Alexander Collin</span>
-                                                    </a>
-                                                    <span className="block text-[14px]">Cosmetologist – Master’s of Cosmetology</span>
-                                                </div>
-                                                <div id="art-team-member-685602409dcf4-popup-2" className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
-                                                    <div className="art-team-widget-popup">
-                                                        <div className="art-team-popup-container">
-                                                            <div className="art-team-popup-left">
-                                                                <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-42.webp" alt="Team Member" />
-                                                            </div>
-                                                            <div className="art-team-popup-right">
-                                                                <div className="member-popup-title art-h2">Dr. Alexander Collin</div>
-                                                                <span className="member-popup-position text-[16px] font-medium">Cosmetologist – Master’s of Cosmetology</span>
-                                                                <div className="art-popup-member-description">
-                                                                    <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
-                                                <div className="text-center">
-                                                    <a href="#art-team-member-685602409dcf6-popup-3" className="">
-                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-32.png" alt="Team Member" />
-                                                    </a>
-                                                    <a href="#art-team-member-685602409dcf6-popup-3" className="block mb-2.5">
-                                                        <span className="text-black text-[16px] font-medium">Rachel Green</span>
-                                                    </a>
-                                                    <span className="block text-[14px]">Hairdresser</span>
-                                                </div>
-                                                <div id="art-team-member-685602409dcf6-popup-3" className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
-                                                    <div className="art-team-widget-popup">
-
-                                                        <div className="art-team-popup-container">
-                                                            <div className="art-team-popup-left">
-                                                                <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-32.png" alt="Team Member" />
-                                                            </div>
-                                                            <div className="art-team-popup-right">
-                                                                <div className="member-popup-title art-h2">Rachel Green</div>
-                                                                <span className="member-popup-position text-[16px] font-medium">Hairdresser</span>
-                                                                <div className="art-popup-member-description">
-                                                                    <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
-                                                <div className="text-center">
-                                                    <a href="#art-team-member-685602409dcf9-popup-4" className="">
-                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-22.webp" alt="Team Member" />
-                                                    </a>
-                                                    <a href="#art-team-member-685602409dcf9-popup-4" className="block mb-2.5">
-                                                        <span className="text-black text-[16px] font-medium">Nick Boil</span>
-                                                    </a>
-                                                    <span className="block text-[14px]">Barber</span>
-                                                </div>
-                                                <div id="art-team-member-685602409dcf9-popup-4" className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
-                                                    <div className="art-team-widget-popup">
-                                                        <div className="art-team-popup-container">
-                                                            <div className="art-team-popup-left">
-                                                                <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-22.webp" alt="Team Member" />
-                                                            </div>
-                                                            <div className="art-team-popup-right">
-                                                                <div className="member-popup-title art-h2">Nick Boil</div>
-                                                                <span className="member-popup-position text-[16px] font-medium">Barber</span>
-                                                                <div className="art-popup-member-description">
-                                                                    <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
-                                                <div className="text-center">
-                                                    <a href="#art-team-member-685602409dcfa-popup-5" className="">
-                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-32.png" alt="Team Member" />
-                                                    </a>
-                                                    <a href="#art-team-member-685602409dcfa-popup-5" className="block mb-2.5">
-                                                        <span className="text-black text-[16px] font-medium">Diana Milos</span>
-                                                    </a>
-                                                    <span className="block text-[14px]">Nail Specialist</span>
-                                                </div>
-                                                <div id="art-team-member-685602409dcfa-popup-5" className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
-                                                    <div className="art-team-widget-popup">
-
-                                                        <div className="art-team-popup-container">
-                                                            <div className="art-team-popup-left">
-                                                                <img decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-32.png" alt="Team Member" />
-                                                            </div>
-                                                            <div className="art-team-popup-right">
-                                                                <div className="member-popup-title art-h2">Diana Milos</div>
-                                                                <span className="member-popup-position text-[16px] font-medium">Nail Specialist</span>
-                                                                <div className="art-popup-member-description">
-                                                                    <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
-                                                <div className="text-center">
-                                                    <a href="#art-team-member-685602409dcfc-popup-6" className="">
-                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-52.webp" alt="Team Member" />
-                                                    </a>
-                                                    <a href="#art-team-member-685602409dcfc-popup-6" className="block mb-2.5">
-                                                        <span className="text-black text-[16px] font-medium">Andrew Parker</span>
-                                                    </a>
-                                                    <span className="block text-[14px]">Event Manager</span>
-                                                </div>
-                                                <div id="art-team-member-685602409dcfc-popup-6" className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
-                                                    <div className="art-team-widget-popup">
-                                                        <div className="art-team-popup-container">
-                                                            <div className="art-team-popup-left">
-                                                                <img decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-52.webp" alt="Team Member" />
-                                                            </div>
-                                                            <div className="art-team-popup-right">
-                                                                <div className="member-popup-title art-h2">Andrew Parker</div>
-                                                                <span className="member-popup-position text-[16px] font-medium">Event Manager</span>
-                                                                <div className="art-popup-member-description">
-                                                                    <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
-                                                <div className="text-center">
-                                                    <a href="#art-team-member-685602409dcfd-popup-7" className="">
-                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-62-1.png" alt="Team Member" />
-                                                    </a>
-                                                    <a href="#art-team-member-685602409dcfd-popup-7" className="block mb-2.5">
-                                                        <span className="text-black text-[16px] font-medium">Susan Geller</span>
-                                                    </a>
-                                                    <span className="block text-[14px]">Nail Specialist</span>
-                                                </div>
-                                                <div id="art-team-member-685602409dcfd-popup-7" className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
-                                                    <div className="art-team-widget-popup">
-                                                        <div className="art-team-popup-container">
-                                                            <div className="art-team-popup-left">
-                                                                <img decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-62-1.png" alt="Team Member" />
-                                                            </div>
-                                                            <div className="art-team-popup-right">
-                                                                <div className="member-popup-title art-h2">Susan Geller</div>
-                                                                <span className="member-popup-position text-[16px] font-medium">Nail Specialist</span>
-                                                                <div className="art-popup-member-description">
-                                                                    <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className="mb-[40px] md:mb-[45px] px-[15px] md:p-0">
-                                                <div className="text-center">
-                                                    <a href="#art-team-member-685602409dcff-popup-8" className="">
-                                                        <img className="h-auto max-w-full mb-[30px]" decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-82-1.webp" alt="Team Member" />
-                                                    </a>
-                                                    <a href="#art-team-member-685602409dcff-popup-8" className="block mb-2.5">
-                                                        <span className="text-black text-[16px] font-medium">Nadia Bake</span>
-                                                    </a>
-                                                    <span className="block text-[14px]">Administrator</span>
-                                                </div>
-                                                <div id="art-team-member-685602409dcff-popup-8" className="relative bg-white py-[100px] px-[178px] w-auto max-w-[1366px] my-[20px] mx-auto hidden">
-                                                    <div className="art-team-widget-popup">
-                                                        <div className="art-team-popup-container">
-                                                            <div className="art-team-popup-left">
-                                                                <img decoding="async" src="https://firstsight.design/cherie/beauty/wp-content/uploads/2023/04/Team-82-1.webp" alt="Team Member" />
-                                                            </div>
-                                                            <div className="art-team-popup-right">
-                                                                <div className="member-popup-title art-h2">Nadia Bake</div>
-                                                                <span className="member-popup-position text-[16px] font-medium">Administrator</span>
-                                                                <div className="art-popup-member-description">
-                                                                    <p>As co-founder of the first all-woman physician plastic surgery practice in Atlanta, Dr. Diane Z. Alexander is a nationally recognized leader in cosmetic surgery, non-invasive facial rejuvenation and anti-aging. As much an artist as a surgeon, she sees Artisan Beauté as the natural fulfillment of her journey for the women she serves.</p>										</div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                                ))
+                                            }
                                         </div>
                                     </div>
                                 </div>

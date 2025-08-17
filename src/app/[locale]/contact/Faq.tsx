@@ -67,7 +67,7 @@ HydraFacials are a miracle treatment for common skin concerns such as: acne, hyp
                                             {faq.title}
                                         </span>
                                         {
-                                            openPanel ?
+                                            openPanel === faq.id ?
                                                 <CloseOutlined
                                                     className={`w-5 h-5 text-gray-600 transform transition-transform duration-200`}
                                                 />

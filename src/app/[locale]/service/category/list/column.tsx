@@ -1,4 +1,4 @@
-import { formatter } from '@/utils/currency';
+import { EditFilled, DeleteFilled } from '@ant-design/icons';
 import { Popconfirm, Space, Tag, type TableProps } from 'antd';
 
 interface DataType {
@@ -50,7 +50,9 @@ const getColumns = (onDelete: (id: string) => void, loading: boolean): TableProp
         key: 'action',
         render: (_, record) => (
             <Space size="middle">
-                <a href={`/service/category/${record.id}/edit`}>Edit</a>
+                <a href={`/service/category/${record.id}/edit`}>
+                    <EditFilled style={{ color: '#E43636' }} />
+                </a>
                 <Popconfirm
                     title={`Are you sure to delete the category - ${record.name}?`}
                     onConfirm={() => onDelete(record.id)}
@@ -58,7 +60,7 @@ const getColumns = (onDelete: (id: string) => void, loading: boolean): TableProp
                     okButtonProps={{ loading: loading, disabled: loading }}
                     cancelText="No"
                 >
-                    <a>Delete</a>
+                    <DeleteFilled style={{ color: '#E43636' }} />
                 </Popconfirm>
             </Space>
         ),
