@@ -103,7 +103,7 @@ Blossom UI relies on **BlossomServer** as its backend:
 - **Notifications, reminders, and analytics** are processed in BlossomServer (via **Hangfire**).  
 - Results are displayed in Blossom UI (**dashboards, alerts**).  
 
-👉 See [BlossomServer README](../BlossomServer/README.md) for backend details.
+👉 See [BlossomServer README](https://github.com/supercoderl/BlossomServer/blob/master/README.md) for backend details.
 
 
 ## 🖼️ Screenshots
