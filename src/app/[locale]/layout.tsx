@@ -9,6 +9,7 @@ import { MessageProvider } from "@/providers/messageProvider";
 import { NextIntlClientProvider } from "next-intl";
 import 'aos/dist/aos.css'
 import { SignalRProvider } from "@/providers/signalRProvider";
+import { UserProvider } from "@/providers/userProvider";
 
 export async function generateMetadata({ params }: any): Promise<Metadata> {
   const t = await getTranslations({ locale: params.locale, namespace: 'index' });
@@ -26,11 +27,13 @@ export default async function BasicLayout({ children, params }: any) {
     <html lang={params?.locale}>
       <body>
         <NextIntlClientProvider locale={params?.locale} messages={messages}>
-          <SignalRProvider>
-            <MessageProvider>
-              <AntdRegistry>{children}</AntdRegistry>
-            </MessageProvider>
-          </SignalRProvider>
+          <UserProvider>
+            <SignalRProvider>
+              <MessageProvider>
+                <AntdRegistry>{children}</AntdRegistry>
+              </MessageProvider>
+            </SignalRProvider>
+          </UserProvider>
         </NextIntlClientProvider>
       </body>
     </html>

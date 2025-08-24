@@ -1,16 +1,33 @@
 import { BadgeDollarSign, CircleDollarSign, ShieldUser, ShoppingBag } from 'lucide-react';
 import { StackedBarChart } from './StackedBar';
 import SparklineLineChart from './SparklineLine';
+import { BusinessData } from '@/types/dashboard';
+import { formatter } from '@/utils/currency';
+import { toFraction } from '@/utils/text';
+import { LoadingOutlined } from '@ant-design/icons';
 
-export const FirstCharts = () => {
+export const FirstCharts = ({
+    businessData,
+    loading
+}: {
+    businessData: BusinessData,
+    loading: Record<string, boolean>
+}) => {
     return (
         <div className="grid grid-cols-4 gap-x-6">
             <div className="h-[100%_-_24px] mb-6 rounded-[5px] bg-[#dfe5fa]">
                 <div className="p-6">
                     <div className="flex justify-between">
                         <div>
-                            <h4 className="mb-3 text-[#777] text-[15px] font-medium">Visitor</h4>
-                            <h5 className="m-0 text-[#485568] text-[22px] leading-[20px] font-bold">698k</h5>
+                            <h4 className="mb-3 text-[#777] text-[15px] font-medium">Visitors</h4>
+                            <h5 className="m-0 text-[#485568] text-[22px] leading-[20px] font-bold">
+                                {
+                                    loading['business-analytics'] ?
+                                        <LoadingOutlined />
+                                        :
+                                        businessData.totalCustomers
+                                }
+                            </h5>
                         </div>
                         <span className="w-[50px] h-[50px] p-[5px] bg-[rgba(72,_85,_104,_0.1)] flex items-center justify-center rounded-[5px]">
                             <ShieldUser />
@@ -31,7 +48,14 @@ export const FirstCharts = () => {
                     <div className="flex justify-between">
                         <div>
                             <h4 className="mb-3 text-[#777] text-[15px] font-medium">Bookings</h4>
-                            <h5 className="m-0 text-[#485568] text-[22px] leading-[20px] font-bold">10.63k</h5>
+                            <h5 className="m-0 text-[#485568] text-[22px] leading-[20px] font-bold">
+                                {
+                                    loading['business-analytics'] ?
+                                        <LoadingOutlined />
+                                        :
+                                        businessData.bookings.currentPeriodBookings
+                                }
+                            </h5>
                         </div>
                         <span className="w-[50px] h-[50px] p-[5px] bg-[rgba(72,_85,_104,_0.1)] flex items-center justify-center rounded-[5px]">
                             <ShoppingBag />
@@ -52,7 +76,14 @@ export const FirstCharts = () => {
                     <div className="flex justify-between">
                         <div>
                             <h4 className="mb-3 text-[#777] text-[15px] font-medium">Revenue</h4>
-                            <h5 className="m-0 text-[#485568] text-[22px] leading-[20px] font-bold">$85420</h5>
+                            <h5 className="m-0 text-[#485568] text-[22px] leading-[20px] font-bold">
+                                {
+                                    loading['business-analytics'] ?
+                                        <LoadingOutlined />
+                                        :
+                                        formatter().format(businessData.revenue.currentTotalRevenue)
+                                }
+                            </h5>
                         </div>
                         <span className="w-[50px] h-[50px] p-[5px] bg-[rgba(72,_85,_104,_0.1)] flex items-center justify-center rounded-[5px]">
                             <CircleDollarSign />
@@ -72,10 +103,14 @@ export const FirstCharts = () => {
                 <div className="p-6">
                     <div className="flex justify-between">
                         <div>
-                            <h4 className="mb-3 text-[#777] text-[15px] font-medium">Rooms</h4>
+                            <h4 className="mb-3 text-[#777] text-[15px] font-medium">Conversation Rate</h4>
                             <h5 className="m-0 text-[#485568] text-[22px] leading-[20px] font-bold">
-                                <span data-bs-toggle="tooltip" aria-label="Available" data-bs-original-flex justify-between="Available">45</span>
-                                /365
+                                {
+                                    loading['business-analytics'] ?
+                                        <LoadingOutlined />
+                                        :
+                                        toFraction(businessData.conversionRate)
+                                }
                             </h5>
                         </div>
                         <span className="w-[50px] h-[50px] p-[5px] bg-[rgba(72,_85,_104,_0.1)] flex items-center justify-center rounded-[5px]">

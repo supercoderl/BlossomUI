@@ -1,8 +1,8 @@
 'use client'
 import { Button, Checkbox, DatePicker, Divider, Form, Input, Segmented, Select, type FormProps } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { loginApi, registerApi } from '../api';
+import { getCSRFToken, loginApi, registerApi, socialLogin } from '../api';
 import {
     GoogleOutlined,
     FacebookOutlined,
@@ -13,10 +13,10 @@ import moment from 'moment';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import { useGlobalMessage } from '@/providers/messageProvider';
 import { Gender } from '@/enums/gender';
-import { setRefreshTokenCookie, setTokenCookie, setUserInfo } from '@/utils/cookie';
 import Link from 'next/link';
 import { Jost } from 'next/font/google';
 import { cn } from '@/utils/helpers';
+import { useUserContext } from '@/providers/userProvider';
 
 type FieldType = {
     email?: string;
@@ -45,26 +45,36 @@ export default function Home() {
     const router = useRouter();
     const { loading } = useApiLoadingStore();
     const [messageApi] = useGlobalMessage();
+    const { setIsAuthenticated } = useUserContext();
+    const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
     const onFinish: FormProps<FieldType>["onFinish"] = async (values: any) => {
+        if (!csrfToken) {
+            messageApi.info("CSRF Token was not generated! Please reload the web or wait in 5 seconds.");
+            setTimeout(() => {
+                window.location.reload();
+            }, 5000);
+            return;
+        }
         try {
             if (curMode === mode[0]) {
                 const { email, pwd } = values;
-                await loginApi(email, pwd).then(res => {
+                await loginApi(email, pwd, csrfToken).then(res => {
                     // login logic
-                    if (res.data) {
-                        setTokenCookie(res.data.accessToken);
-                        setRefreshTokenCookie(res.data.refreshToken);
-                        setUserInfo(res.data.userInfo);
-                        router.push('/dashboard');
+                    if (res.data && typeof res.data === "string") {
+                        messageApi.success(res.data);
+                    } else {
+                        messageApi.success("Login successful");
                     }
+                    setIsAuthenticated(true);
+                    router.push('/dashboard');
                 });
                 return;
             }
 
             if (curMode === mode[1]) {
                 const { email, pwd, firstName, lastName, phoneNumber, gender, dateOfBirth } = values;
-                await registerApi(email, pwd, firstName, lastName, phoneNumber, gender, dateOfBirth).then(res => {
+                await registerApi(email, pwd, firstName, lastName, phoneNumber, gender, dateOfBirth, '').then(res => {
                     // register logic
                     messageApi.success("Registration successful, please log in");
                     setCurMode(mode[0]);
@@ -87,22 +97,27 @@ export default function Home() {
         }
     };
 
-    const handleSocialLogin = (provider: string) => {
-        // Implement your social login logic here
-        console.log(`Login with ${provider}`);
-
-        // Example implementation:
-        // setLoading(prev => ({ ...prev, [provider]: true }));
-        // 
-        // try {
-        //     // Your social login API call
-        //     await socialLogin(provider);
-        // } catch (error) {
-        //     console.error(`${provider} login failed:`, error);
-        // } finally {
-        //     setLoading(prev => ({ ...prev, [provider]: false }));
-        // }
+    const handleSocialLogin = async (provider: string) => {
+        await socialLogin(provider).then((res: any) => {
+            if (res && res.success) {
+                window.location.href = res.data;
+            }
+        });
     };
+
+    const onLoad = async () => {
+        await getCSRFToken().then((res: any) => {
+            if (res && res.success) {
+                setCsrfToken(res.data);
+            }
+        });
+    }
+
+    useEffect(() => {
+        if (!csrfToken) {
+            onLoad();
+        }
+    }, [csrfToken]);
 
     return (
         <main className={styles.loginWrap}>
@@ -206,6 +221,7 @@ export default function Home() {
                                     <Form.Item wrapperCol={{ span: 24 }}>
                                         <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                                             <Button
+                                                id={`${loading['social-login-google'] && "antd-button"}`}
                                                 icon={<GoogleOutlined />}
                                                 size="large"
                                                 style={{
@@ -217,13 +233,14 @@ export default function Home() {
                                                     boxShadow: '0 4px 12px rgba(66, 133, 244, 0.3)',
                                                     transition: 'all 0.3s ease'
                                                 }}
-                                                loading={loading['google']}
-                                                disabled={loading['google']}
-                                                onClick={() => handleSocialLogin('google')}
+                                                loading={loading['social-login-google']}
+                                                disabled={loading['social-login-google']}
+                                                onClick={() => handleSocialLogin('Google')}
                                             >
                                                 Google
                                             </Button>
                                             <Button
+                                                id={`${loading['social-login-facebook'] && "antd-button"}`}
                                                 icon={<FacebookOutlined />}
                                                 size="large"
                                                 style={{
@@ -235,13 +252,14 @@ export default function Home() {
                                                     boxShadow: '0 4px 12px rgba(24, 119, 242, 0.3)',
                                                     transition: 'all 0.3s ease'
                                                 }}
-                                                loading={loading['facebook']}
-                                                disabled={loading['facebook']}
-                                                onClick={() => handleSocialLogin('facebook')}
+                                                loading={loading['social-login-facebook']}
+                                                disabled={loading['social-login-facebook']}
+                                                onClick={() => handleSocialLogin('Facebook')}
                                             >
                                                 Facebook
                                             </Button>
                                             <Button
+                                                id={`${loading['social-login-github'] && "antd-button"}`}
                                                 icon={<GithubOutlined />}
                                                 size="large"
                                                 style={{
@@ -253,9 +271,9 @@ export default function Home() {
                                                     boxShadow: '0 4px 12px rgba(36, 41, 46, 0.3)',
                                                     transition: 'all 0.3s ease'
                                                 }}
-                                                loading={loading['github']}
-                                                disabled={loading['github']}
-                                                onClick={() => handleSocialLogin('github')}
+                                                loading={loading['social-login-github']}
+                                                disabled={loading['social-login-github']}
+                                                onClick={() => handleSocialLogin('GitHub')}
                                             >
                                                 GitHub
                                             </Button>

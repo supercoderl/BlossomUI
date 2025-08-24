@@ -3,5 +3,6 @@ export enum UserRoles {
     Manager,
     Technician,
     Customer,
-    Bot
+    Bot,
+    Guest
 }

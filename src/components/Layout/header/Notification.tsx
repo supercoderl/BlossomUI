@@ -1,6 +1,16 @@
-import { Bell, Clock } from "lucide-react"
+import BasicLoading from "@/components/Loading/basic"
+import { useApiLoadingStore } from "@/stores/loadingStore"
+import { Notification } from "@/types/notification"
+import { getTimeAgo } from "@/utils/date"
+import { Bell, ClipboardClock } from "lucide-react"
 
-export const NotificationHeader = () => {
+export const NotificationHeader = ({
+    notifications
+}: {
+    notifications: Notification[]
+}) => {
+    const { loading } = useApiLoadingStore();
+
     return (
         <div className="group relative">
             <a
@@ -13,7 +23,9 @@ export const NotificationHeader = () => {
             <div className="absolute inset-[55px_0_auto_auto] block shadow-[0px_5px_10px_0px_rgba(0,_0,_0,_0.05)] w-[350px] rounded-[5px] z-[-1] bg-white opacity-0 visibility-hidden transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:visibility-visible group-hover:top-[51px] group-hover:z-1000">
                 <div className="p-4 flex items-center justify-between border-b border-solid border-[#eee]">
                     <h6 className="mb-0 text-[0.875rem] text-[#0C243C] leading-[0.875rem]">Notifications
-                        <span className="p-[3px] text-[11px] w-[20px] h-[20px] font-bold rounded-full bg-[rgb(49,_106,_255)] ml-2 inline-block text-white text-center">9</span>
+                        <span className="p-[3px] text-[11px] w-[20px] h-[20px] font-bold rounded-full bg-[rgb(49,_106,_255)] ml-2 inline-block text-white text-center">
+                            {notifications.length}
+                        </span>
                     </h6>
                 </div>
                 <div className="h-[300px] p-2 relative">
@@ -22,18 +34,32 @@ export const NotificationHeader = () => {
                             <div className="absolute inset-0">
                                 <div className="relative overflow-x-hidden overflow-y-auto h-full block w-auto">
                                     <div className="p-2">
-                                        <ul>
-                                            <li className="flex items-center justify-between relative text-[#0C243C] p-2.5">
-                                                <div className="h-[35px] w-[35px] text-[20px] rounded-full overflow-hidden">
-                                                    <img src="https://gxon.layoutdrop.com/demo/assets/images/avatar/avatar2.webp" alt="" />
-                                                </div>
-                                                <div className="ml-2 flex-1">
-                                                    <h6 className="mb-0 text-[0.875rem] font-semibold leading-[20px]">Emma Smith</h6>
-                                                    <small className="text-[rgb(151,_161,_192)] block text-[0.875rem] leading-[20px]">Need to update the details.</small>
-                                                    <small className="text-[rgba(151,_161,_192,_0.75)] mr-4 mt-2 absolute top-0 right-0 text-[0.875rem] leading-[20px]">7 hr ago</small>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                        {
+                                            loading['get-notifications'] ?
+                                                <BasicLoading className="w-2/3 mx-auto" />
+                                                :
+                                                <ul>
+                                                    {
+                                                        notifications.map(item => (
+                                                            <li
+                                                                className="flex items-start gap-2.5 relative text-[#0C243C] p-2.5"
+                                                                key={item.notificationId}
+                                                            >
+                                                                <div className="h-[35px] w-[35px] text-[20px] bg-blue-500 rounded-full overflow-hidden flex items-center justify-center">
+                                                                    <ClipboardClock className="text-white w-[18px] h-[18px]" />
+                                                                </div>
+                                                                <div className="flex-1 min-w-0 pr-22">
+                                                                    <h6 className="mb-0 text-[0.875rem] font-semibold leading-[20px] truncate">{item.title}</h6>
+                                                                    <small className="text-[rgb(151,_161,_192)] block text-[0.875rem] leading-[20px] truncate">{item.message}</small>
+                                                                </div>
+                                                                <small className="text-[rgba(151,_161,_192,_0.75)] absolute top-2.5 right-2.5 text-[0.875rem] leading-[20px] whitespace-nowrap">
+                                                                    {getTimeAgo(item.createdAt)}
+                                                                </small>
+                                                            </li>
+                                                        ))
+                                                    }
+                                                </ul>
+                                        }
                                     </div>
                                 </div>
                             </div>

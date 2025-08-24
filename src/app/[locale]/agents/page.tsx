@@ -16,7 +16,7 @@ import { deleteConversation, findConversationId, getAllMessageFromConversation, 
 import { useSignalRContext } from '@/providers/signalRProvider';
 import { useApiLoadingStore } from '@/stores/loadingStore';
 import { MessageType } from '@/enums/messageType';
-import { useUser } from '@/providers/userProvider';
+import { useUserContext } from '@/providers/userProvider';
 
 interface ChatItem {
     id: string;
@@ -34,7 +34,7 @@ function MessengerChatContent() {
     const [showComponent, setShowComponent] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const { isConnected, connection } = useSignalRContext();
-    const userInfo = useUser();
+    const { userInfo } = useUserContext();
     const [pageQuery, setPageQuery] = useState({ page: 1, pageSize: 10 });
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [includeDeleted, setIncludeDeleted] = useState<boolean>(false);
@@ -75,7 +75,7 @@ function MessengerChatContent() {
                             role: message.role,
                             createAt: new Date(message.createdAt).getTime(),
                             updateAt: message.lastUpdatedAt ? new Date(message.lastUpdatedAt).getTime() : Date.now()
-                        })).reverse());
+                        })));
                     }
                 })
             }

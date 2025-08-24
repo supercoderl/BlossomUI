@@ -4,6 +4,7 @@ import { getRefreshTokenCookie, getTokenCookie, setRefreshTokenCookie, setTokenC
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API_URL + '/api/v1',
+  withCredentials: true,
   timeout: 10000
 });
 
@@ -70,7 +71,7 @@ instance.interceptors.response.use(function (response) {
           const token = await getRefreshTokenCookie();
           if (token) {
             // Call refresh token API
-            const refreshResponse = await instance.post('/User/refresh-token', {
+            const refreshResponse = await instance.post('/User/rt/refresh-token', {
               refreshToken: token.value
             });
 

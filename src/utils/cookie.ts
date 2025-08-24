@@ -50,3 +50,9 @@ export async function getUserInfo() {
 
     return cookieStore.get('userInfo');
 }
+
+export async function removeKey(key: string) {
+    const cookieStore = await cookies();
+
+    cookieStore.delete(key);
+}

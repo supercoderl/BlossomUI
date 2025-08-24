@@ -19,3 +19,7 @@ export const getShiftColor = (shift: string) => {
 export const getEmployeeById = (id: string, employees: TechnicianInfo[]) => {
     return employees.find(emp => emp.id === id);
 };
+
+export const getOnlineStatus = (onlineUsers: string[], userId: string) => {
+    return onlineUsers.some(x => x === userId);
+}

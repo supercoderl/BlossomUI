@@ -11,11 +11,16 @@ export const getUsers = (filter: Filter) =>
             params: filter
         }));
 
-export const loginApi = (email: string, pwd: string) =>
+export const loginApi = (email: string, pwd: string, csrfToken: string) =>
     withApiLoading('login', () =>
         req.post('/User/login', {
             identifier: email,
             password: pwd,
+        }, {
+            headers: {
+                'X-XSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json'
+            }
         }));
 
 export const registerApi = (
@@ -90,4 +95,20 @@ export const resetPassword = (code: string, newPassword: string) =>
 
 export const subscribe = (email: string) =>
     withApiLoading('subscribe', () =>
-        req.post('/Subscriber', { email })); 
+        req.post('/Subscriber', { email }));
+
+export const generateGuestToken = () =>
+    withApiLoading('generate-guest-token', () =>
+        req.get('/Guest', { params: { clientId: 'website' } }));
+
+export const getCSRFToken = () =>
+    withApiLoading('get-csrf-token', () =>
+        req.get('User/csrf-token'));
+
+export const socialLogin = (provider: string) =>
+    withApiLoading(`social-login-${provider.toLocaleLowerCase()}`, () =>
+        req.post('User/social-login', null, { params: { provider } }));
+
+export const logout = () =>
+    withApiLoading('logout', () =>
+        req.post('User/rt/logout'));

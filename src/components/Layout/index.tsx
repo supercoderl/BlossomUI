@@ -7,12 +7,11 @@ import { useLocale, useTranslations } from 'next-intl';
 import { getThemeBg } from '@/utils';
 import { Link, usePathname } from '../../navigation';
 import styles from './index.module.css';
-import { UserCookieInfo } from '@/types/user';
 import { useSignalRContext } from '@/providers/signalRProvider';
-import { UserRoles } from '@/enums/userRoles';
-import { AdminNotification } from '@/types/notification';
-import { UserContext } from '@/providers/userProvider';
+import { Notification } from '@/types/notification';
 import { AdminHeader } from './header';
+import { getNotifications } from '@/app/[locale]/dashboard/api';
+import { useUserContext } from '@/providers/userProvider';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -67,9 +66,10 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     const router = useRouter();
     const pathname = usePathname();
     const navList = getNavList(t);
-    const { isConnected, connection } = useSignalRContext();
+    const { isConnected, connection, isConnecting } = useSignalRContext();
+    const { userInfo } = useUserContext();
     const [unreadCount, setUnreadCount] = useState(0);
-    const [userInfo, setUserInfo] = useState<UserCookieInfo>();
+    const [notifications, setNotifications] = useState<Notification[]>([]);
 
     const [curTheme, setCurTheme] = useState<boolean>(false);
 
@@ -91,6 +91,7 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
         const isDark = !!localStorage.getItem("isDarkTheme");
         setCurTheme(isDark);
         alertSound.current = new Audio("/audios/alert.mp3");
+        onLoad();
     }, []);
 
     useEffect(() => {
@@ -106,25 +107,15 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
     useEffect(() => {
         if (!isConnected || !connection) return;
 
-        console.log("connected");
-
-        connection.on("getProfileInfo", (data?: UserCookieInfo | null) => {
-            if (data) {
-                setUserInfo(data);
-
-                if (data.role === UserRoles.Admin) {
-                    connection.invoke("JoinGroup", "administrators");
-                }
-            }
-        });
-
-        connection.on("receiveData", (data?: AdminNotification) => {
+        connection.on("receiveData", (payload: any) => {
             setUnreadCount((count) => count + 1);
             alertSound?.current?.play().catch(console.warn);
+            if (payload.data) {
+                setNotifications((prev) => [payload.data, ...prev]);
+            }
         })
 
         return () => {
-            connection.off("getProfileInfo");
             connection.off("receiveData");
         };
     }, [isConnected, connection]);
@@ -137,6 +128,18 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
         }
     }, [unreadCount]);
 
+    const onLoad = async () => {
+        await getNotifications({
+            query: { page: 1, pageSize: 5 },
+            searchTerm: '',
+            includeDeleted: false
+        }).then((res: any) => {
+            if (res && res.success) {
+                setNotifications(res.data.items);
+            }
+        })
+    }
+
     const divRef = useRef<HTMLDivElement>(null);
 
     return (
@@ -148,58 +151,58 @@ const CommonLayout: React.FC<IProps> = ({ children, curActive, defaultOpen = ['/
                 }
             }}
         >
-            <UserContext.Provider value={userInfo}>
-                <Layout style={{ minHeight: "100vh" }} ref={divRef}>
-                    <Sider
+            <Layout style={{ minHeight: "100vh" }} ref={divRef}>
+                <Sider
+                    theme={curTheme ? "dark" : "light"}
+                    breakpoint="lg"
+                    collapsedWidth="0"
+                    onBreakpoint={(broken) => {
+                    }}
+                    onCollapse={(collapsed, type) => {
+                    }}
+                >
+                    <span className={styles.logo}>
+                        <Link href="/" className={styles.logoLink}>
+                            <img className='w-full' src={curTheme ? '/logo.png' : '/logo.png'} alt="logo" />
+                        </Link>
+                    </span>
+                    <Menu
                         theme={curTheme ? "dark" : "light"}
-                        breakpoint="lg"
-                        collapsedWidth="0"
-                        onBreakpoint={(broken) => {
-                        }}
-                        onCollapse={(collapsed, type) => {
-                        }}
-                    >
-                        <span className={styles.logo}>
-                            <Link href="/" className={styles.logoLink}>
-                                <img className='w-full' src={curTheme ? '/logo.png' : '/logo.png'} alt="logo" />
-                            </Link>
-                        </span>
-                        <Menu
-                            theme={curTheme ? "dark" : "light"}
-                            mode="inline"
-                            defaultSelectedKeys={[curActive]}
-                            items={navList}
-                            defaultOpenKeys={defaultOpen}
-                            onSelect={handleSelect}
+                        mode="inline"
+                        defaultSelectedKeys={[curActive]}
+                        items={navList}
+                        defaultOpenKeys={defaultOpen}
+                        onSelect={handleSelect}
+                    />
+                </Sider>
+                <Layout>
+                    <Header style={{ padding: 0, paddingRight: 16, ...getThemeBg(curTheme), display: 'flex' }}>
+                        <AdminHeader
+                            curTheme={curTheme}
+                            userInfo={userInfo}
+                            ref={divRef}
+                            toggleTheme={toggleTheme}
+                            loading={isConnecting}
+                            notifications={notifications}
                         />
-                    </Sider>
-                    <Layout>
-                        <Header style={{ padding: 0, paddingRight: 16, ...getThemeBg(curTheme), display: 'flex' }}>
-                            <AdminHeader
-                                curTheme={curTheme}
-                                userInfo={userInfo}
-                                ref={divRef}
-                                toggleTheme={toggleTheme}
-                            />
-                        </Header>
-                        <Content style={{ margin: '24px 16px 0' }}>
-                            <div
-                                style={{
-                                    padding: 24,
-                                    minHeight: 520,
-                                    ...getThemeBg(curTheme),
-                                    borderRadius: borderRadiusLG,
-                                }}
-                            >
-                                {children}
-                            </div>
-                        </Content>
-                        <Footer style={{ textAlign: 'center' }}>
-                            Blossom Nails ©{new Date().getFullYear()} Created by <a href="https://github.com/supercoderl">Supercoderl</a>
-                        </Footer>
-                    </Layout>
+                    </Header>
+                    <Content style={{ margin: '24px 16px 0' }}>
+                        <div
+                            style={{
+                                padding: 24,
+                                minHeight: 520,
+                                ...getThemeBg(curTheme),
+                                borderRadius: borderRadiusLG,
+                            }}
+                        >
+                            {children}
+                        </div>
+                    </Content>
+                    <Footer style={{ textAlign: 'center' }}>
+                        Blossom Nails ©{new Date().getFullYear()} Created by <a href="https://github.com/supercoderl">Supercoderl</a>
+                    </Footer>
                 </Layout>
-            </UserContext.Provider>
+            </Layout>
         </ConfigProvider>
     );
 };

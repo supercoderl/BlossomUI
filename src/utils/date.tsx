@@ -91,16 +91,83 @@ const convertTo24Hour = (time: string): string => {
 }
 
 export const isSlotOverlapping = (slotStart: Date, slotEnd: Date, bookings: any[]): boolean => {
-  return bookings.some(booking => {
-    const start = new Date(booking.start);
-    const end = new Date(start.getTime() + parseDuration(booking.duration));
-    return (
-      slotStart < end && slotEnd > start
-    );
-  });
+    return bookings.some(booking => {
+        const start = new Date(booking.start);
+        const end = new Date(start.getTime() + parseDuration(booking.duration));
+        console.log(booking);
+        return (
+            slotStart < end && slotEnd > start
+        );
+    });
 }
 
 const parseDuration = (durationStr: string): number => {
-  const [hours, minutes, seconds] = durationStr.split(":").map(Number);
-  return ((hours * 60 + minutes) * 60 + seconds) * 1000;
+    const [hours, minutes, seconds] = durationStr.split(":").map(Number);
+    return ((hours * 60 + minutes) * 60 + seconds) * 1000;
+}
+
+/**
+ * Calculate time difference between a created timestamp and now
+ * @param {string|Date|number} createdAt - The timestamp when something was created
+ * @returns {string} Human-readable time difference (e.g., "2 hours ago", "just now")
+ */
+export function getTimeAgo(createdAt: Date) {
+    const now = new Date();
+    const created = new Date(createdAt);
+
+    // Check if the date is valid
+    if (isNaN(created.getTime())) {
+        return 'Invalid date';
+    }
+
+    const diffInMs = now.getTime() - created.getTime();
+    const diffInSeconds = Math.floor(diffInMs / 1000);
+
+    // Handle future dates
+    if (diffInSeconds < 0) {
+        return 'in the future';
+    }
+
+    // Less than a minute
+    if (diffInSeconds < 60) {
+        return 'just now';
+    }
+
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+
+    // Less than an hour
+    if (diffInMinutes < 60) {
+        return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+    }
+
+    const diffInHours = Math.floor(diffInMinutes / 60);
+
+    // Less than a day
+    if (diffInHours < 24) {
+        return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+    }
+
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    // Less than a week
+    if (diffInDays < 7) {
+        return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+    }
+
+    const diffInWeeks = Math.floor(diffInDays / 7);
+
+    // Less than a month (approximately 4 weeks)
+    if (diffInWeeks < 4) {
+        return `${diffInWeeks} week${diffInWeeks !== 1 ? 's' : ''} ago`;
+    }
+
+    const diffInMonths = Math.floor(diffInDays / 30);
+
+    // Less than a year (approximately 12 months)
+    if (diffInMonths < 12) {
+        return `${diffInMonths} month${diffInMonths !== 1 ? 's' : ''} ago`;
+    }
+
+    const diffInYears = Math.floor(diffInDays / 365);
+    return `${diffInYears} year${diffInYears !== 1 ? 's' : ''} ago`;
 }

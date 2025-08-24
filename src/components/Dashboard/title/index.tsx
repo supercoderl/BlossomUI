@@ -1,6 +1,10 @@
 import { Calendar, RefreshCcw, Settings2 } from 'lucide-react';
 
-export const PageTitle = () => {
+export const PageTitle = ({
+    refresh
+} : {
+    refresh: () => void
+}) => {
     return (
         <div className="pb-6 flex justify-between">
             <div className="breadcrumb">
@@ -9,7 +13,9 @@ export const PageTitle = () => {
             <div className="flex items-center">
                 <a
                     href="javascript:void(0)"
-                    className="w-[35px] h-[35px] flex items-center justify-center rounded-[5px] text-[#484d54] shadow-[0_0_10px_-3px_rgba(0,_0,_0,_0.15)]"
+                    className="w-[35px] h-[35px] flex items-center justify-center rounded-[5px] text-[#484d54] shadow-[0_0_10px_-3px_rgba(0,_0,_0,_0.15)] cursor-pointer"
+                    onClick={refresh}
+                    title="Refresh"
                 >
                     <RefreshCcw className='w-[16px] h-[16px]' />
                 </a>

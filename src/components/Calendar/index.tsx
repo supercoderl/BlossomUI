@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 
-const Calendar = () => {
-    const [currentDate, setCurrentDate] = useState(new Date(2025, 7, 17)); // August 2025, day 17
+const Calendar = ({
+    currentDate,
+    setCurrentDate
+}: {
+    currentDate: Date,
+    setCurrentDate: Dispatch<SetStateAction<Date>>
+}) => {
     const [showMonthDropdown, setShowMonthDropdown] = useState(false);
+    // Separate viewing date from selected date
+    const [viewingDate, setViewingDate] = useState(new Date());
 
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June',
@@ -21,48 +28,68 @@ const Calendar = () => {
     };
 
     const getPreviousMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+        setViewingDate(new Date(viewingDate.getFullYear(), viewingDate.getMonth() - 1, 1));
     };
 
     const getNextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+        setViewingDate(new Date(viewingDate.getFullYear(), viewingDate.getMonth() + 1, 1));
     };
 
     const selectMonth = (monthIndex: number) => {
-        setCurrentDate(new Date(currentDate.getFullYear(), monthIndex, currentDate.getDate()));
+        setViewingDate(new Date(viewingDate.getFullYear(), monthIndex, 1));
         setShowMonthDropdown(false);
     };
 
+    const selectDate = (year: number, month: number, day: number) => {
+        const newDate = new Date(year, month, day);
+        setCurrentDate(newDate); // Update parent component if needed
+    };
+
     const renderCalendarDays = () => {
-        const daysInMonth = getDaysInMonth(currentDate);
-        const firstDay = getFirstDayOfMonth(currentDate);
+        const daysInMonth = getDaysInMonth(viewingDate);
+        const firstDay = getFirstDayOfMonth(viewingDate);
         const days = [];
 
         // Previous month's days
-        const prevMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 0);
+        const prevMonth = new Date(viewingDate.getFullYear(), viewingDate.getMonth() - 1, 0);
         const daysInPrevMonth = prevMonth.getDate();
 
         for (let i = firstDay - 1; i >= 0; i--) {
+            const day = daysInPrevMonth - i;
+            const isSelected = currentDate &&
+                currentDate.getFullYear() === viewingDate.getFullYear() &&
+                currentDate.getMonth() === viewingDate.getMonth() - 1 &&
+                currentDate.getDate() === day;
+
             days.push(
                 <button
-                    key={`prev-${daysInPrevMonth - i}`}
-                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:bg-gray-100 rounded-lg transition-colors"
+                    key={`prev-${day}`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors ${isSelected
+                            ? 'bg-blue-500 text-white shadow-md'
+                            : 'text-gray-400 hover:bg-gray-100'
+                        }`}
+                    onClick={() => selectDate(viewingDate.getFullYear(), viewingDate.getMonth() - 1, day)}
                 >
-                    {daysInPrevMonth - i}
+                    {day}
                 </button>
             );
         }
 
         // Current month's days
         for (let day = 1; day <= daysInMonth; day++) {
-            const isToday = day === 17; // Highlighting day 17 as shown in the image
+            const isSelected = currentDate &&
+                currentDate.getFullYear() === viewingDate.getFullYear() &&
+                currentDate.getMonth() === viewingDate.getMonth() &&
+                currentDate.getDate() === day;
+
             days.push(
                 <button
                     key={`current-${day}`}
-                    className={`w-10 h-10 flex items-center justify-center rounded-lg font-medium transition-colors ${isToday
+                    className={`w-10 h-10 flex items-center justify-center rounded-lg font-medium transition-colors ${isSelected
                             ? 'bg-blue-500 text-white shadow-md'
                             : 'text-gray-900 hover:bg-gray-100'
                         }`}
+                    onClick={() => selectDate(viewingDate.getFullYear(), viewingDate.getMonth(), day)}
                 >
                     {day}
                 </button>
@@ -74,10 +101,19 @@ const Calendar = () => {
         const remainingCells = totalCells - (firstDay + daysInMonth);
 
         for (let day = 1; day <= remainingCells; day++) {
+            const isSelected = currentDate &&
+                currentDate.getFullYear() === viewingDate.getFullYear() &&
+                currentDate.getMonth() === viewingDate.getMonth() + 1 &&
+                currentDate.getDate() === day;
+
             days.push(
                 <button
                     key={`next-${day}`}
-                    className="w-10 h-10 flex items-center justify-center text-gray-400 hover:bg-gray-100 rounded-lg transition-colors"
+                    className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors ${isSelected
+                            ? 'bg-blue-500 text-white shadow-md'
+                            : 'text-gray-400 hover:bg-gray-100'
+                        }`}
+                    onClick={() => selectDate(viewingDate.getFullYear(), viewingDate.getMonth() + 1, day)}
                 >
                     {day}
                 </button>
@@ -105,7 +141,7 @@ const Calendar = () => {
                             className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
                         >
                             <span className="font-medium text-gray-700">
-                                {months[currentDate.getMonth()]}
+                                {months[viewingDate.getMonth()]}
                             </span>
                             <ChevronDown className="w-4 h-4 text-gray-600" />
                         </button>
@@ -126,7 +162,7 @@ const Calendar = () => {
                     </div>
 
                     <span className="font-medium text-gray-700 bg-gray-100 px-4 py-2 rounded-lg">
-                        {currentDate.getFullYear()}
+                        {viewingDate.getFullYear()}
                     </span>
                 </div>
 

@@ -87,6 +87,7 @@ const CalendarSelection = ({
         // For example, you can fetch unavailable dates from an API and set them in state
         // Here we just return true for demonstration purposes
         const timeSlots = await getAllTimeSlotsForTechnician(employeeId ?? "", `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+        
         if (timeSlots.data.length === 0) {
             setUnavailableSlots([]);
             return false;

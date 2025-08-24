@@ -45,3 +45,10 @@ export interface UserCookieInfo {
     status: UserStatus;
     website?: string | null;
 }
+
+export interface UserContextType {
+    isAuthenticated: boolean;
+    setIsAuthenticated: (value: boolean) => void;
+    userInfo: UserCookieInfo | null;
+    setUserInfo: (value: UserCookieInfo) => void;
+}

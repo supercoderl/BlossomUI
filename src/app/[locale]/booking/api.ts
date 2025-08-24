@@ -39,3 +39,12 @@ export const getAllTimeSlotsForTechnician = (technicianId: string, date: string)
             }
         }));
 }
+
+export const getScheduleDate = (date: string) => {
+    return withApiLoading('get-schedule-date', () =>
+        req.get(`/Booking/schedule`, {
+            params: {
+                selectedDate: date
+            }
+        }));
+}

@@ -19,6 +19,7 @@ const getColumns = (onChangeStatus: (id: string, status: BookingStatus) => void,
         dataIndex: 'scheduleTime',
         key: 'scheduleTime',
         render: (date) => new Date(date).toLocaleString(),
+        width: '20%'
     },
     {
         title: 'Price',
