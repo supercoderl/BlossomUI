@@ -3,7 +3,7 @@ import { Modal, Button, Space, message } from 'antd';
 import { ScissorOutlined, RadiusSettingOutlined } from '@ant-design/icons';
 import Cropper from 'react-easy-crop';
 import type { Area } from 'react-easy-crop';
-import { removeBackgroundAsync } from '@/app/[locale]/api/file/route';
+import { removeBackgroundAsync } from '@/libs/removeBackground';
 
 interface ImageEditModalProps {
     visible: boolean;
