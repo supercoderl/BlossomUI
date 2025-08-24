@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌸 Blossom UI
 
-## Getting Started
+## Overview
+**Blossom UI** is the client-side application for the **Blossom platform**, built with **Next.js 15**, **TypeScript**, and **Tailwind CSS**.  
+It provides a modern, responsive, and user-friendly interface for managing bookings, services, users, and content.  
 
-First, run the development server:
+The UI communicates with **BlossomServer** via REST/gRPC APIs and integrates authentication, localization, and role-based access control.
 
+---
+
+## ✨ Features
+- 🔐 **Authentication & Authorization** (Google OAuth, custom login, role-based access)  
+- 📅 **Appointments & Booking Management**  
+- 👤 **User & Profile Management**  
+- 🛠️ **Service & Technician Management**  
+- 📊 **Dashboard with Analytics**  
+- 📰 **Blog & Content Pages**  
+- 📣 **Promotions & Reviews**  
+- 🌍 **Multi-language Support (i18n)**  
+- 🎨 **Responsive UI with Tailwind CSS**  
+- ⚡ **Optimized with Next.js 15 App Router & API routes**  
+
+---
+
+## 📂 Project Structure
+```
+src/
+├── api/ # API route handlers
+├── app/ # Next.js App Router pages
+│ ├── [locale]/ # Multi-language routes
+│ ├── appointments/ # Booking & scheduling pages
+│ ├── blog/ # Blog module
+│ ├── booking/ # Booking workflow
+│ ├── dashboard/ # Dashboard & analytics
+│ ├── profile/ # User profile management
+│ ├── promotion/ # Promotions module
+│ ├── service/ # Services module
+│ ├── user/ # User management
+│ └── ... # Other feature modules
+├── components/ # Shared React components
+├── data/ # Static data / mock data
+├── enums/ # Enums used across app
+├── hooks/ # Custom React hooks
+├── libs/ # Utility libraries (e.g. googleAuth.ts, removeBackground.ts)
+├── providers/ # Context providers (theme, auth, store)
+├── stores/ # State management
+├── tests/ # Unit / integration tests
+├── types/ # TypeScript type definitions
+└── utils/ # Utility functions
+```
+---
+
+## 🛠️ Tech Stack
+- **Next.js 15** (App Router)  
+- **TypeScript**  
+- **Tailwind CSS**  
+- **React Query / Zustand** (state management, if applicable)  
+- **NextAuth.js / OAuth** for authentication  
+- **i18next** for internationalization  
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/your-org/blossom-ui.git
+cd blossom-ui
+npm install
+```
+### 2. Environment Variables
+
+Create a .env.local file with the following:
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:5000
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+### 3. Run Dev Server
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔗 Integration with BlossomServer
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Blossom UI relies on **BlossomServer** as its backend:
 
-## Learn More
+### API Communication
+- Consumes **REST APIs** for user authentication, bookings, services, and notifications.  
+- Uses **gRPC endpoints** where low-latency communication is required (e.g., real-time updates).  
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
+- Delegates **OAuth flows** (e.g., Google login) to **BlossomServer**.  
+- UI stores and manages **JWT/session tokens** issued by the server.  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Data Flow
+- **UI requests** → **BlossomServer Application Layer (CQRS/Domain logic)** → **Infrastructure (DB, Event Sourcing)**.  
+- Responses are normalized in UI state management (**React Query / Zustand**).  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Background Jobs
+- **Notifications, reminders, and analytics** are processed in BlossomServer (via **Hangfire**).  
+- Results are displayed in Blossom UI (**dashboards, alerts**).  
 
-## Deploy on Vercel
+👉 See [BlossomServer README](../BlossomServer/README.md) for backend details.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🖼️ Screenshots
+
+Dashboard
+
+Booking Flow
+
+Profile Page
+
+## 📌 Summary
+
+**Blossom UI** is the frontend interface for the **Blossom platform**, designed with modularity, scalability, and great user experience in mind.
+By leveraging **Next.js 15** and **TypeScript**, it delivers a maintainable and high-performance application.
