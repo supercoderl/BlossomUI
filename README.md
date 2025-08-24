@@ -64,7 +64,7 @@ src/
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-org/blossom-ui.git
+git clone https://github.com/supercoderl/blossom-ui.git
 cd blossom-ui
 npm install
 ```
@@ -72,9 +72,8 @@ npm install
 
 Create a .env.local file with the following:
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:5000
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
+NEXT_PUBLIC_API_URL=https://localhost:7176
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-map-api-key
 ```
 ### 3. Run Dev Server
 ```bash
